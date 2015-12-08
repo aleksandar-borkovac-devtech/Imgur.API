@@ -60,11 +60,12 @@
     <Compile Include="JsonConverters\EpochTimeConverter.cs" />
     <Compile Include="JsonConverters\GalleryItemConverter.cs" />
     <Compile Include="JsonConverters\NotificationConverter.cs" />
-    <Compile Include="Models\AlbumPrivacy.cs" />
-    <Compile Include="Models\CommentSortOrder.cs" />
+    <Compile Include="Enums\AlbumPrivacy.cs" />
+    <Compile Include="Enums\CommentSortOrder.cs" />
     <Compile Include="Models\GalleryEntryFacade.cs" />
-    <Compile Include="Models\GallerySection.cs" />
-    <Compile Include="Models\GallerySortBy.cs" />
+    <Compile Include="Enums\GallerySection.cs" />
+    <Compile Include="Enums\GallerySortBy.cs" />
+    <Compile Include="Enums\GalleryWindow.cs" />
     <Compile Include="Models\IAccount.cs" />
     <Compile Include="Models\IAccountSettings.cs" />
     <Compile Include="Models\IAlbum.cs" />
@@ -113,8 +114,9 @@
     <Compile Include="Models\ITopic.cs" />
     <Compile Include="Models\ITrophy.cs" />
     <Compile Include="Models\IVote.cs" />
-    <Compile Include="Models\GalleryFavoritesSortOrder.cs" />
-    <Compile Include="Models\ThumbnailSize.cs" />
+    <Compile Include="Enums\GalleryFavoritesSortOrder.cs" />
+    <Compile Include="Enums\ThumbnailSize.cs" />
+    <Compile Include="Enums\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
