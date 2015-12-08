@@ -25,7 +25,7 @@ namespace Imgur.API.Endpoints
         /// <param name="gallerySortOrder">Indicates the order that a list of items are sorted. Default: Newest.</param>
         /// <returns></returns>
         Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username = "me", int? page = null,
-            GallerySortOrder? gallerySortOrder = GallerySortOrder.Newest);
+            GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest);
 
         /// <summary>
         ///     Returns the users favorited images, only accessible if you're logged in as the user.

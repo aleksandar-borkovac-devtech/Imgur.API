@@ -44,9 +44,11 @@
     <Compile Include="Authentication\OAuth2ResponseType.cs" />
     <Compile Include="Endpoints\IAccountEndpoint.cs" />
     <Compile Include="Endpoints\IEndpoint.cs" />
+    <Compile Include="Endpoints\IGalleryEndpoint.cs" />
     <Compile Include="Endpoints\IImageEndpoint.cs" />
     <Compile Include="Endpoints\Impl\AccountEndpoint.cs" />
     <Compile Include="Endpoints\Impl\EndpointBase.cs" />
+    <Compile Include="Endpoints\Impl\GalleryEndpoint.cs" />
     <Compile Include="Endpoints\Impl\ImageEndpoint.cs" />
     <Compile Include="Endpoints\Impl\OAuth2Endpoint.cs" />
     <Compile Include="Endpoints\Impl\RateLimitEndpoint.cs" />
@@ -60,12 +62,16 @@
     <Compile Include="JsonConverters\NotificationConverter.cs" />
     <Compile Include="Models\AlbumPrivacy.cs" />
     <Compile Include="Models\CommentSortOrder.cs" />
+    <Compile Include="Models\GalleryEntryFacade.cs" />
+    <Compile Include="Models\GallerySection.cs" />
+    <Compile Include="Models\GallerySortBy.cs" />
     <Compile Include="Models\IAccount.cs" />
     <Compile Include="Models\IAccountSettings.cs" />
     <Compile Include="Models\IAlbum.cs" />
     <Compile Include="Models\IBasic.cs" />
     <Compile Include="Models\IBlockedUser.cs" />
     <Compile Include="Models\IComment.cs" />
+    <Compile Include="Models\ImgurHelper.cs" />
     <Compile Include="Models\Impl\Notifications.cs" />
     <Compile Include="Models\Impl\Message.cs" />
     <Compile Include="Models\IMessage.cs" />
@@ -107,7 +113,8 @@
     <Compile Include="Models\ITopic.cs" />
     <Compile Include="Models\ITrophy.cs" />
     <Compile Include="Models\IVote.cs" />
-    <Compile Include="Models\GallerySortOrder.cs" />
+    <Compile Include="Models\GalleryFavoritesSortOrder.cs" />
+    <Compile Include="Models\ThumbnailSize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

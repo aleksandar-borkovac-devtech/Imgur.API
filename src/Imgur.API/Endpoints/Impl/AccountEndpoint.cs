@@ -87,7 +87,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns></returns>
         public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username = "me",
             int? page = null,
-            GallerySortOrder? gallerySortOrder = GallerySortOrder.Newest)
+            GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
