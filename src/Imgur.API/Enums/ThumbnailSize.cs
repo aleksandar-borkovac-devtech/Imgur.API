@@ -1,4 +1,4 @@
-﻿namespace Imgur.API.Models
+﻿namespace Imgur.API.Enums
 {
     /// <summary>
     ///     The various thumbnail sizes.

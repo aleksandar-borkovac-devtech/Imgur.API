@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Imgur.API.Models
+namespace Imgur.API.Enums
 {
     /// <summary>
     /// The various gallery sections.

@@ -1,4 +1,4 @@
-﻿namespace Imgur.API.Models
+﻿namespace Imgur.API.Enums
 {
     /// <summary>
     ///     Indicates the order that a list of items are sorted.
