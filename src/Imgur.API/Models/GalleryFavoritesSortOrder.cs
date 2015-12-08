@@ -3,7 +3,7 @@
     /// <summary>
     ///     Indicates the order that a list of items are sorted.
     /// </summary>
-    public enum GallerySortOrder
+    public enum GalleryFavoritesSortOrder
     {
         /// <summary>
         ///     Sort the list by the newest item first.
