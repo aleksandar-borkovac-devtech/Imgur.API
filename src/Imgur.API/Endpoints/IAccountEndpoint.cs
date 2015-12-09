@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Imgur.API.Enums;
 using Imgur.API.Models;
+using Imgur.Windows.Models;
 
 namespace Imgur.API.Endpoints
 {
@@ -24,14 +26,14 @@ namespace Imgur.API.Endpoints
         /// <param name="page">Set the page number so you don't have to retrieve all the data at once. Default: null.</param>
         /// <param name="gallerySortOrder">Indicates the order that a list of items are sorted. Default: Newest.</param>
         /// <returns></returns>
-        Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username = "me", int? page = null,
+        Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountGalleryFavoritesAsync(string username = "me", int? page = null,
             GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest);
 
         /// <summary>
         ///     Returns the users favorited images, only accessible if you're logged in as the user.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<IGalleryItem>> GetAccountFavoritesAsync();
+        Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountFavoritesAsync();
 
         /// <summary>
         ///     Return the images a user has submitted to the gallery.
@@ -39,7 +41,7 @@ namespace Imgur.API.Endpoints
         /// <param name="username">The user account. Default: me</param>
         /// <param name="page">Set the page number so you don't have to retrieve all the data at once. Default: null.</param>
         /// <returns></returns>
-        Task<IEnumerable<IGalleryItem>> GetAccountSubmissionsAsync(string username = "me", int? page = null);
+        Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountSubmissionsAsync(string username = "me", int? page = null);
 
         /// <summary>
         ///     Returns the account settings, only accessible if you're logged in as the user.

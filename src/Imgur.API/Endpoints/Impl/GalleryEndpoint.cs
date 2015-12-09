@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imgur.API.Enums;
 using Imgur.API.Models;
 using Imgur.API.Authentication;
+using Imgur.Windows.Models;
 using System.Net.Http;
 using Imgur.API.Exceptions;
 
@@ -18,6 +20,7 @@ namespace Imgur.API.Endpoints.Impl
         private const string getGalleryUrl = "gallery/{0}/{1}/{2}.json?showViral={3}";
         private const string getGalleryUrl2 = "gallery/{0}/{1}/{2}/{3}.json?showViral={4}";
         private const string getImageUrl = "gallery/image/{0}";
+        private const string getAlbumUrl = "gallery/album/{0}";
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -38,7 +41,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryItem[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral = true)
+        public async Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral = true)
         {
             if(sort == GallerySortBy.Rising && section != GallerySection.User)
                 throw new ArgumentException(nameof(sort) + " can only be rising if " + nameof(section) + " is user.");
@@ -50,7 +53,7 @@ namespace Imgur.API.Endpoints.Impl
                 sort.ToString().ToLower(),
                 page,
                 showViral);
-            var gallery = await MakeEndpointRequestAsync<IGalleryItem[]>(HttpMethod.Get, endpointUrl);
+            var gallery = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
             return gallery;
         }
 
@@ -66,7 +69,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryItem[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true)
+        public async Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true)
         {
             if (sort == GallerySortBy.Rising && section != GallerySection.User)
                 throw new ArgumentException(nameof(sort) + " can only be rising if " + nameof(section) + " is user.");
@@ -79,7 +82,7 @@ namespace Imgur.API.Endpoints.Impl
                 window.ToString().ToLower(),
                 page,
                 showViral);
-            var gallery = await MakeEndpointRequestAsync<IGalleryItem[]>(HttpMethod.Get, endpointUrl);
+            var gallery = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
             return gallery;
         }
 
@@ -90,14 +93,14 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryImage> GetGalleryImageAsync(string id)
+        public async Task<GalleryImage> GetGalleryImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(id);
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getImageUrl);
             endpointUrl = string.Format(endpointUrl, id);
-            var image = await MakeEndpointRequestAsync<IGalleryImage>(HttpMethod.Get, endpointUrl);
+            var image = await MakeEndpointRequestAsync<GalleryImage>(HttpMethod.Get, endpointUrl);
             return image;
         }
 
@@ -108,14 +111,14 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryAlbum> GetGalleryAlbumAsync(string id)
+        public async Task<GalleryAlbum> GetGalleryAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(id);
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getImageUrl);
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getAlbumUrl);
             endpointUrl = string.Format(endpointUrl, id);
-            var image = await MakeEndpointRequestAsync<IGalleryAlbum>(HttpMethod.Get, endpointUrl);
+            var image = await MakeEndpointRequestAsync<GalleryAlbum>(HttpMethod.Get, endpointUrl);
             return image;
         }
 
@@ -126,7 +129,7 @@ namespace Imgur.API.Endpoints.Impl
             throw new NotImplementedException();
         }
 
-        public async Task<IGalleryItem[]> GetRandomItemsAsync(uint page = 0)
+        public async Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0)
         {
             throw new NotImplementedException();
         }
@@ -141,7 +144,7 @@ namespace Imgur.API.Endpoints.Impl
             throw new NotImplementedException();
         }
 
-        public async Task<IGalleryImage> GetTagImageAsync(string tagname, string id)
+        public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
         {
             throw new NotImplementedException();
         }

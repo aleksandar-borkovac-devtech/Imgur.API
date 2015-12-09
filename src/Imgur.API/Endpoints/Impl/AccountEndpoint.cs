@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Imgur.API.Enums;
+using Imgur.Windows.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication;
@@ -85,7 +87,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username = "me",
+        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountGalleryFavoritesAsync(string username = "me",
             int? page = null,
             GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest)
         {
@@ -98,7 +100,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountGalleryFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, username, page, gallerySortOrder.ToString().ToLower());
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<GalleryItem>>(HttpMethod.Get, endpointUrl);
+            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, null);
             return favorites;
         }
 
@@ -111,14 +113,14 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryItem>> GetAccountFavoritesAsync()
+        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountFavoritesAsync()
         {
             if (ApiClient.OAuth2Token == null)
                 throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, "me");
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<GalleryItem>>(HttpMethod.Get, endpointUrl);
+            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
             return favorites;
         }
 
@@ -133,7 +135,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryItem>> GetAccountSubmissionsAsync(string username = "me", int? page = null)
+        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountSubmissionsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
@@ -144,7 +146,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountSubmissionsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
-            var submissions = await MakeEndpointRequestAsync<IEnumerable<GalleryItem>>(HttpMethod.Get, endpointUrl);
+            var submissions = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
             return submissions;
         }
 
