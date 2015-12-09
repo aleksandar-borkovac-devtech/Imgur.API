@@ -29,6 +29,7 @@ namespace Imgur.API.Endpoints.Impl
         private const string postReplyUrl = "gallery/{0}/comment/{1}";
         private const string getCommentIdsUrl = "gallery/{0}/comments/ids";
         private const string getCommentCountUrl = "gallery/{0}/comments/count";
+        private const string deleteUrl = "gallery/{0}";
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -262,9 +263,15 @@ namespace Imgur.API.Endpoints.Impl
             throw new NotImplementedException();
         }
 
-        public async Task<IBasic<object>> DeleteFromGalleryAsync(string id)
+        public async Task<object> DeleteFromGalleryAsync(string id)
         {
-            throw new NotImplementedException();
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Delete, endpointUrl);
+        	return result;
         }
     }
 }
