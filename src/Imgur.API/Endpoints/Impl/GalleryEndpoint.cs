@@ -172,6 +172,23 @@ namespace Imgur.API.Endpoints.Impl
         	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl, comment);
         	return result;
         }
+        
+        public async Task<IBasic<object>> PostReplyAsync(string id, string commentID, string reply)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	if(string.IsNullOrEmpty(reply))
+        		throw new ArgumentNullException(nameof(reply));
+        	
+        	if(string.IsNullOrEmpty(commentID))
+        		throw new ArgumentNullException(nameof(commentID));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postReplyUrl);
+        	endpointUrl = string.Format(endpointUrl, id, commentID);
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl, reply);
+        	return result;
+        }
 
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
