@@ -130,7 +130,16 @@ namespace Imgur.API.Endpoints.Impl
             var image = await MakeEndpointRequestAsync<GalleryAlbum>(HttpMethod.Get, endpointUrl);
             return image;
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="report"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<object> PostReportAsync(string id, Reporting report)
         {
         	if(string.IsNullOrEmpty(id))
@@ -142,6 +151,14 @@ namespace Imgur.API.Endpoints.Impl
         	return image;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<IVote> GetVotesAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
@@ -153,6 +170,15 @@ namespace Imgur.API.Endpoints.Impl
         	return votes;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="vote"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<IBasic<object>> PostVoteAsync(string id, Vote vote)
         {
         	if(string.IsNullOrEmpty(id))
@@ -164,6 +190,15 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sort"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<IComment[]> GetCommentsAsync(string id, CommentSortOrder sort)
         {
         	if(string.IsNullOrEmpty(id))
@@ -175,6 +210,15 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="comment"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<IBasic<object>> PostCommentAsync(string id, string comment)
         {
         	if(string.IsNullOrEmpty(id))
@@ -189,6 +233,16 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="commentID"></param>
+        /// <param name="reply"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<IBasic<object>> PostReplyAsync(string id, string commentID, string reply)
         {
         	if(string.IsNullOrEmpty(id))
@@ -206,6 +260,14 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<object> GetCommentIdsAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
@@ -217,6 +279,14 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
         public async Task<object> GetCommentCountAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
@@ -225,6 +295,25 @@ namespace Imgur.API.Endpoints.Impl
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentCountUrl);
         	endpointUrl = string.Format(endpointUrl, id);
         	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
+        	return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        public async Task<object> DeleteFromGalleryAsync(string id)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Delete, endpointUrl);
         	return result;
         }
 
@@ -261,17 +350,6 @@ namespace Imgur.API.Endpoints.Impl
         public async Task<IBasic<object>> PublishToGalleryAsync(string title, string topic = null, bool acceptTerms = false, bool NSFW = false)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<object> DeleteFromGalleryAsync(string id)
-        {
-        	if(string.IsNullOrEmpty(id))
-        		throw new ArgumentNullException(nameof(id));
-        	
-        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteUrl);
-        	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Delete, endpointUrl);
-        	return result;
         }
     }
 }
