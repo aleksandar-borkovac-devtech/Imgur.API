@@ -21,6 +21,8 @@ namespace Imgur.API.Endpoints.Impl
         private const string getGalleryUrl2 = "gallery/{0}/{1}/{2}/{3}.json?showViral={4}";
         private const string getImageUrl = "gallery/image/{0}";
         private const string getAlbumUrl = "gallery/album/{0}";
+        private const string getVotesUrl = "gallery/{0}/votes";
+        private const string postVoteUrl = "gallery/{0}/vote/{1}";
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -122,15 +124,26 @@ namespace Imgur.API.Endpoints.Impl
             return image;
         }
 
-        public async Task<Vote> GetVotes(string id)
+        public async Task<IVote> GetVotesAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getVotesUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var votes = await MakeEndpointRequestAsync<Vote>(HttpMethod.Get, endpointUrl);
+        	var votes = await MakeEndpointRequestAsync<IVote>(HttpMethod.Get, endpointUrl);
         	return votes;
+        }
+        
+        public async Task<IBasic<object>> PostVoteAsync(string id, Vote vote)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postVoteUrl);
+        	endpointUrl = string.Format(endpointUrl, id, vote.ToString().ToLower());
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl);
+        	return result;
         }
         
 
