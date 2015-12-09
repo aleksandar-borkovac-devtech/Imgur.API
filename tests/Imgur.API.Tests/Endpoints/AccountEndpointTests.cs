@@ -11,6 +11,7 @@ using Imgur.API.Models.Impl;
 using Imgur.API.Tests.EndpointResponses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Tests.Endpoints
 {
@@ -104,7 +105,7 @@ namespace Imgur.API.Tests.Endpoints
         {
             var endpoint = Substitute.ForPartsOf<EndpointBase>();
             var favorites =
-                endpoint.ProcessEndpointResponse<IEnumerable<GalleryItem>>(
+                endpoint.ProcessEndpointResponse<IEnumerable<IGalleryAlbumImageBase>>(
                     AccountEndpointResponses.Imgur.GetAccountGalleryFavoritesResponse);
 
             Assert.IsTrue(favorites.Any());
@@ -185,7 +186,7 @@ namespace Imgur.API.Tests.Endpoints
         {
             var endpoint = Substitute.ForPartsOf<EndpointBase>();
             var submissions =
-                endpoint.ProcessEndpointResponse<IEnumerable<GalleryItem>>(
+                endpoint.ProcessEndpointResponse<IEnumerable<IGalleryAlbumImageBase>>(
                     AccountEndpointResponses.Imgur.GetAccountSubmissionsResponse);
 
             Assert.IsTrue(submissions.Any());

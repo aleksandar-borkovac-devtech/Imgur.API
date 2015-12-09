@@ -2,6 +2,7 @@
 using Imgur.API.JsonConverters;
 using Imgur.API.Models.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Imgur.API.Models;
 
 namespace Imgur.API.Tests.JsonConverters
 {

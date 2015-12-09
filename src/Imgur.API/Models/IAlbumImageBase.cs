@@ -8,12 +8,12 @@
  */
 using System;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of IAlbumImageBase.
 	/// </summary>
-	public interface IAlbumImageBase
+	public interface IAlbumImageBase : IDataModel
 	{
 		string Id {get;set;}
 		
@@ -22,14 +22,10 @@ namespace Imgur.Windows.Models
 		string Description {get;set;}
 		
 		DateTimeOffset DateTime {get;set;}
-		
-		string AccountUrl {get;set;}
-		
-		int AccountId {get;set;}
-		
+
 		string Link {get;set;}
 		
-		string? DeleteHash {get;set;}
+		string DeleteHash {get;set;}
 		
 		bool Nsfw {get;set;}
 		

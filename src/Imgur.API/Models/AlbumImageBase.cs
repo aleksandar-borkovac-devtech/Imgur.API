@@ -6,9 +6,11 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.JsonConverters;
+using Newtonsoft.Json;
 using System;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of AlbumImageBase.
@@ -58,7 +60,7 @@ namespace Imgur.Windows.Models
         /// <summary>
         ///     Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
         /// </summary>
-        public bool? Nsfw { get; set; }
+        public bool Nsfw { get; set; }
 
         /// <summary>
         ///     If the image has been categorized then this will contain the section the image belongs in. (funny, cats,
@@ -69,6 +71,6 @@ namespace Imgur.Windows.Models
         /// <summary>
         ///     OPTIONAL, the deletehash, if you're logged in as the album owner.
         /// </summary>
-        public string? DeleteHash { get; set; }
-	}
+        public string DeleteHash { get; set; }
+    }
 }

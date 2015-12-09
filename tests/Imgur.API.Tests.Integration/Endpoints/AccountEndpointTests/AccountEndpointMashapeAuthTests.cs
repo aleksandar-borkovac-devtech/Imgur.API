@@ -4,6 +4,7 @@ using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Tests.Integration.Endpoints.AccountEndpointTests
 {

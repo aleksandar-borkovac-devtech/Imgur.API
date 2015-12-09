@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of IImage.

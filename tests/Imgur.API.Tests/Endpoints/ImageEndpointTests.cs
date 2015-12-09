@@ -9,6 +9,7 @@ using Imgur.API.Models.Impl;
 using Imgur.API.Tests.EndpointResponses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using Imgur.API.Models;
 
 namespace Imgur.API.Tests.Endpoints
 {

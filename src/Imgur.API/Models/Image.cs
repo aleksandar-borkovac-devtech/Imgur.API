@@ -6,9 +6,10 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Newtonsoft.Json;
 using System;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of Image.
@@ -79,7 +80,7 @@ namespace Imgur.Windows.Models
         ///     OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is
         ///     'image/gif'.
         /// </summary>
-        public bool Looping { get; set; }
+        public bool? Looping { get; set; }
 
         /// <summary>
         ///     The current user's vote on the album. null if not signed in, if the user hasn't voted on it, or if not submitted to

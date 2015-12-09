@@ -1,4 +1,6 @@
-﻿namespace Imgur.API.Models
+﻿using Imgur.API.Models;
+
+namespace Imgur.API.Models
 {
     /// <summary>
     ///     The base model for a tag.
@@ -28,6 +30,6 @@
         /// <summary>
         ///     An array of all the gallery items in the custom gallery
         /// </summary>
-        IGalleryItem[] Items { get; set; }
+        IGalleryAlbumImageBase[] Items { get; set; }
     }
 }

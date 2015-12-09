@@ -6,9 +6,11 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.Models;
 using System;
+using System.Collections.Generic;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of IGalleryAlbumImageBase.
@@ -49,8 +51,18 @@ namespace Imgur.Windows.Models
         ///     Topic ID of the gallery album.
         /// </summary>
         int? TopicId { get; set; }
-        
-        string Vote{get;set;}
 
-	}
+        string Vote{get;set; }
+
+        /// <summary>
+        ///     The username of the account that uploaded it, or null.
+        /// </summary>
+        string AccountUrl { get; set; }
+
+        /// <summary>
+        ///     The account ID for the uploader, or null.
+        /// </summary>
+        string AccountId { get; set; }
+
+    }
 }

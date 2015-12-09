@@ -6,6 +6,7 @@ using Imgur.API.Models.Impl;
 using Imgur.API.Tests.EndpointResponses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Imgur.API.Models;
 
 namespace Imgur.API.Tests.JsonConverters
 {

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Imgur.API.Models;
+using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints
 {

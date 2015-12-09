@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Imgur.API.Enums;
-using Imgur.Windows.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
+using Imgur.API.Models;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -100,7 +101,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountGalleryFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, username, page, gallerySortOrder.ToString().ToLower());
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, null);
+            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
             return favorites;
         }
 

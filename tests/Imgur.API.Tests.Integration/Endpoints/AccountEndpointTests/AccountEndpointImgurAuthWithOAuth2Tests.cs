@@ -6,6 +6,7 @@ using Imgur.API.Endpoints.Impl;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Tests.Integration.Endpoints.AccountEndpointTests
 {

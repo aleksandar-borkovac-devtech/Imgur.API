@@ -44,7 +44,6 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
             }
 
             Assert.IsFalse(string.IsNullOrEmpty(image.Id));
-            Assert.IsFalse(string.IsNullOrEmpty(image.AccountId));
             Assert.AreEqual("binary test title!", image.Title);
             Assert.AreEqual("binary test desc!", image.Description);
 

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Imgur.API.Enums;
 using Imgur.API.Models;
 using Imgur.API.Authentication;
-using Imgur.Windows.Models;
 using System.Net.Http;
 using Imgur.API.Exceptions;
+using Imgur.API.Enums;
+using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -140,15 +141,23 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<object> PostReportAsync(string id, Reporting report)
+        public async Task<object> PostReportAsync(string id, Reporting reason)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postReportUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var image = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, report);
-        	return image;
+            object ret;
+
+            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            {
+                content.Add(new StringContent(reason.ToString()), "reason");
+
+                ret = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+            }
+
+            return ret;
         }
         
         /// <summary>
@@ -179,14 +188,14 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IBasic<object>> PostVoteAsync(string id, Vote vote)
+        public async Task<object> PostVoteAsync(string id, Vote vote)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postVoteUrl);
         	endpointUrl = string.Format(endpointUrl, id, vote.ToString().ToLower());
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
         	return result;
         }
         
@@ -206,7 +215,7 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentsUrl);
         	endpointUrl = string.Format(endpointUrl, id, sort.ToString().ToLower());
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<IComment[]>(HttpMethod.Get, endpointUrl);
         	return result;
         }
         
@@ -219,7 +228,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IBasic<object>> PostCommentAsync(string id, string comment)
+        public async Task<object> PostCommentAsync(string id, string comment)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
@@ -229,7 +238,16 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postCommentUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl, comment);
+
+            object result;
+
+            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            {
+                content.Add(new StringContent(comment), "comment");
+
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+            }
+
         	return result;
         }
         
@@ -243,7 +261,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IBasic<object>> PostReplyAsync(string id, string commentID, string reply)
+        public async Task<object> PostReplyAsync(string id, string commentID, string reply)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
@@ -256,7 +274,14 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postReplyUrl);
         	endpointUrl = string.Format(endpointUrl, id, commentID);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl, reply);
+
+            object result;
+            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            {
+                content.Add(new StringContent(reply), "comment");
+
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+            }
         	return result;
         }
         
@@ -275,7 +300,7 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentIdsUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Get, endpointUrl);
         	return result;
         }
         
@@ -294,7 +319,7 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentCountUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Get, endpointUrl);
         	return result;
         }
 
@@ -313,7 +338,7 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync(HttpMethod.Delete, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl);
         	return result;
         }
 
@@ -336,7 +361,7 @@ namespace Imgur.API.Endpoints.Impl
         {
             throw new NotImplementedException();
         }
-
+        
         public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
         {
             throw new NotImplementedException();

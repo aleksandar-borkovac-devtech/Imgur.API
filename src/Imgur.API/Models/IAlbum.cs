@@ -6,9 +6,12 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.Enums;
+using Imgur.API.Models;
 using System;
+using System.Collections.Generic;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of IAlbum.
@@ -48,11 +51,15 @@ namespace Imgur.Windows.Models
         /// <summary>
         ///     The total number of images in the album.
         /// </summary>
-        int ImagesCount { get; set; }
+        int ImageCount { get; set; }
 
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
-        Enumerable<Image> Images { get; set; }
-	}
+        IEnumerable<Image> Images { get; set; }
+
+        string AccountUrl { get; set; }
+
+        string AccountId { get; set; }
+    }
 }

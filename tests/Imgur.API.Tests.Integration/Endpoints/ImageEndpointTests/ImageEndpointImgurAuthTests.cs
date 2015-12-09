@@ -34,7 +34,7 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
         {
             var client = new ImgurClient(ClientId, ClientSecret);
             var endpoint = new ImageEndpoint(client);
-            IImage image = null;
+            Image image = null;
 
             using (var fs = new FileStream("banana.gif", FileMode.Open))
             {
@@ -42,7 +42,6 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
             }
 
             Assert.IsFalse(string.IsNullOrEmpty(image.Id));
-            Assert.IsFalse(string.IsNullOrEmpty(image.AccountId));
             Assert.AreEqual("binary test title!", image.Title);
             Assert.AreEqual("binary test desc!", image.Description);
 
@@ -72,7 +71,7 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
             await DeleteImageAsync_WithImage_IsTrue(image);
         }
 
-        public async Task GetImageAsync_WithImage_AreEqual(IImage actualImage)
+        public async Task GetImageAsync_WithImage_AreEqual(Image actualImage)
         {
             var client = new ImgurClient(ClientId, ClientSecret);
             var endpoint = new ImageEndpoint(client);

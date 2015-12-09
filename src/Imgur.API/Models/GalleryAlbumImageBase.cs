@@ -6,9 +6,13 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.JsonConverters;
+using Imgur.API.Models.Impl;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of GalleryAlbumImageBase.

@@ -6,9 +6,13 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.Enums;
+using Imgur.API.JsonConverters;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of Album.
@@ -42,7 +46,7 @@ namespace Imgur.Windows.Models
         ///     The account ID or null if it's anonymous.
         /// </summary>
         [JsonProperty("account_id")]
-        public int? AccountId { get; set; }
+        public string AccountId { get; set; }
 
         /// <summary>
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
@@ -63,12 +67,13 @@ namespace Imgur.Windows.Models
         ///     The total number of images in the album.
         /// </summary>
         [JsonProperty("images_count")]
-        public int ImagesCount { get; set; }
+        public int ImageCount { get; set; }
 
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
         [JsonConverter(typeof (EnumerableConverter<Image>))]
-        public IEnumerable<IImage> Images { get; set; } = new List<IImage>();
+
+        public IEnumerable<Image> Images { get; set; } = new List<Image>();
 	}
 }

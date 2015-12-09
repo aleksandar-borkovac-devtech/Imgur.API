@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Imgur.Windows.Models;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
+using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -41,7 +41,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IImage> GetImageAsync(string id)
+        public async Task<Image> GetImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -68,13 +68,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IImage> UploadImageBinaryAsync(byte[] image, string album = null, string title = null,
+        public async Task<Image> UploadImageBinaryAsync(byte[] image, string album = null, string title = null,
             string description = null)
         {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
-            IImage returnImage;
+            Image returnImage;
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), UploadImageUrl);
 
@@ -114,13 +114,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IImage> UploadImageStreamAsync(Stream image, string album = null, string title = null,
+        public async Task<Image> UploadImageStreamAsync(Stream image, string album = null, string title = null,
             string description = null)
         {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
-            IImage returnImage;
+            Image returnImage;
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), UploadImageUrl);
 
@@ -160,7 +160,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IImage> UploadImageUrlAsync(string image, string album = null, string title = null,
+        public async Task<Image> UploadImageUrlAsync(string image, string album = null, string title = null,
             string description = null)
         {
             if (string.IsNullOrEmpty(image))
@@ -185,7 +185,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
 
-            IImage returnImage = await MakeEndpointRequestAsync<Image>(HttpMethod.Post, endpointUrl, content);
+            Image returnImage = await MakeEndpointRequestAsync<Image>(HttpMethod.Post, endpointUrl, content);
 
             return returnImage;
         }

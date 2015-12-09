@@ -6,6 +6,7 @@ using Imgur.API.Models.Impl;
 using Imgur.API.Tests.EndpointResponses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using Imgur.API.Models;
 
 namespace Imgur.API.Tests.JsonConverters
 {
@@ -47,7 +48,7 @@ namespace Imgur.API.Tests.JsonConverters
                 Converters = {converter}
             };
 
-            var actual = (GalleryAlbum) converter.ReadJson(reader, typeof (GalleryItem), null, serializer);
+            var actual = (GalleryAlbum) converter.ReadJson(reader, typeof (IGalleryAlbumImageBase), null, serializer);
             Assert.IsNotNull(actual);
 
             Assert.AreEqual(null, actual.AccountId);
@@ -89,7 +90,7 @@ namespace Imgur.API.Tests.JsonConverters
                 Converters = {converter}
             };
 
-            var actual = (GalleryImage) converter.ReadJson(reader, typeof (GalleryItem), null, serializer);
+            var actual = (GalleryImage) converter.ReadJson(reader, typeof (IGalleryAlbumImageBase), null, serializer);
             Assert.IsNotNull(actual);
 
             Assert.AreEqual(null, actual.AccountId);

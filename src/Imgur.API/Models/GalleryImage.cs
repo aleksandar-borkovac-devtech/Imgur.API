@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace Imgur.Windows.Models
+namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of GalleryImage.
@@ -36,7 +36,7 @@ namespace Imgur.Windows.Models
         ///     OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is
         ///     'image/gif'.
         /// </summary>
-        public bool Looping { get; set; }
+        public bool? Looping { get; set; }
 
         /// <summary>
         ///     Is the image animated.
