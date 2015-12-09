@@ -1,5 +1,7 @@
 ﻿using Imgur.API.Endpoints;
+using Imgur.API.Enums;
 using Imgur.API.Exceptions;
+using Imgur.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,19 +12,19 @@ using System.Threading.Tasks;
 namespace Imgur.API.Models
 {
     /// <summary>
-    /// A facade that encapsulates either an <see cref="IGalleryImage"/> or an <see cref="IGalleryAlbum"/>, meant generalize dealing with them.
+    /// A facade that encapsulates either an <see cref="GalleryImage"/> or an <see cref="GalleryAlbum"/>, meant generalize dealing with them.
     /// </summary>
     public class GalleryEntryFacade
     {
-        private IGalleryImage image;
-        private IGalleryAlbum album;
+        private GalleryImage image;
+        private GalleryAlbum album;
 
-        private IGalleryItem item;
+        private IGalleryAlbumImageBase item;
 
         /// <summary>
         /// The gallery item being encapsulated.
         /// </summary>
-        public IGalleryItem Item
+        public IGalleryAlbumImageBase Item
         {
             get
             {
@@ -32,30 +34,30 @@ namespace Imgur.API.Models
             {
                 item = value;
 
-                if (item is IGalleryImage)
+                if (item is GalleryImage)
                 {
-                    image = value as IGalleryImage;
+                    image = value as GalleryImage;
                     album = null;
                 }
                 else
                 {
                     image = null;
-                    album = value as IGalleryAlbum;
+                    album = value as GalleryAlbum;
                 }
             }
         }
 
         /// <summary>
-        /// Initializes the facade with the given <see cref="IGalleryItem"/>.
+        /// Initializes the facade with the given <see cref="GalleryItem"/>.
         /// </summary>
         /// <param name="item"></param>
-        public GalleryEntryFacade(IGalleryItem item)
+        public GalleryEntryFacade(IGalleryAlbumImageBase item)
         {
             Item = item;
         }
 
         /// <summary>
-        ///     Gets the thumbnail url for the encapsulated <see cref="IGalleryItem"/>.
+        ///     Gets the thumbnail url for the encapsulated <see cref="GalleryItem"/>.
         /// </summary>
         /// <param name="gallery"></param>
         /// <param name="thumbnailSize"></param>
@@ -63,7 +65,7 @@ namespace Imgur.API.Models
         public async Task<string> GetThumbnailUrl(IImageEndpoint gallery, ThumbnailSize thumbnailSize)
         {
             string id, mime;
-            if (image is IGalleryImage)
+            if (item is GalleryImage)
             {
                 id = image.Id;
                 mime = image.Type;

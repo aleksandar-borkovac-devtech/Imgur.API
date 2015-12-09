@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Models.Impl
 {

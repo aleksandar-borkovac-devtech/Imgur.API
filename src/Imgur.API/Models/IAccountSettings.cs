@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Imgur.API.Enums;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {

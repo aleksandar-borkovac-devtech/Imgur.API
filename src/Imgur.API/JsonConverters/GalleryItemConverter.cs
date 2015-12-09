@@ -4,6 +4,7 @@ using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Imgur.API.Models;
 
 namespace Imgur.API.JsonConverters
 {
@@ -19,7 +20,7 @@ namespace Imgur.API.JsonConverters
         /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            if (typeof (IGalleryItem).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
+            if (typeof (IGalleryAlbumImageBase).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 return true;
 
             return false;
