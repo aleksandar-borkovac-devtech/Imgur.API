@@ -15,7 +15,7 @@ namespace Imgur.API.Endpoints.Impl
     /// <summary>
     ///     Gallery related actions.
     /// </summary>
-    public class GalleryEndpoint : EndpointBase, IGalleryEndpoint
+    public class GalleryEndpoint : EndpointBase
     {
         private const string getGalleryUrl = "gallery/{0}/{1}/{2}.json?showViral={3}";
         private const string getGalleryUrl2 = "gallery/{0}/{1}/{2}/{3}.json?showViral={4}";
@@ -96,7 +96,7 @@ namespace Imgur.API.Endpoints.Impl
         public async Task<GalleryImage> GetGalleryImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(id);
+            	throw new ArgumentNullException(nameof(id));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getImageUrl);
             endpointUrl = string.Format(endpointUrl, id);
@@ -114,7 +114,7 @@ namespace Imgur.API.Endpoints.Impl
         public async Task<GalleryAlbum> GetGalleryAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(id);
+            	throw new ArgumentNullException(nameof(id));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getAlbumUrl);
             endpointUrl = string.Format(endpointUrl, id);
@@ -122,7 +122,17 @@ namespace Imgur.API.Endpoints.Impl
             return image;
         }
 
-
+        public async Task<Vote> GetVotes(string id)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getVotesUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var votes = await MakeEndpointRequestAsync<Vote>(HttpMethod.Get, endpointUrl);
+        	return votes;
+        }
+        
 
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
