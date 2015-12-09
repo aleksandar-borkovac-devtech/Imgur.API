@@ -72,8 +72,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
-        [JsonConverter(typeof (EnumerableConverter<Image>))]
-
-        public IEnumerable<Image> Images { get; set; } = new List<Image>();
+        [JsonConverter(typeof (EnumerableConverter<IImage>))]
+        public IEnumerable<IImage> Images { get; set; } = new List<IImage>();
 	}
 }
