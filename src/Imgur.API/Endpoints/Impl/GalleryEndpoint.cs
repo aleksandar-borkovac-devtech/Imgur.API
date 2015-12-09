@@ -21,6 +21,7 @@ namespace Imgur.API.Endpoints.Impl
         private const string getGalleryUrl2 = "gallery/{0}/{1}/{2}/{3}.json?showViral={4}";
         private const string getImageUrl = "gallery/image/{0}";
         private const string getAlbumUrl = "gallery/album/{0}";
+        private const string postReportUrl = "gallery/{0}/report";
         private const string getVotesUrl = "gallery/{0}/votes";
         private const string postVoteUrl = "gallery/{0}/vote/{1}";
         private const string getCommentsUrl = "gallery/{0}/comments/{1}";
@@ -129,6 +130,17 @@ namespace Imgur.API.Endpoints.Impl
             return image;
         }
 
+        public async Task<object> PostReportAsync(string id, Reporting report)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postReportUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var image = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, report);
+        	return image;
+        }
+        
         public async Task<IVote> GetVotesAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
