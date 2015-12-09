@@ -24,6 +24,7 @@ namespace Imgur.API.Endpoints.Impl
         private const string getVotesUrl = "gallery/{0}/votes";
         private const string postVoteUrl = "gallery/{0}/vote/{1}";
         private const string getCommentsUrl = "gallery/{0}/comments/{1}";
+        private const string postCommentUrl = "gallery/{0}/comment";
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -158,6 +159,19 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
+        public async Task<IBasic<object>> PostCommentAsync(string id, string comment)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	if(string.IsNullOrEmpty(comment))
+        		throw new ArgumentNullException(nameof(comment));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postCommentUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Post, endpointUrl, comment);
+        	return result;
+        }
 
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
