@@ -11,7 +11,7 @@ namespace Imgur.API.JsonConverters
     /// <summary>
     ///     Converts Gallery items to their appropriate type.
     /// </summary>
-    public class GalleryItemConverter : JsonConverter
+    public class AlbumImageConverter : JsonConverter
     {
         /// <summary>
         ///     Determines whether this instance can convert the specified object type.
@@ -20,7 +20,7 @@ namespace Imgur.API.JsonConverters
         /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
-            if (typeof (IGalleryAlbumImageBase).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
+            if (typeof (IAlbumImageBase).GetTypeInfo().IsAssignableFrom(objectType.GetTypeInfo()))
                 return true;
 
             return false;
@@ -41,11 +41,11 @@ namespace Imgur.API.JsonConverters
 
             if (jsonString.Replace(" ", "").Contains("is_album\":true"))
             {
-                var album = JsonConvert.DeserializeObject<GalleryAlbum>(jsonString);
+                var album = JsonConvert.DeserializeObject<Album>(jsonString);
                 return album;
             }
 
-            var image = JsonConvert.DeserializeObject<GalleryImage>(jsonString);
+            var image = JsonConvert.DeserializeObject<Image>(jsonString);
             return image;
         }
 
