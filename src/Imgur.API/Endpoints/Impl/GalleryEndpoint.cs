@@ -27,6 +27,7 @@ namespace Imgur.API.Endpoints.Impl
         private const string postCommentUrl = "gallery/{0}/comment";
         private const string postReplyUrl = "gallery/{0}/comment/{1}";
         private const string getCommentIdsUrl = "gallery/{0}/comments/ids";
+        private const string getCommentCountUrl = "gallery/{0}/comments/count";
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -192,12 +193,23 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
         
-        public async Task<object> GetCommentIds(string id)
+        public async Task<object> GetCommentIdsAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentIdsUrl);
+        	endpointUrl = string.Format(endpointUrl, id);
+        	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
+        	return result;
+        }
+        
+        public async Task<object> GetCommentCountAsync(string id)
+        {
+        	if(string.IsNullOrEmpty(id))
+        		throw new ArgumentNullException(nameof(id));
+        	
+        	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCommentCountUrl);
         	endpointUrl = string.Format(endpointUrl, id);
         	var result = await MakeEndpointRequestAsync(HttpMethod.Get, endpointUrl);
         	return result;
