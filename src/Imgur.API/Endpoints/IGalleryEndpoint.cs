@@ -12,6 +12,7 @@ namespace Imgur.API.Endpoints
     /// </summary>
     public interface IGalleryEndpoint
     {
+
         /// <summary>
         ///     Returns the images currently in the gallery.
         /// </summary>
@@ -23,7 +24,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral=true);
+        Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral = true);
 
         /// <summary>
         ///     Returns the images currently in the gallery.
@@ -39,29 +40,6 @@ namespace Imgur.API.Endpoints
         /// <returns></returns>
         Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true);
 
-        Task<IGalleryMeme> GetMemesSubGalleryAsync(GallerySortBy sort, uint page = 0, GalleryWindow window = GalleryWindow.Week);
-        Task<GalleryMemeImage> GetMemesSubGalleryImageAsync(string id);
-        
-        Task<GalleryRedditImage> GetSubredditGalleryAsync(string subredditName, GallerySortBy sort = GallerySortBy.Time, uint page = 0, GalleryWindow window = GalleryWindow.Week);
-        Task<GalleryRedditImage> GetSubredditImageAsync(string subredditName, string id);
-        
-        Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, uint page = 0);
-        Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
-
-        Task<IGalleryAlbumImageBase> GetTagImageAsync(string tagname, string id);
-
-        Task<ITagVote[]> GetGalleryItemTagsAsync(string id);
-
-        Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
-        
-        Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0);
-
-        Task<object> PublishToGalleryAsync(string title, string topic = null, bool acceptTerms = false, bool NSFW = false);
-
-        Task<object> DeleteFromGalleryAsync(string id);
-
-        Task<IGalleryAlbumImageBase> GetGalleryAlbumAsync(string id);
-
         /// <summary>
         ///     Returns the image identified by the given id.
         /// </summary>
@@ -69,6 +47,125 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        Task<IGalleryAlbumImageBase> GetGalleryImageAsync(string id);
+        Task<GalleryImage> GetGalleryImageAsync(string id);
+
+        /// <summary>
+        ///     Returns the album identified by the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<GalleryAlbum> GetGalleryAlbumAsync(string id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="reason"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> PostReportAsync(string id, Reporting reason);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<IVotes> GetVotesAsync(string id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="vote"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> PostVoteAsync(string id, Vote vote);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sort"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<IComment[]> GetCommentsAsync(string id, CommentSortOrder sort);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="comment"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> PostCommentAsync(string id, string comment);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="commentID"></param>
+        /// <param name="reply"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> PostReplyAsync(string id, string commentID, string reply);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> GetCommentIdsAsync(string id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> GetCommentCountAsync(string id);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        Task<object> DeleteFromGalleryAsync(string id);
+
+        Task<ITagVote[]> GetGalleryItemTagsAsync(string id);
+
+        Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0);
+
+        Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+
+        Task<GalleryImage> GetTagImageAsync(string tagname, string id);
+
+        Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
+
+        Task<object> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null);
+
+        Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0);
     }
 }

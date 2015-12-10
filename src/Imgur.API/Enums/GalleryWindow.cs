@@ -14,6 +14,8 @@ namespace Imgur.API.Enums
 
         Month,
 
-        Year
+        Year,
+
+        All
     }
 }

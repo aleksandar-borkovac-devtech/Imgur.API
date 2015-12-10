@@ -9,13 +9,14 @@ using Imgur.API.Authentication;
 using System.Net.Http;
 using Imgur.API.Exceptions;
 using Imgur.API.Models.Impl;
+using System.Net;
 
 namespace Imgur.API.Endpoints.Impl
 {
     /// <summary>
     ///     Gallery related actions.
     /// </summary>
-    public class GalleryEndpoint : EndpointBase
+    public class GalleryEndpoint : EndpointBase, IGalleryEndpoint
     {
         private const string getGalleryUrl = "gallery/{0}/{1}/{2}.json?showViral={3}";
         private const string getGalleryUrl2 = "gallery/{0}/{1}/{2}/{3}.json?showViral={4}";
@@ -30,6 +31,15 @@ namespace Imgur.API.Endpoints.Impl
         private const string getCommentIdsUrl = "gallery/{0}/comments/ids";
         private const string getCommentCountUrl = "gallery/{0}/comments/count";
         private const string deleteUrl = "gallery/{0}";
+        private const string getTagsUrl = "gallery/{0}/tags";
+        private const string getRandomUrl = "gallery/random/random/{0}";
+        private const string getTagUrl = "gallery/t/{0}/{1}/{2}/{3}";
+        private const string getTagImageUrl = "gallery/t/{0}/{1}";
+        private const string postTagVoteUrl = "gallery/{0}/vote/tag/{1}/{2}";
+        private const string postPublishUrl = "gallery/{0}";
+        private const string searchGalleryUrl = "gallery/search/{0}/{1}/{3}";
+
+        private const uint randomPageMax = 50;
 
         /// <summary>
         ///     Initializes the endpoint.
@@ -343,37 +353,120 @@ namespace Imgur.API.Endpoints.Impl
 
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getTagsUrl);
+            endpointUrl = string.Format(endpointUrl, id);
+            var result = await MakeEndpointRequestAsync<ITagVote[]>(HttpMethod.Get, endpointUrl);
+            return result;
         }
 
         public async Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0)
         {
-            throw new NotImplementedException();
-        }
+            if (page > randomPageMax)
+                throw new ArgumentException(nameof(page) + " can not be higher than 50.");
 
-        public async Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, uint page = 0)
-        {
-            throw new NotImplementedException();
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getRandomUrl);
+            endpointUrl = string.Format(endpointUrl, page);
+            var result = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
+            return result;
         }
 
         public async Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(tagname))
+                throw new ArgumentNullException(nameof(tagname));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getTagUrl);
+            endpointUrl = string.Format(
+                endpointUrl,
+                sort.ToString().ToLower(),
+                window.ToString().ToLower(),
+                page);
+            var result = await MakeEndpointRequestAsync<ITag>(HttpMethod.Get, endpointUrl);
+            return result;
         }
         
         public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(tagname))
+                throw new ArgumentNullException(nameof(tagname));
+
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getTagImageUrl);
+            endpointUrl = string.Format(endpointUrl, tagname, id);
+
+            var result = await MakeEndpointRequestAsync<GalleryImage>(HttpMethod.Get, endpointUrl);
+            return result;
         }
 
-        public async Task<IBasic<object>> PostGalleryTagVoteAsync(string id, string tagname, Vote vote)
+        public async Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            if (string.IsNullOrEmpty(tagname))
+                throw new ArgumentNullException(nameof(tagname));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), postTagVoteUrl);
+            endpointUrl = string.Format(endpointUrl, id, tagname, vote.ToString().ToLower());
+
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+            return result;
         }
 
-        public async Task<IBasic<object>> PublishToGalleryAsync(string title, string topic = null, bool acceptTerms = false, bool NSFW = false)
+        public async Task<object> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            if (string.IsNullOrEmpty(title))
+                throw new ArgumentNullException(nameof(title));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), postPublishUrl);
+            endpointUrl = string.Format(endpointUrl, id);
+
+            object result;
+            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            {
+                content.Add(new StringContent(title), "title");
+
+                if (!string.IsNullOrEmpty(topic))
+                    content.Add(new StringContent(topic), "topic");
+
+                if (acceptTerms != null)
+                {
+                    var terms = (bool)acceptTerms ? 1 : 0;
+                    content.Add(new StringContent(terms.ToString()), "terms");
+                }
+
+                if (Nsfw != null)
+                {
+                    var mature = (bool)Nsfw ? 1 : 0;
+                    content.Add(new StringContent(mature.ToString()), "mature");
+                }
+
+
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+            }
+
+            return result;
+        }
+
+        public async Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0)
+        {
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException(nameof(query));
+
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), searchGalleryUrl);
+            endpointUrl = string.Format(endpointUrl, sort.ToString().ToLower(), window.ToString().ToLower(), page);
+            endpointUrl += "?q=" + WebUtility.UrlEncode(query);
+
+            var result = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
+            return result;
         }
     }
 }
