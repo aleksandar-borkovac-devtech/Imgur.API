@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Imgur.API.Models
 {
     /// <summary>
-    /// A facade that encapsulates either an <see cref="GalleryImage"/> or an <see cref="GalleryAlbum"/>, meant generalize dealing with them.
+    /// A facade that encapsulates either an <see cref="GalleryImage"/> or an <see cref="GalleryAlbum"/>, meant unify their usage.
     /// </summary>
     public class GalleryEntryFacade : IGalleryAlbumImageBase, IAlbum, IImage
     {

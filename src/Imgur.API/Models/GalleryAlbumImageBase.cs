@@ -27,18 +27,20 @@ namespace Imgur.API.Models
         /// <summary>
         ///     Upvotes for the image.
         /// </summary>
+        [JsonProperty("ups")]
         public int? Ups { get; set; }
 
         /// <summary>
         ///     Number of downvotes for the image.
         /// </summary>
+        [JsonProperty("downs")]
         public int? Downs { get; set; }
 
         /// <summary>
         ///     Imgur popularity score.
         /// </summary>
+        [JsonProperty("score")]
         public int? Score { get; set; }
-        
 
         /// <summary>
         ///     Number of comments on the gallery image.
@@ -56,6 +58,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     Topic of the gallery image.
         /// </summary>
+        [JsonProperty("topic")]
         public string Topic { get; set; }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace Imgur.API.Models
         ///     The current user's vote on the album. null if not signed in, if the user hasn't voted on it, or if not submitted to
         ///     the gallery.
         /// </summary>
+        [JsonProperty("vote")]
         public string Vote { get; set; }
 	}
 }

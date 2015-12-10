@@ -22,6 +22,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The ID of the album cover image.
         /// </summary>
+        [JsonProperty("cover")]
         public string Cover { get; set; }
 
         /// <summary>
@@ -39,16 +40,19 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
         /// </summary>
+        [JsonProperty("privacy")]
         public AlbumPrivacy Privacy { get; set; }
 
         /// <summary>
         ///     The view layout of the album.
         /// </summary>
+        [JsonProperty("layout")]
         public string Layout { get; set; }
 
         /// <summary>
         ///     Order number of the album on the user's album page (defaults to 0 if their albums haven't been reordered).
         /// </summary>
+        [JsonProperty("order")]
         public int Order { get; set; }
 
         /// <summary>
@@ -60,6 +64,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
+        [JsonProperty("images")]
         [JsonConverter(typeof (EnumerableConverter<IImage>))]
         public IEnumerable<IImage> Images { get; set; } = new List<IImage>();
     }
