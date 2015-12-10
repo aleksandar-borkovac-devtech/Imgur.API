@@ -8,8 +8,6 @@ using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
-using Imgur.API.Models;
-using Imgur.API.Enums;
 
 namespace Imgur.API.Endpoints.Impl
 {

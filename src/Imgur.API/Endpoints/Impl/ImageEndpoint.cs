@@ -6,9 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
-using Imgur.API.Models;
 using Imgur.API.Models.Impl;
-using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints.Impl
 {

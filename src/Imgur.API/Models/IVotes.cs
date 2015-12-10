@@ -3,7 +3,7 @@
     /// <summary>
     ///     The base model for a vote.
     /// </summary>
-    public interface IVote
+    public interface IVotes
     {
         /// <summary>
         ///     Number of upvotes.

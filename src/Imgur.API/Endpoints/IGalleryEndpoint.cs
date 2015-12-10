@@ -1,11 +1,7 @@
 ﻿using Imgur.API.Enums;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
-using Imgur.API.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Imgur.API.Models.Impl;
 

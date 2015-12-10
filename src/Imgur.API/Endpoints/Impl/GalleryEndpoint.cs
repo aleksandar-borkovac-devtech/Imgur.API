@@ -8,8 +8,7 @@ using Imgur.API.Models;
 using Imgur.API.Authentication;
 using System.Net.Http;
 using Imgur.API.Exceptions;
-using Imgur.API.Enums;
-using Imgur.API.Models;
+using Imgur.API.Models.Impl;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -136,7 +135,7 @@ namespace Imgur.API.Endpoints.Impl
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="report"></param>
+        /// <param name="reason"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
@@ -168,14 +167,14 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <returns></returns>
-        public async Task<IVote> GetVotesAsync(string id)
+        public async Task<IVotes> GetVotesAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), getVotesUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var votes = await MakeEndpointRequestAsync<IVote>(HttpMethod.Get, endpointUrl);
+        	var votes = await MakeEndpointRequestAsync<IVotes>(HttpMethod.Get, endpointUrl);
         	return votes;
         }
         

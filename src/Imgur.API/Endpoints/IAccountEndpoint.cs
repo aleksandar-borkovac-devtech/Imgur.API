@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Imgur.API.Enums;
 using Imgur.API.Models;
-using Imgur.API.Enums;
 
 namespace Imgur.API.Endpoints
 {

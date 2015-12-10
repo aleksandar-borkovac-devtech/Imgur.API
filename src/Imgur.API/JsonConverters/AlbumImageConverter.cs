@@ -2,7 +2,6 @@
 using System.Reflection;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
-using Imgur.Windows.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

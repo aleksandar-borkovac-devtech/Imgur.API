@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Newtonsoft.Json;
 using System;
 
 namespace Imgur.API.Models.Impl
@@ -13,9 +14,9 @@ namespace Imgur.API.Models.Impl
 	/// <summary>
 	/// Description of Vote.
 	/// </summary>
-	public class Vote : IVote
+	public class Votes : IVotes
 	{
-		public Vote()
+		public Votes()
 		{
 		}
 

@@ -2,6 +2,7 @@
 using Imgur.API.Enums;
 using Imgur.API.Exceptions;
 using Imgur.API.Models;
+using Imgur.API.Models.Impl;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -613,7 +614,7 @@ namespace Imgur.API.Models
         }
 
         /// <summary>
-        /// Initializes the facade with the given <see cref="GalleryItem"/>.
+        /// Initializes the facade with the given <see cref="IGalleryAlbumImageBase"/>.
         /// </summary>
         /// <param name="item"></param>
         public GalleryEntryFacade(IGalleryAlbumImageBase item)
