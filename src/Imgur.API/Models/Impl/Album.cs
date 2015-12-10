@@ -59,7 +59,7 @@ namespace Imgur.API.Models.Impl
         ///     The view layout of the album.
         /// </summary>
         [JsonProperty("layout")]
-        public string Layout { get; set; }
+        public AlbumLayout Layout { get; set; }
 
         /// <summary>
         ///     Order number of the album on the user's album page (defaults to 0 if their albums haven't been reordered).

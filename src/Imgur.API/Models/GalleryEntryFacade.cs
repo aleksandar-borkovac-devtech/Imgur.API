@@ -373,7 +373,7 @@ namespace Imgur.API.Models
             }
         }
 
-        public string Layout
+        public AlbumLayout Layout
         {
             get
             {
