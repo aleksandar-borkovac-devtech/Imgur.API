@@ -53,12 +53,14 @@ namespace Imgur.API.Models.Impl
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
         /// </summary>
         [JsonProperty("privacy")]
+        [JsonConverter(typeof(AlbumPrivacyConverter))]
         public AlbumPrivacy Privacy { get; set; }
 
         /// <summary>
         ///     The view layout of the album.
         /// </summary>
         [JsonProperty("layout")]
+        [JsonConverter(typeof(AlbumLayoutConverter))]
         public AlbumLayout Layout { get; set; }
 
         /// <summary>

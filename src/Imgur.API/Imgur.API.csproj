@@ -43,10 +43,12 @@
     <Compile Include="Authentication\Impl\MashapeClient.cs" />
     <Compile Include="Authentication\OAuth2ResponseType.cs" />
     <Compile Include="Endpoints\IAccountEndpoint.cs" />
+    <Compile Include="Endpoints\IAlbumEndpoint.cs" />
     <Compile Include="Endpoints\IEndpoint.cs" />
     <Compile Include="Endpoints\IGalleryEndpoint.cs" />
     <Compile Include="Endpoints\IImageEndpoint.cs" />
     <Compile Include="Endpoints\Impl\AccountEndpoint.cs" />
+    <Compile Include="Endpoints\Impl\AlbumEndpoint.cs" />
     <Compile Include="Endpoints\Impl\EndpointBase.cs" />
     <Compile Include="Endpoints\Impl\GalleryEndpoint.cs" />
     <Compile Include="Endpoints\Impl\ImageEndpoint.cs" />
@@ -54,9 +56,11 @@
     <Compile Include="Endpoints\Impl\RateLimitEndpoint.cs" />
     <Compile Include="Endpoints\IOAuth2Endpoint.cs" />
     <Compile Include="Endpoints\IRateLimitEndpoint.cs" />
+    <Compile Include="Enums\AlbumLayout.cs" />
     <Compile Include="Exceptions\MashapeException.cs" />
     <Compile Include="Exceptions\ImgurException.cs" />
     <Compile Include="JsonConverters\AlbumImageConverter.cs" />
+    <Compile Include="JsonConverters\EnumConverters.cs" />
     <Compile Include="JsonConverters\EnumerableConverter.cs" />
     <Compile Include="JsonConverters\EpochTimeConverter.cs" />
     <Compile Include="JsonConverters\GalleryItemConverter.cs" />
