@@ -25,7 +25,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     OPTIONAL, boolean representing whether or not the user is following the tag in their custom gallery.
         /// </summary>
-        bool Following { get; set; }
+        bool? Following { get; set; }
 
         /// <summary>
         ///     An array of all the gallery items in the custom gallery
