@@ -8,7 +8,7 @@
         /// <summary>
         ///     ID of the topic.
         /// </summary>
-        string Id { get; set; }
+        int Id { get; set; }
 
         /// <summary>
         ///     Topic name.
@@ -28,6 +28,6 @@
         /// <summary>
         ///     Whether it is an ephemeral (e.g. current events) topic.
         /// </summary>
-        string Ephemeral { get; set; }
+        bool Ephemeral { get; set; }
     }
 }
