@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Imgur.API.Models.Impl;
 
 namespace Imgur.API.Endpoints
 {
@@ -42,6 +43,12 @@ namespace Imgur.API.Endpoints
         /// <returns></returns>
         Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true);
 
+        Task<IGalleryMeme> GetMemesSubGalleryAsync(GallerySortBy sort, uint page = 0, GalleryWindow window = GalleryWindow.Week);
+        Task<GalleryMemeImage> GetMemesSubGalleryImageAsync(string id);
+        
+        Task<GalleryRedditImage> GetSubredditGalleryAsync(string subredditName, GallerySortBy sort = GallerySortBy.Time, uint page = 0, GalleryWindow window = GalleryWindow.Week);
+        Task<GalleryRedditImage> GetSubredditImageAsync(string subredditName, string id);
+        
         Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, uint page = 0);
         Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
 
@@ -49,13 +56,13 @@ namespace Imgur.API.Endpoints
 
         Task<ITagVote[]> GetGalleryItemTagsAsync(string id);
 
-        Task<IBasic<object>> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
-
+        Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
+        
         Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0);
 
-        Task<IBasic<object>> PublishToGalleryAsync(string title, string topic = null, bool acceptTerms = false, bool NSFW = false);
+        Task<object> PublishToGalleryAsync(string title, string topic = null, bool acceptTerms = false, bool NSFW = false);
 
-        Task<IBasic<object>> DeleteFromGalleryAsync(string id);
+        Task<object> DeleteFromGalleryAsync(string id);
 
         Task<IGalleryAlbumImageBase> GetGalleryAlbumAsync(string id);
 
