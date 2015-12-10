@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Imgur.API.Models
+namespace Imgur.API.Models.Impl
 {
 	/// <summary>
 	/// Description of GalleryAlbumImageBase.

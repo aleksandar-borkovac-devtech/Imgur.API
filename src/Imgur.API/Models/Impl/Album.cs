@@ -2,7 +2,7 @@
  * Created by SharpDevelop.
  * User: lbokkers
  * Date: 09-12-2015
- * Time: 3:57 PM
+ * Time: 3:54 PM
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
@@ -12,12 +12,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Imgur.API.Models
+namespace Imgur.API.Models.Impl
 {
 	/// <summary>
-	/// Description of GalleryAlbum.
+	/// Description of Album.
 	/// </summary>
-	public class GalleryAlbum : GalleryAlbumImageBase, IAlbum
+	public class Album : AlbumImageBase, IAlbum
 	{
         /// <summary>
         ///     The ID of the album cover image.
@@ -36,6 +36,18 @@ namespace Imgur.API.Models
         /// </summary>
         [JsonProperty("cover_height")]
         public int? CoverHeight { get; set; }
+
+        /// <summary>
+        ///     The account username or null if it's anonymous.
+        /// </summary>
+        [JsonProperty("account_url")]
+        public string AccountUrl { get; set; }
+
+        /// <summary>
+        ///     The account ID or null if it's anonymous.
+        /// </summary>
+        [JsonProperty("account_id")]
+        public string AccountId { get; set; }
 
         /// <summary>
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
@@ -67,5 +79,5 @@ namespace Imgur.API.Models
         [JsonProperty("images")]
         [JsonConverter(typeof (EnumerableConverter<IImage>))]
         public IEnumerable<IImage> Images { get; set; } = new List<IImage>();
-    }
+	}
 }

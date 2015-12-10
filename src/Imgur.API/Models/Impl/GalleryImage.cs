@@ -9,7 +9,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Imgur.API.Models
+namespace Imgur.API.Models.Impl
 {
 	/// <summary>
 	/// Description of GalleryImage.
