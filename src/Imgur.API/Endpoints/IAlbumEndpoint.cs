@@ -16,7 +16,7 @@ namespace Imgur.API.Endpoints
 
         Task<object> CreateAlbumAsync(
             string title = null, string description = null,
-            AlbumPrivacy? privacy = AlbumPrivacy.Secret, AlbumLayout layout = AlbumLayout.Vertical,
+            AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
             string coverID = null, string[] imageIds = null);
 
         Task<object> UpdateAlbumAsync(string album,
