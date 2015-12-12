@@ -68,7 +68,7 @@ namespace Imgur.API.Models.Impl
         ///     Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
         /// </summary>
         [JsonProperty("nsfw")]
-        public bool Nsfw { get; set; }
+        public bool? Nsfw { get; set; }
 
         /// <summary>
         ///     If the image has been categorized then this will contain the section the image belongs in. (funny, cats,

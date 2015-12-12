@@ -254,7 +254,7 @@ namespace Imgur.API.Models
             }
         }
 
-        public bool Nsfw
+        public bool? Nsfw
         {
             get
             {

@@ -27,7 +27,7 @@ namespace Imgur.API.Models
 		
 		string DeleteHash {get;set;}
 		
-		bool Nsfw {get;set;}
+		bool? Nsfw {get;set;}
 		
 		string Section {get;set;}
 		
