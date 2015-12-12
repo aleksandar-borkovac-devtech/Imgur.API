@@ -16,13 +16,15 @@ namespace Imgur.API.Models.Impl
         /// <param name="tokenType">The type of token, typically "Bearer".</param>
         /// <param name="accountId">The account id.</param>
         /// <param name="expiresIn">The time in seconds when the token expires. Usually one hour from the request.</param>
-        public OAuth2Token(string accessToken, string refreshToken, string tokenType, string accountId, int expiresIn)
+        /// <param name="accountName">The account name.</param>
+        public OAuth2Token(string accessToken, string refreshToken, string tokenType, string accountId, int expiresIn, string accountName = null)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             TokenType = tokenType;
             AccountId = accountId;
             ExpiresIn = expiresIn;
+            AccountName = accountName;
         }
 
         /// <summary>
@@ -59,5 +61,11 @@ namespace Imgur.API.Models.Impl
         ///     The DateTimeOffset when the token expires. Usually one hour from the request.
         /// </summary>
         public virtual DateTimeOffset ExpiresAt => DateTimeOffset.UtcNow.AddSeconds(ExpiresIn);
+
+        /// <summary>
+        /// The user's AccountName.
+        /// </summary>
+        [JsonProperty("account_name")]
+        public string AccountName { get; }
     }
 }

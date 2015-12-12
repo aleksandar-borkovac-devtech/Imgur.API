@@ -10,22 +10,8 @@ namespace Imgur.API.Endpoints
     /// <summary>
     ///     Gallery related actions.
     /// </summary>
-    public interface IGalleryEndpoint
+    public interface IGalleryEndpoint : IEndpoint
     {
-
-        /// <summary>
-        ///     Returns the images currently in the gallery.
-        /// </summary>
-        /// <param name="section">What section of the gallery to fetch.</param>
-        /// <param name="sort">How to sort the gallery.</param>
-        /// <param name="page">What page of the gallery to fetch.</param>
-        /// <param name="showViral">Whether to show viral images or not.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
-        Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral = true);
-
         /// <summary>
         ///     Returns the images currently in the gallery.
         /// </summary>

@@ -15,6 +15,9 @@ namespace Imgur.API.Models
 	/// </summary>
 	public interface IRedditItem
 	{
-		string RedditComments {get;set;}
+        /// <summary>
+        /// Link to reddit comments url.
+        /// </summary>
+		string RedditCommentsUrl {get;set;}
 	}
 }

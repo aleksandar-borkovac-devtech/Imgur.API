@@ -7,7 +7,6 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using Newtonsoft.Json;
-using System;
 
 namespace Imgur.API.Models.Impl
 {
@@ -16,17 +15,16 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class Votes : IVotes
 	{
-		public Votes()
-		{
-		}
-
-		#region IVote implementation
+        /// <summary>
+        /// Number of upvotes.
+        /// </summary>
 		[JsonProperty("ups")]
 		public int Ups {get;set;}
 
+        /// <summary>
+        /// Number of downvotes.
+        /// </summary>
 		[JsonProperty("downs")]
 		public int Downs {get;set;}
-
-		#endregion
 	}
 }

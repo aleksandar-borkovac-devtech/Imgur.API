@@ -9,6 +9,7 @@ using Imgur.API.JsonConverters;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -85,13 +86,28 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
         internal async Task<T> MakeEndpointRequestAsync<T>(HttpMethod httpMethod, string endpointUrl,
-            HttpContent content = null)
+            HttpContent content = null, bool requiresAuth = false)
         {
             if (httpMethod == null)
                 throw new ArgumentNullException(nameof(httpMethod));
 
             if (string.IsNullOrEmpty(endpointUrl))
                 throw new ArgumentNullException(nameof(endpointUrl));
+
+            if (requiresAuth)
+            { 
+                if(ApiClient.OAuth2Token == null)
+                    throw new InvalidOperationException("Requested endpoint call requires an authorized IApiClient.");
+
+                // If the token has expired, refresh.
+                if (ApiClient.OAuth2Token.ExpiresAt < DateTimeOffset.UtcNow)
+                {
+                    Debug.WriteLine("Refreshing token...");
+                    var authEndpoint = new OAuth2Endpoint(ApiClient);
+                    var token = await authEndpoint.GetTokenByRefreshTokenAsync(ApiClient.OAuth2Token.RefreshToken);
+                    ApiClient.SetOAuth2Token(token);
+                }
+            }
 
             using (var httpClient = GetHttpClient())
             {

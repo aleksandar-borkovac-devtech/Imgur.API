@@ -23,7 +23,7 @@ namespace Imgur.API.Models.Impl
 		#region IRedditItem implementation
 
 		[JsonProperty("reddit_comments")]
-		public string RedditComments {get;set;}
+		public string RedditCommentsUrl {get;set;}
 
 		#endregion
 	}

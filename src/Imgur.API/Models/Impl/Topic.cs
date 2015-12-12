@@ -7,7 +7,6 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using Newtonsoft.Json;
-using System;
 
 namespace Imgur.API.Models.Impl
 {
@@ -16,27 +15,34 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class Topic : ITopic
 	{
-		public Topic()
-		{
-		}
-
-		#region ITopic implementation
-
+        /// <summary>
+        ///  ID of the topic. 
+        /// </summary>
 		[JsonProperty("id")]
 		public int Id {get;set;}
 
+        /// <summary>
+        /// Topic name.
+        /// </summary>
 		[JsonProperty("name")]
 		public string Name {get;set;}
 
+        /// <summary>
+        /// Description of the topic.
+        /// </summary>
 		[JsonProperty("description")]
 		public string Description { get;set;}
 
+        /// <summary>
+        /// CSS class used on website to style the ephemeral topic.
+        /// </summary>
 		[JsonProperty("css")]
 		public string Css {get;set;}
 
+        /// <summary>
+        /// Whether it is an ephemeral (e.g. current events) topic.
+        /// </summary>
 		[JsonProperty("Ephemeral")]
 		public bool Ephemeral{get;set;}
-
-		#endregion
 	}
 }

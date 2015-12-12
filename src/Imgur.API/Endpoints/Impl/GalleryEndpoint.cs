@@ -10,6 +10,7 @@ using System.Net.Http;
 using Imgur.API.Exceptions;
 using Imgur.API.Models.Impl;
 using System.Net;
+using System.Diagnostics;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -52,33 +53,6 @@ namespace Imgur.API.Endpoints.Impl
         /// <summary>
         ///     Returns the images currently in the gallery.
         /// </summary>
-        /// <param name="section">What section of the gallery to fetch.</param>
-        /// <param name="sort">How to sort the gallery.</param>
-        /// <param name="page">What page of the gallery to fetch.</param>
-        /// <param name="showViral">Whether to show viral images or not.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
-        public async Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, uint page = 0, bool showViral = true)
-        {
-            if(sort == GallerySortBy.Rising && section != GallerySection.User)
-                throw new ArgumentException(nameof(sort) + " can only be rising if " + nameof(section) + " is user.");
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryUrl);
-            endpointUrl = string.Format(
-                endpointUrl,
-                section.ToString().ToLower(),
-                sort.ToString().ToLower(),
-                page,
-                showViral);
-            var gallery = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
-            return gallery;
-        }
-
-        /// <summary>
-        ///     Returns the images currently in the gallery.
-        /// </summary>
         /// <param name="section"></param>
         /// <param name="sort"></param>
         /// <param name="window"></param>
@@ -93,7 +67,7 @@ namespace Imgur.API.Endpoints.Impl
             if (sort == GallerySortBy.Rising && section != GallerySection.User)
                 throw new ArgumentException(nameof(sort) + " can only be rising if " + nameof(section) + " is user.");
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryUrl);
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryUrl2);
             endpointUrl = string.Format(
                 endpointUrl,
                 section.ToString().ToLower(),
@@ -101,6 +75,7 @@ namespace Imgur.API.Endpoints.Impl
                 window.ToString().ToLower(),
                 page,
                 showViral);
+            Debug.WriteLine("gallery endpoint url: " + endpointUrl);
             var gallery = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
             return gallery;
         }

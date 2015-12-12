@@ -36,5 +36,10 @@ namespace Imgur.API.Models
         ///     The time in seconds when the token expires. Usually one hour from when the token was created.
         /// </summary>
         int ExpiresIn { get; }
+
+        /// <summary>
+        ///     The users name.
+        /// </summary>
+        string AccountName { get; }
     }
 }
