@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
         "Imgur.API is a .NET implementation of Imgur's v3 API. Supports Imgur's free and Mashape's commercial API endpoints."
         )]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Damien Dennehy")]
+[assembly: AssemblyCompany("Damien Dennehy & Lars Bokkers")]
 [assembly: AssemblyProduct("Imgur.API")]
 [assembly: AssemblyCopyright("Copyright © 2015-2016")]
 [assembly: AssemblyTrademark("")]
@@ -32,6 +32,6 @@ using System.Runtime.CompilerServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.2.0.*")]
+[assembly: AssemblyFileVersion("3.2.0.0")]
+[assembly: AssemblyInformationalVersion("1.1.0.0")]
