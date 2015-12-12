@@ -8,13 +8,29 @@ using System.Threading.Tasks;
 
 namespace Imgur.API.JsonConverters
 {
+    /// <summary>
+    /// Converts a json string to an album layout value.
+    /// </summary>
     public class AlbumLayoutConverter : JsonConverter
     {
+        /// <summary>
+        ///     Determines whether this instance can convert the specified object type.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(string);
         }
 
+        /// <summary>
+        ///     Reads the JSON representation of the object.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var enumString = reader.Value as string;
@@ -40,19 +56,41 @@ namespace Imgur.API.JsonConverters
             }
         }
 
+        /// <summary>
+        ///     Writes the JSON representation of the object.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="serializer"></param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Converts a json string to an album privacy value.
+    /// </summary>
     public class AlbumPrivacyConverter : JsonConverter
     {
+        /// <summary>
+        ///     Determines whether this instance can convert the specified object type.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(string);
         }
 
+        /// <summary>
+        ///     Reads the JSON representation of the object.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var enumString = reader.Value as string;
@@ -75,6 +113,12 @@ namespace Imgur.API.JsonConverters
             }
         }
 
+        /// <summary>
+        ///     Writes the JSON representation of the object.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="serializer"></param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();

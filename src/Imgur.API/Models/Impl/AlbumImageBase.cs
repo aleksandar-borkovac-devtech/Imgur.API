@@ -17,10 +17,6 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class AlbumImageBase : IAlbumImageBase
 	{
-		public AlbumImageBase()
-		{
-		}
-		
         /// <summary>
         ///     The ID for the album.
         /// </summary>

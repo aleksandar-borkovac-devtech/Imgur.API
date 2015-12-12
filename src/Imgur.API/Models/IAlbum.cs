@@ -58,8 +58,14 @@ namespace Imgur.API.Models
         /// </summary>
         IEnumerable<IImage> Images { get; set; }
 
+        /// <summary>
+        /// The account username or null if it's anonymous.
+        /// </summary>
         string AccountUrl { get; set; }
 
+        /// <summary>
+        /// The account ID or null if it's anonymous.
+        /// </summary>
         string AccountId { get; set; }
     }
 }

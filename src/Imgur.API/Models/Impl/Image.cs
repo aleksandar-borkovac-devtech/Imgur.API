@@ -16,10 +16,6 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class Image : AlbumImageBase, IImage
 	{
-		public Image()
-		{
-		}
-
         /// <summary>
         ///     Image MIME type.
         /// </summary>

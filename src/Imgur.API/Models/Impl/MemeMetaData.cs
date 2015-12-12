@@ -11,29 +11,34 @@ using System;
 
 namespace Imgur.API.Models.Impl
 {
-	/// <summary>
-	/// Description of MemeMetadata.
-	/// </summary>
-	public class MemeMetaData : IMemeMetaData
-	{
-		public MemeMetaData()
-		{
-		}
+    /// <summary>
+    /// Represents basic meme metadata.
+    /// </summary>
+    public class MemeMetaData : IMemeMetaData
+    {
+        /// <summary>
+        /// The name of the meme used.
+        /// </summary>
+        [JsonProperty("meme_name")]
+        public string MemeName { get; set; }
 
-		#region IMemeMetaData implementation
+        /// <summary>
+        /// The top text of the meme.
+        /// </summary>
+        [JsonProperty("top_text")]
+        public string TopText { get; set; }
 
-		[JsonProperty("meme_name")]
-		public string MemeName {get;set;}
+        /// <summary>
+        /// The bottom text of the meme.
+        /// </summary>
+        [JsonProperty("bottom_text")]
+        public string BottomText { get; set; }
 
-		[JsonProperty("top_text")]
-		public string TopText {get;set;}
-
-		[JsonProperty("bottom_text")]
-		public string BottomText {get;set;}
-
-		[JsonProperty("bg_image")]
-		public string BgImage {get;set;}
-
-		#endregion
-	}
+        /// <summary>
+        /// The image id of the background image of the meme.
+        /// </summary>
+        [JsonProperty("bg_image")]
+        public string BgImage { get; set; }
+    }
 }
+

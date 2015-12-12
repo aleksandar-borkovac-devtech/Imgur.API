@@ -52,7 +52,10 @@ namespace Imgur.API.Models
         /// </summary>
         int? TopicId { get; set; }
 
-        string Vote{get;set; }
+        /// <summary>
+        ///     The current user's vote on the album. null if not signed in or if the user hasn't voted on it.
+        /// </summary>
+        string Vote {get;set; }
 
         /// <summary>
         ///     The username of the account that uploaded it, or null.

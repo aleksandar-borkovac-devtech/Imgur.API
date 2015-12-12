@@ -16,6 +16,9 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class GalleryImage : GalleryAlbumImageBase, IImage
 	{
+        /// <summary>
+        ///     OPTIONAL, the original filename, if you're logged in as the image owner
+        /// </summary>
         [JsonProperty("name")]
 		public string Name {get;set;}
 		

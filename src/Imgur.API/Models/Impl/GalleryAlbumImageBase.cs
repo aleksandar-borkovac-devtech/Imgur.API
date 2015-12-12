@@ -19,11 +19,6 @@ namespace Imgur.API.Models.Impl
 	/// </summary>
 	public class GalleryAlbumImageBase : AlbumImageBase, IGalleryAlbumImageBase
 	{
-
-		public GalleryAlbumImageBase()
-		{
-		}
-
         /// <summary>
         ///     Upvotes for the image.
         /// </summary>

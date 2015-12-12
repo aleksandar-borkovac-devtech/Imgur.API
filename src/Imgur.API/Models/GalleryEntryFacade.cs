@@ -48,6 +48,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Upvotes for the image.
+        /// </summary>
         public int? Ups
         {
             get
@@ -60,6 +63,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Number of downvotes for the image.
+        /// </summary>
         public int? Downs
         {
             get
@@ -72,6 +78,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Imgur popularity score.
+        /// </summary>
         public int? Score
         {
             get
@@ -85,6 +94,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Number of comments on the gallery album.
+        /// </summary>
         public int? CommentCount
         {
             get
@@ -98,6 +110,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Up to 10 top level comments, sorted by "best".
+        /// </summary>
         public IEnumerable<IComment> CommentPreview
         {
             get
@@ -111,6 +126,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Topic of the gallery album.
+        /// </summary>
         public string Topic
         {
             get
@@ -124,6 +142,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Topic ID of the gallery album.
+        /// </summary>
         public int? TopicId
         {
             get
@@ -137,6 +158,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The current user's vote on the album. null if not signed in or if the user hasn't voted on it.
+        /// </summary>
         public string Vote
         {
             get
@@ -150,6 +174,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The username of the account that uploaded it, or null.
+        /// </summary>
         public string AccountUrl
         {
             get
@@ -163,6 +190,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The account ID for the uploader, or null.
+        /// </summary>
         public string AccountId
         {
             get
@@ -176,6 +206,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The ID for the image or album.
+        /// </summary>
         public string Id
         {
             get
@@ -189,6 +222,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The title of the image or album.
+        /// </summary>
         public string Title
         {
             get
@@ -202,6 +238,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Description of the image or album.
+        /// </summary>
         public string Description
         {
             get
@@ -215,6 +254,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Time uploaded or added to gallery.
+        /// </summary>
         public DateTimeOffset DateTime
         {
             get
@@ -228,6 +270,11 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The direct link to the the image or album.
+        /// 
+        /// Note: if fetching an animated GIF that was over 20MB in original size, a .gif thumbnail will be returned
+        /// </summary>
         public string Link
         {
             get
@@ -241,6 +288,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, the deletehash, if you're logged in as the image owner.
+        /// </summary>
         public string DeleteHash
         {
             get
@@ -254,6 +304,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Indicates if the image has been marked as nsfw or not. Defaults to null if information is not available.
+        /// </summary>
         public bool? Nsfw
         {
             get
@@ -267,6 +320,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// If the image has been categorized by our backend then this will contain the section the image belongs in. (funny, cats, adviceanimals, wtf, etc)
+        /// </summary>
         public string Section
         {
             get
@@ -280,6 +336,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Indicates if the current user favorited the image. Defaults to false if not signed in.
+        /// </summary>
         public bool Favorite
         {
             get
@@ -293,6 +352,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The number of image views.
+        /// </summary>
         public int Views
         {
             get
@@ -306,6 +368,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The ID of the album cover image.
+        /// </summary>
         public string Cover
         {
             get
@@ -325,6 +390,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The width, in pixels, of the album cover image.
+        /// </summary>
         public int? CoverWidth
         {
             get
@@ -341,6 +409,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The height, in pixels, of the album cover image.
+        /// </summary>
         public int? CoverHeight
         {
             get
@@ -357,6 +428,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The privacy level of the album, you can only view public if not logged in as album owner.
+        /// </summary>
         public AlbumPrivacy Privacy
         {
             get
@@ -373,6 +447,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The view layout of the album.
+        /// </summary>
         public AlbumLayout Layout
         {
             get
@@ -389,6 +466,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     Order number of the album on the user's album page (defaults to 0 if their albums haven't been reordered).
+        /// </summary>
         public int Order
         {
             get
@@ -405,6 +485,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     The total number of images in the album.
+        /// </summary>
         public int ImageCount
         {
             get
@@ -421,6 +504,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        ///     An array of all the images in the album (only available when requesting the direct album).
+        /// </summary>
         public IEnumerable<IImage> Images
         {
             get
@@ -437,6 +523,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Is the image animated.
+        /// </summary>
         public bool Animated
         {
             get
@@ -453,6 +542,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The width of the image in pixels.
+        /// </summary>
         public int Width
         {
             get
@@ -469,6 +561,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The height of the image in pixels.
+        /// </summary>
         public int Height
         {
             get
@@ -485,6 +580,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// The size of the image in bytes.
+        /// </summary>
         public int Size
         {
             get
@@ -501,6 +599,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Image MIME type.
+        /// </summary>
         public string Type
         {
             get
@@ -517,6 +618,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// Bandwidth consumed by the image in bytes.
+        /// </summary>
         public long Bandwidth
         {
             get
@@ -533,6 +637,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, the original filename, if you're logged in as the image owner.
+        /// </summary>
         public string Name
         {
             get
@@ -549,6 +656,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, The .gifv link. Only available if the image is animated and type is 'image/gif'.
+        /// </summary>
         public string Gifv
         {
             get
@@ -565,6 +675,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, The direct link to the .mp4. Only available if the image is animated and type is 'image/gif'.
+        /// </summary>
         public string Mp4
         {
             get
@@ -581,6 +694,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, The direct link to the .webm. Only available if the image is animated and type is 'image/gif'.
+        /// </summary>
         public string Webm
         {
             get
@@ -597,6 +713,9 @@ namespace Imgur.API.Models
             }
         }
 
+        /// <summary>
+        /// OPTIONAL, Whether the image has a looping animation. Only available if the image is animated and type is 'image/gif'.
+        /// </summary>
         public bool? Looping
         {
             get

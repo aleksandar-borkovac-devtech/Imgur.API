@@ -326,6 +326,11 @@ namespace Imgur.API.Endpoints.Impl
         	return result;
         }
 
+        /// <summary>
+        /// View tags for a gallery item.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -337,6 +342,13 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Returns a random set of gallery images.
+        /// 
+        /// Pages are regenerated every hour.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0)
         {
             if (page > randomPageMax)
@@ -348,6 +360,14 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// View images for a gallery tag
+        /// </summary>
+        /// <param name="tagname"></param>
+        /// <param name="sort"></param>
+        /// <param name="window"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             if (string.IsNullOrEmpty(tagname))
@@ -362,7 +382,13 @@ namespace Imgur.API.Endpoints.Impl
             var result = await MakeEndpointRequestAsync<ITag>(HttpMethod.Get, endpointUrl);
             return result;
         }
-        
+
+        /// <summary>
+        /// View a single image in a gallery tag
+        /// </summary>
+        /// <param name="tagname"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
         {
             if (string.IsNullOrEmpty(tagname))
@@ -378,6 +404,13 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Vote for a tag, 'up' or 'down' vote. Send the same value again to undo a vote.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tagname"></param>
+        /// <param name="vote"></param>
+        /// <returns></returns>
         public async Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote)
         {
             if (string.IsNullOrEmpty(id))
@@ -393,6 +426,15 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Share an Album or Image to the Gallery.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="topic"></param>
+        /// <param name="acceptTerms"></param>
+        /// <param name="Nsfw"></param>
+        /// <returns></returns>
         public async Task<object> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null)
         {
             if (string.IsNullOrEmpty(id))
@@ -431,6 +473,14 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Search the gallery with a given query string.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="sort"></param>
+        /// <param name="window"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0)
         {
             if (string.IsNullOrEmpty(query))

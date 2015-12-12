@@ -11,14 +11,33 @@ using System;
 namespace Imgur.API.Enums
 {
 	/// <summary>
-	/// Description of Reporting.
+	/// Reasons to report a gallery item.
 	/// </summary>
 	public enum Reporting
 	{
+        /// <summary>
+        /// The content does not belong on imgur.
+        /// </summary>
 		DoesNotBelongOnImgur = 1,
+
+        /// <summary>
+        /// The content is spam.
+        /// </summary>
 		Spam = 2,
+
+        /// <summary>
+        /// The content is abusive.
+        /// </summary>
 		Abusive = 3,
+
+        /// <summary>
+        /// The content is mature, but not marked as such.
+        /// </summary>
 		MatureContentNotMarked = 4,
+
+        /// <summary>
+        /// The content is pornography.
+        /// </summary>
 		Pornography = 5
 	}
 }

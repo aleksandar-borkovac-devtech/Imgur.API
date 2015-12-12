@@ -78,6 +78,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="endpointUrl">The endpointUrl that should be called.</param>
         /// <param name="httpMethod">The HttpMethod that should be used.</param>
         /// <param name="content">The HttpContent that should be submitted.</param>
+        /// <param name="requiresAuth">Whether or not this request needs authentication.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>

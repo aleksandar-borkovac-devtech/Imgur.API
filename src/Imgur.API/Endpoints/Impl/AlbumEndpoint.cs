@@ -10,6 +10,9 @@ using System.Net.Http;
 
 namespace Imgur.API.Endpoints.Impl
 {
+    /// <summary>
+    /// Implements album related actions.
+    /// </summary>
     public class AlbumEndpoint : EndpointBase, IAlbumEndpoint
     {
         private const string getAlbumUrl = "album/{0}";
@@ -23,10 +26,19 @@ namespace Imgur.API.Endpoints.Impl
         private const string addAlbumImagesUrl = "album/{0}/add";
         private const string removeAlbumImagesUrl = "album/{0}/remove_images";
 
+        /// <summary>
+        /// Initializes the endpoint.
+        /// </summary>
+        /// <param name="client"></param>
         public AlbumEndpoint(IApiClient client) : base(client)
         {
         }
 
+        /// <summary>
+        /// Get information about a specific album.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Album> GetAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -38,6 +50,12 @@ namespace Imgur.API.Endpoints.Impl
             return album;
         }
 
+        /// <summary>
+        /// Get information about an image in an album, any additional actions found in <see cref="IImageEndpoint"/> will also work. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
         public async Task<Image> GetAlbumImageAsync(string id, string imageId)
         {
             if (string.IsNullOrEmpty(id))
@@ -52,6 +70,11 @@ namespace Imgur.API.Endpoints.Impl
             return image;
         }
 
+        /// <summary>
+        /// Return all of the images in the album
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Image[]> GetAlbumImagesAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -63,6 +86,18 @@ namespace Imgur.API.Endpoints.Impl
             return images;
         }
 
+        /// <summary>
+        /// Create a new album. Optional parameter of ids[] is an array of image ids to add to the album.
+        ///
+        /// This method is available without authenticating an account. Doing so will create an anonymous album which is not tied to an account.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="privacy"></param>
+        /// <param name="layout"></param>
+        /// <param name="coverID"></param>
+        /// <param name="imageIds"></param>
+        /// <returns></returns>
         public async Task<object> CreateAlbumAsync(
             string title = null, string description = null,
             AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
@@ -98,9 +133,12 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
-
-
-
+        /// <summary>
+        /// Takes parameter, ids[], as an array of ids to add to the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="album"></param>
+        /// <param name="imageIds"></param>
+        /// <returns></returns>
         public async Task<object> AddAlbumImagesAsync(string album, string[] imageIds)
         {
             if (string.IsNullOrEmpty(album))
@@ -123,6 +161,11 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Delete an album with a given ID. You are required to be logged in as the user to delete the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="album"></param>
+        /// <returns></returns>
         public async Task<object> DeleteAlbumAsync(string album)
         {
             if (string.IsNullOrEmpty(album))
@@ -135,6 +178,11 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Favorite an album with a given ID. The user is required to be logged in to favorite the album.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<object> FavoriteAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -147,6 +195,12 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Takes parameter, ids[], as an array of ids to from the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="album"></param>
+        /// <param name="imageIds"></param>
+        /// <returns></returns>
         public async Task<object> RemoveAlbumImagesAsync(string album, string[] imageIds)
         {
             if (string.IsNullOrEmpty(album))
@@ -169,6 +223,12 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Sets the images for an album, removes all other images and only uses the images in this request. For anonymous albums, album should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="album"></param>
+        /// <param name="imageIds"></param>
+        /// <returns></returns>
         public async Task<object> SetAlbumImagesAsync(string album, string[] imageIds)
         {
             if (string.IsNullOrEmpty(album))
@@ -191,6 +251,17 @@ namespace Imgur.API.Endpoints.Impl
             return result;
         }
 
+        /// <summary>
+        /// Update the information of an album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        /// </summary>
+        /// <param name="album"></param>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="privacy"></param>
+        /// <param name="layout"></param>
+        /// <param name="coverID"></param>
+        /// <param name="imageIds"></param>
+        /// <returns></returns>
         public async Task<object> UpdateAlbumAsync(string album,
             string title = null, string description = null,
             AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
