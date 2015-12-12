@@ -15,8 +15,8 @@ namespace Imgur.API.Endpoints
 	/// <summary>
 	///  Converation related endpoints.
 	/// </summary>
-	public interface IConversationEndpoint
-	{
+	public interface IConversationEndpoint : IEndpoint
+    {
         /// <summary>
         /// Get list of all conversations for the logged in user.
         /// </summary>

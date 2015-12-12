@@ -11,7 +11,7 @@ namespace Imgur.API.Endpoints
     /// <summary>
     /// Album related actions.
     /// </summary>
-    public interface IAlbumEndpoint
+    public interface IAlbumEndpoint : IEndpoint
     {
         /// <summary>
         /// Get information about a specific album.
