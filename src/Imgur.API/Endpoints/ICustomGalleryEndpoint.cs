@@ -1,5 +1,6 @@
 ﻿using Imgur.API.Enums;
 using Imgur.API.Models;
+using Imgur.API.Models.Impl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Imgur.API.Endpoints
         /// <param name="window"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        Task<ICustomGallery> GetCustomGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+        Task<CustomGallery> GetCustomGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
 
         /// <summary>
         /// Retrieve user's filtered out gallery.
@@ -29,7 +30,7 @@ namespace Imgur.API.Endpoints
         /// <param name="window"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        Task<ICustomGallery> GetFilteredOutGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+        Task<CustomGallery> GetFilteredOutGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
 
         /// <summary>
         /// View a single image in a user's custom gallery.
