@@ -44,11 +44,13 @@
     <Compile Include="Authentication\OAuth2ResponseType.cs" />
     <Compile Include="Endpoints\IAccountEndpoint.cs" />
     <Compile Include="Endpoints\IAlbumEndpoint.cs" />
+    <Compile Include="Endpoints\IConversationEndpoint.cs" />
     <Compile Include="Endpoints\IEndpoint.cs" />
     <Compile Include="Endpoints\IGalleryEndpoint.cs" />
     <Compile Include="Endpoints\IImageEndpoint.cs" />
     <Compile Include="Endpoints\Impl\AccountEndpoint.cs" />
     <Compile Include="Endpoints\Impl\AlbumEndpoint.cs" />
+    <Compile Include="Endpoints\Impl\ConversationEndpoint.cs" />
     <Compile Include="Endpoints\Impl\EndpointBase.cs" />
     <Compile Include="Endpoints\Impl\GalleryEndpoint.cs" />
     <Compile Include="Endpoints\Impl\ImageEndpoint.cs" />

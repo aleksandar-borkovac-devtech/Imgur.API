@@ -9,7 +9,7 @@
 using System;
 using System.Threading.Tasks;
 using Imgur.API.Models;
-
+using System.Net.Http;
 
 namespace Imgur.API.Endpoints.Impl
 {
