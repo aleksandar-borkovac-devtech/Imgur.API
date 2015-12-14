@@ -29,14 +29,15 @@ namespace Imgur.API.Endpoints
         /// <param name="gallerySortOrder">Indicates the order that a list of items are sorted. Default: Newest.</param>
 		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
 		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
-        /// <returns></returns>
+        /// <returns>An array of gallery submissions.</returns>
         Task<IGalleryAlbumImageBase[]> GetAccountGalleryFavoritesAsync(string username = "me", int? page = null,
             GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest);
 
         /// <summary>
         ///     Returns the users favorited images, only accessible if you're logged in as the user.
         /// </summary>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of gallery submissions.</returns>
         Task<IGalleryAlbumImageBase[]> GetAccountFavoritesAsync();
 
         /// <summary>
@@ -44,13 +45,16 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
         /// <param name="page">Set the page number so you don't have to retrieve all the data at once. Default: null.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of gallery submissions.</returns>
         Task<IGalleryAlbumImageBase[]> GetAccountSubmissionsAsync(string username = "me", int? page = null);
 
         /// <summary>
         ///     Returns the account settings, only accessible if you're logged in as the user.
         /// </summary>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of gallery submissions.</returns>
         Task<IAccountSettings> GetAccountSettingsAsync();
 
         /// <summary>
@@ -64,7 +68,9 @@ namespace Imgur.API.Endpoints
         /// <param name="username">A valid Imgur username (between 4 and 63 alphanumeric characters).</param>
         /// <param name="showMature">Toggle display of mature images in gallery list endpoints.</param>
         /// <param name="newsletterSubscribed">Toggle subscription to email newsletter.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>Whether or not the update succeeded.</returns>
         Task<bool> UpdateAccountSettingsAsync(
             string bio = null,
             bool? publicImages = null,
@@ -79,20 +85,24 @@ namespace Imgur.API.Endpoints
         ///     The totals for a users gallery information.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>Gallery Profile information.</returns>
         Task<IGalleryProfile> GetGalleryProfileAsync(string username = "me");
 
         /// <summary>
         ///     Checks to see if user has verified their email address.
         /// </summary>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>True if the user has verified their email address, false if not.</returns>
         Task<bool> VerifyEmailAsync();
 
         /// <summary>
         ///     Sends an email to the user to verify that their email is valid to upload to gallery.
         ///     Must be logged in as the user to send.
         /// </summary>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>True if the verification email was sent successfully, false if not.</returns>
         Task<bool> SendVerificationEmailAsync();
 
         /// <summary>
@@ -101,7 +111,9 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of albums.</returns>
         Task<IAlbum[]> GetAlbumsAsync(string username = "me", int? page = null);
 
         /// <summary>
@@ -109,79 +121,98 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="id">The album's id.</param>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when id or username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of albums.</returns>
         Task<IAlbum> GetAlbumAsync(string id, string username = "me");
 
         /// <summary>
-        ///     Return an array of all of the album IDs.
+        ///     Fetch an array of all of the album IDs.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of album ids.</returns>
         Task<string[]> GetAlbumIdsAsync(string username = "me", int? page = null);
 
         /// <summary>
-        ///     Return the total number of albums associated with the account.
+        ///     Fetch the total number of albums associated with the account.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>The total number of albums associated with the account.</returns>
         Task<int> GetAlbumCountAsync(string username = "me");
 
         /// <summary>
         ///     Delete an Album with a given id.
         /// </summary>
         /// <param name="id">The album id.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>True if the album was deleted successfully, false if not.</returns>
         Task<bool> DeleteAlbumAsync(string id);
 
         /// <summary>
-        ///     Return the comments the user has created.
+        ///     Fetch the comments the user has created.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
         /// <param name="commentSortOrder">'best', 'worst', 'oldest', or 'newest'. Defaults to 'newest'.</param>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of comments.</returns>
         Task<IComment[]> GetCommentsAsync(string username = "me",
             CommentSortOrder commentSortOrder = CommentSortOrder.Newest, int? page = null);
 
         /// <summary>
-        ///     Return information about a specific comment.
+        ///     Fetch information about a specific comment.
         /// </summary>
         /// <param name="id">The comment id.</param>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when id or username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of comments.</returns>
         Task<IComment> GetCommentAsync(string id, string username = "me");
 
         /// <summary>
-        ///     Return an array of all of the comment IDs.
+        ///     Fetch an array of all of the comment IDs.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
         /// <param name="commentSortOrder">'best', 'worst', 'oldest', or 'newest'. Defaults to 'newest'.</param>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of comment IDs.</returns>
         Task<string[]> GetCommentIdsAsync(string username = "me",
             CommentSortOrder commentSortOrder = CommentSortOrder.Newest, int? page = null);
 
         /// <summary>
-        ///     Return a count of all of the comments associated with the account.
+        ///     Fetch the total number of all of the comments associated with the account.
         /// </summary>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>The total number of comments associated with the account.</returns>
         Task<int> GetCommentCountAsync(string username = "me");
 
         /// <summary>
         ///     Delete a comment. You are required to be logged in as the user whom created the comment.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the comment to delete.</param>
+		/// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>True if the comment was deleted successfully, false if not.</returns>
         Task<bool> DeleteCommentAsync(string id);
 
         /// <summary>
-        ///     Return all of the images associated with the account.
+        ///     Fetch all of the images associated with the account.
         ///     You can page through the images by setting the page, this defaults to 0.
         /// </summary>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of images.</returns>
         Task<IImage[]> GetImagesAsync(int? page = null);
 
         /// <summary>
@@ -189,34 +220,41 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="id">The album's id.</param>
         /// <param name="username">The user account. Default: me</param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when id or username was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An image.</returns>
         Task<IImage> GetImageAsync(string id, string username = "me");
 
         /// <summary>
-        ///     Returns an array of Image IDs that are associated with the account.
+        ///     Fetch an array of Image IDs that are associated with the account.
         /// </summary>
         /// <param name="page">Allows you to set the page number so you don't have to retrieve all the data at once.</param>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of image IDs.</returns>
         Task<string[]> GetImageIdsAsync(int? page = null);
 
         /// <summary>
-        ///     Returns the total number of images associated with the account.
+        ///     Fetch the total number of images associated with the account.
         /// </summary>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>The total number of images associated with the account.</returns>
         Task<int> GetImageCountAsync();
 
         /// <summary>
         ///     Deletes an Image. This requires a delete hash rather than an ID.
         /// </summary>
         /// <param name="deleteHash"></param>
-        /// <returns></returns>
+		/// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>True if the image was deleted succesfully, false if not.</returns>
         Task<bool> DeleteImageAsync(string deleteHash);
 
         /// <summary>
         ///     Returns all of the notifications for the user.
         /// </summary>
         /// <param name="newNotifications">false for all notifications, true for only non-viewed notification. Default is true.</param>
-        /// <returns></returns>
+		/// <exception cref="ImgurException">Thrown when Imgur encountered a problem.</exception>
+        /// <returns>An array of notifications.</returns>
         Task<INotifications> GetNotificationsAsync(bool newNotifications = true);
     }
 }
