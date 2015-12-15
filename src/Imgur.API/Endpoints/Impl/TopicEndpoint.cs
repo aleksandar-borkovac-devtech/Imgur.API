@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Imgur.API.Enums;
 using Imgur.API.Models;
+using System.Net.Http;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -10,13 +11,20 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class TopicEndpoint : EndpointBase, ITopicEndpoint
     {
+        private const string getDefaultTopics = "topics/defaults";
+        private const string getGalleryTopic = "topics/{0}/{1}/{2}/{3}";
+        private const string getGalleryTopicItem = "topics/{0}/{1}";
+
         /// <summary>
         ///     Get the list of default topics.
         /// </summary>
         /// <returns>An array of topics.</returns>
-        public Task<ITopic[]> GetDefaultTopicsAsync()
+        public async Task<ITopic[]> GetDefaultTopicsAsync()
         {
-            throw new NotImplementedException();
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getDefaultTopics);
+
+            var topics = await MakeEndpointRequestAsync<ITopic[]>(HttpMethod.Get, endpointUrl);
+            return topics;
         }
 
         /// <summary>
@@ -25,9 +33,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="topicId">The id of the topic.</param>
         /// <param name="itemId">The id of the gallery item.</param>
         /// <returns>A gallery item.</returns>
-        public Task<IGalleryAlbumImageBase> GetTopicGalleryItemAsync(string topicId, string itemId)
+        public async Task<IGalleryAlbumImageBase> GetTopicGalleryItemAsync(int topicId, string itemId)
         {
-            throw new NotImplementedException();
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryTopicItem);
+            endpointUrl = string.Format(endpointUrl, topicId, itemId);
+
+            var items = await MakeEndpointRequestAsync<IGalleryAlbumImageBase>(HttpMethod.Get, endpointUrl);
+            return items;
         }
 
         /// <summary>
@@ -38,9 +50,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="window">How old the items can be.</param>
         /// <param name="page">What page of the topic to fetch.</param>
         /// <returns>An array of gallery items.</returns>
-        public Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(string topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
+        public async Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
-            throw new NotImplementedException();
+            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryTopicItem);
+            endpointUrl = string.Format(endpointUrl, topicId, sort, window, page);
+
+            var items = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
+            return items;
         }
     }
 }

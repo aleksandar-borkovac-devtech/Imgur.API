@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Imgur.API.Endpoints
 {
     /// <summary>
-    /// Topic related actions.
+    ///     Topic related actions.
     /// </summary>
     public interface ITopicEndpoint : IEndpoint
     {
@@ -23,7 +23,7 @@ namespace Imgur.API.Endpoints
         /// <param name="window">How old the items can be.</param>
         /// <param name="page">What page of the topic to fetch.</param>
         /// <returns>An array of gallery items.</returns>
-        Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(string topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+        Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
 
         /// <summary>
         ///     View a single item in a gallery topic.
@@ -31,6 +31,6 @@ namespace Imgur.API.Endpoints
         /// <param name="topicId">The id of the topic.</param>
         /// <param name="itemId">The id of the gallery item.</param>
         /// <returns>A gallery item.</returns>
-        Task<IGalleryAlbumImageBase> GetTopicGalleryItemAsync(string topicId, string itemId);
+        Task<IGalleryAlbumImageBase> GetTopicGalleryItemAsync(int topicId, string itemId);
     }
 }
