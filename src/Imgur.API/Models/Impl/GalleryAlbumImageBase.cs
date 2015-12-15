@@ -47,8 +47,7 @@ namespace Imgur.API.Models.Impl
         ///     Up to 10 top level comments, sorted by "best".
         /// </summary>
         [JsonProperty("comment_preview")]
-        [JsonConverter(typeof (EnumerableConverter<Comment>))]
-        public IEnumerable<IComment> CommentPreview { get; set; } = new List<IComment>();
+        public IComment[] CommentPreview { get; set; }
 
         /// <summary>
         ///     Topic of the gallery image.

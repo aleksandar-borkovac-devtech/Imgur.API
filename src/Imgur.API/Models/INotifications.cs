@@ -10,11 +10,11 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of message notifications.
         /// </summary>
-        IEnumerable<INotification> Messages { get; set; }
+        INotification[] Messages { get; set; }
 
         /// <summary>
         ///     An array of comment notifications.
         /// </summary>
-        IEnumerable<INotification> Replies { get; set; }
+        INotification[] Replies { get; set; }
     }
 }

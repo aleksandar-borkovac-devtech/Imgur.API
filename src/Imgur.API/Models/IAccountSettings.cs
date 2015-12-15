@@ -46,7 +46,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of users that have been blocked from messaging.
         /// </summary>
-        IEnumerable<IBlockedUser> BlockedUsers { get; set; }
+        IBlockedUser[] BlockedUsers { get; set; }
 
         /// <summary>
         ///     True if the user has opted to have mature images displayed in gallery list endpoints.

@@ -56,7 +56,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
-        IEnumerable<IImage> Images { get; set; }
+        IImage[] Images { get; set; }
 
         /// <summary>
         /// The account username or null if it's anonymous.

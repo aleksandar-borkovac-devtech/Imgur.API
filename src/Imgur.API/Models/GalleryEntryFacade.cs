@@ -113,7 +113,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     Up to 10 top level comments, sorted by "best".
         /// </summary>
-        public IEnumerable<IComment> CommentPreview
+        public IComment[] CommentPreview
         {
             get
             {
@@ -507,7 +507,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
-        public IEnumerable<IImage> Images
+        public IImage[] Images
         {
             get
             {

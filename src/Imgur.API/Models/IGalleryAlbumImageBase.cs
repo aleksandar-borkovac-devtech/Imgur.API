@@ -40,7 +40,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     Up to 10 top level comments, sorted by "best".
         /// </summary>
-        IEnumerable<IComment> CommentPreview { get; set; }
+        IComment[] CommentPreview { get; set; }
 
         /// <summary>
         ///     Topic of the gallery album.
