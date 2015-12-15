@@ -70,7 +70,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountUrl);
             endpointUrl = string.Format(endpointUrl, username);
-            var account = await MakeEndpointRequestAsync<Account>(HttpMethod.Get, endpointUrl);
+            var account = await MakeEndpointRequestAsync<Account>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return account;
         }
 
@@ -99,7 +99,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountGalleryFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, username, page, gallerySortOrder.ToString().ToLower());
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
+            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return favorites;
         }
 
@@ -119,7 +119,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, "me");
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
+            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return favorites;
         }
 
@@ -145,7 +145,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountSubmissionsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
-            var submissions = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl);
+            var submissions = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return submissions;
         }
 
@@ -165,7 +165,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), AccountSettingsUrl);
             endpointUrl = string.Format(endpointUrl, "me");
-            var settings = await MakeEndpointRequestAsync<AccountSettings>(HttpMethod.Get, endpointUrl);
+            var settings = await MakeEndpointRequestAsync<AccountSettings>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return settings;
         }
 
@@ -230,7 +230,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, content);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetGalleryProfileUrl);
             endpointUrl = string.Format(endpointUrl, username);
-            var galleryProfile = await MakeEndpointRequestAsync<GalleryProfile>(HttpMethod.Get, endpointUrl);
+            var galleryProfile = await MakeEndpointRequestAsync<GalleryProfile>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return galleryProfile;
         }
 
@@ -275,7 +275,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), VerifyEmailUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Get, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), VerifyEmailUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<Album>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<Album>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var album = await MakeEndpointRequestAsync<Album>(HttpMethod.Get, endpointUrl);
+            var album = await MakeEndpointRequestAsync<Album>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return album;
         }
 
@@ -378,7 +378,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumIdsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumCountUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), DeleteAlbumUrl);
             endpointUrl = string.Format(endpointUrl, "me", id);
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -455,7 +455,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentsUrl);
             endpointUrl = string.Format(endpointUrl, username, commentSortOrder.ToString().ToLower(), page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<Comment>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<Comment>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var comment = await MakeEndpointRequestAsync<Comment>(HttpMethod.Get, endpointUrl);
+            var comment = await MakeEndpointRequestAsync<Comment>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return comment;
         }
 
@@ -512,7 +512,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentIdsUrl);
             endpointUrl = string.Format(endpointUrl, username, commentSortOrder.ToString().ToLower(), page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentCountUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
         }
 
         /// <summary>
@@ -561,7 +561,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), DeleteCommentUrl);
             endpointUrl = string.Format(endpointUrl, "me", id);
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -583,7 +583,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImagesUrl);
             endpointUrl = string.Format(endpointUrl, "me", page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<Image>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<Image>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -611,7 +611,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl);
+            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
             return image;
         }
 
@@ -633,7 +633,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageIdsUrl);
             endpointUrl = string.Format(endpointUrl, "me", page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -653,7 +653,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageCountUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), DeleteImageUrl);
             endpointUrl = string.Format(endpointUrl, "me", deleteHash);
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl);
+            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
         }
 
         /// <summary>
@@ -698,7 +698,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetNotificationsUrl);
             endpointUrl = string.Format(endpointUrl, "me", newNotifications);
 
-            return await MakeEndpointRequestAsync<Notifications>(HttpMethod.Get, endpointUrl);
+            return await MakeEndpointRequestAsync<Notifications>(HttpMethod.Get, endpointUrl, requiresAuth: true);
         }
     }
 }
