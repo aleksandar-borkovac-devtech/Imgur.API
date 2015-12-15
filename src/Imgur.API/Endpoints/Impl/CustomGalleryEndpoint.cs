@@ -37,7 +37,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(string.Join(",", tags)), "tags");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             }
             return result;
         }
@@ -59,7 +59,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(tag), "tag");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             }
             return result;
         }
@@ -83,7 +83,7 @@ namespace Imgur.API.Endpoints.Impl
                 window.ToString().ToLower(),
                 page);
 
-            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl);
+            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return gallery;
         }
 
@@ -100,7 +100,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCustomGalleryItemUrl);
             endpointUrl = string.Format(endpointUrl, id);
 
-            var result = await MakeEndpointRequestAsync<IGalleryAlbumImageBase>(HttpMethod.Get, endpointUrl);
+            var result = await MakeEndpointRequestAsync<IGalleryAlbumImageBase>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -123,7 +123,7 @@ namespace Imgur.API.Endpoints.Impl
                 window.ToString().ToLower(),
                 page);
 
-            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl);
+            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return gallery;
         }
 
@@ -144,7 +144,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(string.Join(",", tags)), "tags");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             }
             return result;
         }
@@ -166,7 +166,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(tag), "tag");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             }
             return result;
         }

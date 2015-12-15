@@ -744,14 +744,14 @@ namespace Imgur.API.Models
         /// <summary>
         ///     Gets the thumbnail url for the encapsulated <see cref="IGalleryAlbumImageBase"/>.
         /// </summary>
-        /// <param name="gallery"></param>
         /// <param name="thumbnailSize"></param>
         /// <returns></returns>
-        public async Task<string> GetThumbnailUrl(IImageEndpoint gallery, ThumbnailSize thumbnailSize)
+        public string GetThumbnailUrl(ThumbnailSize thumbnailSize)
         {
             string id, mime;
             if (item is GalleryImage)
             {
+                var image = item as GalleryImage;
                 id = image.Id;
                 mime = image.Type;
             }
@@ -759,9 +759,9 @@ namespace Imgur.API.Models
             {
                 try
                 {
-                    var cover = await gallery.GetImageAsync(album.Cover);
-                    id = cover.Id;
-                    mime = cover.Type;
+                    var album = item as GalleryAlbum;
+                    id = album.Cover;
+                    mime = "image/png";
                 }
                 catch (ImgurException)
                 {
@@ -770,6 +770,33 @@ namespace Imgur.API.Models
             }
 
             return ImgurHelper.CreateThumbnailUrl(id, thumbnailSize, mime);
+        }
+
+        /// <summary>
+        /// Get the original link from a given thumbnail url.
+        /// </summary>
+        /// <param name="thumbnailUrl"></param>
+        /// <returns></returns>
+        public static string GetLinkFromThumbnail(string thumbnailUrl)
+        {
+            int idx = thumbnailUrl.LastIndexOf('.');
+            return thumbnailUrl.Remove(idx - 1, 1);
+        }
+
+        /// <summary>
+        /// The thumbnail size to use in the <see cref="Thumbnail"/> property.
+        /// </summary>
+        public static ThumbnailSize ThumbnailSize { get; set; } = ThumbnailSize.SmallSquare;
+
+        /// <summary>
+        /// Fetches a thumbnail for the contained gallery item.
+        /// </summary>
+        public string Thumbnail
+        {
+            get
+            {
+                return GetThumbnailUrl(ThumbnailSize);
+            }
         }
     }
 }

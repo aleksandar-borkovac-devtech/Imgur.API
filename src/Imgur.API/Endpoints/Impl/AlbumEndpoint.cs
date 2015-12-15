@@ -191,7 +191,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), favoriteAlbumUrl);
             endpointUrl = string.Format(endpointUrl, id);
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
             return result;
         }
 

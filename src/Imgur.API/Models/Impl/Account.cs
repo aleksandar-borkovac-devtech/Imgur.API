@@ -1,6 +1,7 @@
 ﻿using System;
 using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
+using Imgur.API.Enums;
 
 namespace Imgur.API.Models.Impl
 {
@@ -34,5 +35,10 @@ namespace Imgur.API.Models.Impl
         /// </summary>
         [JsonConverter(typeof (EpochTimeConverter))]
         public virtual DateTimeOffset Created { get; set; }
+
+        /// <summary>
+        ///     The users notoriety.
+        /// </summary>
+        public Notoriety Notoriety => NotorietyHelper.FromReputation(Reputation);
     }
 }

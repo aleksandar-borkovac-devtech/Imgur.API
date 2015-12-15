@@ -60,12 +60,27 @@ namespace Imgur.API.Models.Impl
         /// <summary>
         ///     The DateTimeOffset when the token expires. Usually one hour from the request.
         /// </summary>
-        public virtual DateTimeOffset ExpiresAt => DateTimeOffset.UtcNow.AddSeconds(ExpiresIn);
+        [JsonIgnore]
+        public virtual DateTimeOffset ExpiresAt => CreationTime.AddSeconds(ExpiresIn);
 
         /// <summary>
         /// The user's AccountName.
         /// </summary>
         [JsonProperty("account_name")]
-        public string AccountName { get; }
+        public string AccountName { get; set; }
+
+        /// <summary>
+        /// The time at which the OAuth2Token was created.
+        /// </summary>
+        public DateTimeOffset CreationTime { get; private set; }
+
+        /// <summary>
+        /// Sets the time at which the OAuth2Token was created.
+        /// </summary>
+        /// <param name="creationTime"></param>
+        public void SetCreationTime(DateTimeOffset creationTime)
+        {
+            CreationTime = creationTime;
+        }
     }
 }

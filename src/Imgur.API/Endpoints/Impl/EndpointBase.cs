@@ -44,6 +44,11 @@ namespace Imgur.API.Endpoints.Impl
         public virtual IApiClient ApiClient { get; private set; }
 
         /// <summary>
+        ///     Whether or not the Endpoint should fetch a new OAuth2 token after the old one has expired.
+        /// </summary>
+        public bool AutoReauthorize { get; set; } = true;
+
+        /// <summary>
         ///     The base Endpoint Url based on the current authentication set.
         ///     https://api.imgur.com/3/ or https://imgur-apiv3.p.mashape.com/3/
         /// </summary>
@@ -96,17 +101,26 @@ namespace Imgur.API.Endpoints.Impl
                 throw new ArgumentNullException(nameof(endpointUrl));
 
             if (requiresAuth)
-            { 
-                if(ApiClient.OAuth2Token == null)
-                    throw new InvalidOperationException("Requested endpoint call requires an authorized IApiClient.");
+            {
+                if (ApiClient.OAuth2Token == null)
+                    throw new InvalidOperationException("Requested API call requires a valid OAuth2Token in ApiClient.");
 
                 // If the token has expired, refresh.
-                if (ApiClient.OAuth2Token.ExpiresAt < DateTimeOffset.UtcNow)
+                if (ApiClient.OAuth2Token.ExpiresAt < DateTimeOffset.UtcNow && AutoReauthorize)
                 {
-                    Debug.WriteLine("Refreshing token...");
+                    Debug.WriteLine("Auto-refreshing token...");
                     var authEndpoint = new OAuth2Endpoint(ApiClient);
-                    var token = await authEndpoint.GetTokenByRefreshTokenAsync(ApiClient.OAuth2Token.RefreshToken);
-                    ApiClient.SetOAuth2Token(token);
+
+                    // Try to refresh token.
+                    try
+                    {
+                        var token = await authEndpoint.GetTokenByRefreshTokenAsync(ApiClient.OAuth2Token.RefreshToken);
+                        ApiClient.SetOAuth2Token(token);
+                    }
+                    catch(ImgurException ex)
+                    {
+                        throw new InvalidOperationException("Cannot make request as authorization is required, but token could not be refreshed.", ex);
+                    }
                 }
             }
 

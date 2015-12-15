@@ -1,4 +1,5 @@
-﻿using Imgur.API.Models;
+using Imgur.API.Models;
+using Imgur.API.Exceptions;
 using System.Threading.Tasks;
 
 namespace Imgur.API.Endpoints
@@ -12,9 +13,10 @@ namespace Imgur.API.Endpoints
     public interface IMemeGenEndpoint : IEndpoint
     {
         /// <summary>
-        /// Get the list of default memes.
+        /// 	Get the list of default memes.
         /// </summary>
-        /// <returns></returns>
-        Task<IImage> GetDefaultMemesAsync();
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>An array containing the default images.</returns>
+        Task<IImage[]> GetDefaultMemesAsync();
     }
 }

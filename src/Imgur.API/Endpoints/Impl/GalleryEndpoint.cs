@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +15,7 @@ using System.Diagnostics;
 namespace Imgur.API.Endpoints.Impl
 {
     /// <summary>
-    ///     Gallery related actions.
+    ///     Implementation of gallery related actions.
     /// </summary>
     public class GalleryEndpoint : EndpointBase, IGalleryEndpoint
     {
@@ -51,17 +51,16 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        ///     Returns the images currently in the gallery.
+        ///     Fetches gallery submissions.
         /// </summary>
-        /// <param name="section"></param>
-        /// <param name="sort"></param>
-        /// <param name="window"></param>
-        /// <param name="page"></param>
-        /// <param name="showViral"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
+        /// <param name="section">The section of the gallery to fetch.</param>
+        /// <param name="sort">How to sort the gallery.</param>
+        /// <param name="window">The maximum age of the submissions to fetch.</param>
+        /// <param name="page">What page of the gallery to fetch.</param>
+        /// <param name="showViral">If true, viral pots will be included. If false, viral posts will be excluded.</param>
+        /// <exception cref="ArgumentException">Thrown when arguments are invalid or conflicting.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
+        /// <returns>An array with gallery submissions.</returns>
         public async Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true)
         {
             if (sort == GallerySortBy.Rising && section != GallerySection.User)
@@ -81,12 +80,12 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        ///     Returns the image identified by the given id.
+        ///     Fetches the image identified by the given id.
         /// </summary>
         /// <param name="id">The id of the image to fetch.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
+        /// <returns>The gallery image identified by the given ID.</returns>
         public async Task<GalleryImage> GetGalleryImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -99,12 +98,12 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        ///     Returns the album identified by the given id.
+        ///     Fetches the album identified by the given id.
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
+        /// <param name="id">The id of the album to fetch.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
+        /// <returns>The gallery album identified by the given id.</returns>
         public async Task<GalleryAlbum> GetGalleryAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -117,13 +116,12 @@ namespace Imgur.API.Endpoints.Impl
         }
         
         /// <summary>
-        /// 
+        ///		Report an item currently in the gallery.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="reason"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission to report.</param>
+        /// <param name="reason">The reason for reporting the item.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
         public async Task<object> PostReportAsync(string id, Reporting reason)
         {
@@ -145,13 +143,12 @@ namespace Imgur.API.Endpoints.Impl
         }
         
         /// <summary>
-        /// 
+        /// 	Get the vote information about an image
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
+        /// <param name="id">The id of the gallery submission to get the votes for.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
+        /// <returns>Vote information on the gallery submission.</returns>
         public async Task<IVotes> GetVotesAsync(string id)
         {
         	if(string.IsNullOrEmpty(id))
@@ -164,13 +161,12 @@ namespace Imgur.API.Endpoints.Impl
         }
         
         /// <summary>
-        /// 
+        /// 	Vote for an image, 'up' or 'down' vote. Send the same value again to undo a vote.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="vote"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission to vote on.</param>
+        /// <param name="vote">The vote to send.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
         public async Task<object> PostVoteAsync(string id, Vote vote)
         {
@@ -179,19 +175,18 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postVoteUrl);
         	endpointUrl = string.Format(endpointUrl, id, vote.ToString().ToLower());
-        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
         	return result;
         }
         
         /// <summary>
-        /// 
+        ///		Get the comments on a gallery submission.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="sort"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
+        /// <param name="id">The id of the gallery submission to fetch the comments for.</param>
+        /// <param name="sort">How to sort the comments.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
+        /// <returns>The comments posted to the gallery submission.</returns>
         public async Task<IComment[]> GetCommentsAsync(string id, CommentSortOrder sort)
         {
         	if(string.IsNullOrEmpty(id))
@@ -204,13 +199,12 @@ namespace Imgur.API.Endpoints.Impl
         }
         
         /// <summary>
-        /// 
+        /// 	Create a comment for a gallery submission.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="comment"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission to post a comment on.</param>
+        /// <param name="comment">The comment to post.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id or comment was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
         public async Task<object> PostCommentAsync(string id, string comment)
         {
@@ -229,21 +223,20 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(comment), "comment");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
             }
 
         	return result;
         }
         
         /// <summary>
-        /// 
+        /// 	Reply to a comment that has been created for a gallery submission.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="commentID"></param>
-        /// <param name="reply"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission the original comment was posted in.</param>
+        /// <param name="commentID">The comment to reply to.</param>
+        /// <param name="reply">The reply to post.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id, commentID or reply was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
         public async Task<object> PostReplyAsync(string id, string commentID, string reply)
         {
@@ -264,18 +257,17 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(reply), "comment");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
             }
         	return result;
         }
         
         /// <summary>
-        /// 
+        ///		List all of the IDs for the comments on a gallery submission
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission to fetch the comment ids for.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
         public async Task<object> GetCommentIdsAsync(string id)
         {
@@ -289,12 +281,11 @@ namespace Imgur.API.Endpoints.Impl
         }
         
         /// <summary>
-        /// 
+        /// 	The number of comments on a gallery submission.
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the gallery submission to get the comment count for.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
         public async Task<object> GetCommentCountAsync(string id)
         {
@@ -308,12 +299,11 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        /// 
+        /// 	Remove a submission from the gallery. You must be logged in as the owner of the item to do this action.
         /// </summary>
-        /// <param name="id"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ImgurException"></exception>
+        /// <param name="id">The id of the submission to remove from the gallery.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
         public async Task<object> DeleteFromGalleryAsync(string id)
         {
@@ -322,15 +312,17 @@ namespace Imgur.API.Endpoints.Impl
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteUrl);
         	endpointUrl = string.Format(endpointUrl, id);
-        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl);
+        	var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
         	return result;
         }
 
         /// <summary>
-        /// View tags for a gallery item.
+        /// 	View tags for a gallery submission.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The id of the gallery item to fetch tags for.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>The tags related to the gallery submission.</returns>
         public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -343,12 +335,12 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        /// Returns a random set of gallery images.
-        /// 
-        /// Pages are regenerated every hour.
+        /// 	Returns a random set of gallery images. Pages are regenerated every hour.
         /// </summary>
-        /// <param name="page"></param>
-        /// <returns></returns>
+        /// <param name="page">The page to fetch.</param>
+        /// <exception cref="ArgumentException">Thrown when page was higher than 50.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>An array of gallery submissions.</returns>
         public async Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0)
         {
             if (page > randomPageMax)
@@ -361,17 +353,23 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        /// View images for a gallery tag
+        /// 	View images for a gallery tag
         /// </summary>
-        /// <param name="tagname"></param>
-        /// <param name="sort"></param>
-        /// <param name="window"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
+        /// <param name="tagname">The name of the tag to fetch items for.</param>
+        /// <param name="sort">How to sort the items.</param>
+        /// <param name="window">The maximum age of the items.</param>
+        /// <param name="page">The page to fetch.</param>
+        /// <exception cref="ArgumentNullException">Thrown when tagname was null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>Information about the tag and an array of gallery submissions.</returns>
         public async Task<ITag> GetTagAsync(string tagname, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             if (string.IsNullOrEmpty(tagname))
                 throw new ArgumentNullException(nameof(tagname));
+				
+			if(sort == GallerySortBy.Rising)
+				throw new ArgumentException(nameof(tagname) + " cannot be Rising.");
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getTagUrl);
             endpointUrl = string.Format(
@@ -384,11 +382,13 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        /// View a single image in a gallery tag
+        /// 	View a single image in a gallery tag.
         /// </summary>
-        /// <param name="tagname"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="tagname">The name of the tag.</param>
+        /// <param name="id">The id of the gallery image to fetch</param>
+        /// <exception cref="ArgumentNullException">Thrown when id or tagname was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>The gallery image identified by the given id.</returns>
         public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
         {
             if (string.IsNullOrEmpty(tagname))
@@ -405,11 +405,13 @@ namespace Imgur.API.Endpoints.Impl
         }
 
         /// <summary>
-        /// Vote for a tag, 'up' or 'down' vote. Send the same value again to undo a vote.
+        /// 	Vote for a tag, 'up' or 'down' vote. Send the same value again to undo a vote.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="tagname"></param>
-        /// <param name="vote"></param>
+        /// <param name="id">The id of the gallery submission to vote on a tag for.</param>
+        /// <param name="tagname">The tag to vote for.</param>
+        /// <param name="vote">The vote.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id or tagname was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
         public async Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote)
         {
@@ -422,18 +424,20 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), postTagVoteUrl);
             endpointUrl = string.Format(endpointUrl, id, tagname, vote.ToString().ToLower());
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             return result;
         }
 
         /// <summary>
-        /// Share an Album or Image to the Gallery.
+        /// 	Share an Album or Image to the Gallery.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="title"></param>
-        /// <param name="topic"></param>
-        /// <param name="acceptTerms"></param>
-        /// <param name="Nsfw"></param>
+        /// <param name="id">The id of the album or image to share.</param>
+        /// <param name="title">The title for the submission.</param>
+        /// <param name="topic">The topic for the submission.</param>
+        /// <param name="acceptTerms">Whether or not the user has accepted the Imgur terms of service.</param>
+        /// <param name="Nsfw">Whether or not the submission is nsfw.</param>
+        /// <exception cref="ArgumentNullException">Thrown when id or title was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
         public async Task<object> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null)
         {
@@ -467,24 +471,30 @@ namespace Imgur.API.Endpoints.Impl
                 }
 
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
             }
 
             return result;
         }
 
         /// <summary>
-        /// Search the gallery with a given query string.
+        /// 	Search the gallery with a given query string.
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="sort"></param>
-        /// <param name="window"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
+        /// <param name="query">The query to use for searching.</param>
+        /// <param name="sort">How to sort the results.</param>
+        /// <param name="window">The maximum age of the items in the result.</param>
+        /// <param name="page">The page of the result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>An array of gallery submissions matching the query.</returns>
         public async Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0)
         {
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException(nameof(query));
+				
+			if(sort == GallerySortBy.Rising)
+				throw new ArgumentException(nameof(query) + " cannot be Rising.");
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), searchGalleryUrl);
             endpointUrl = string.Format(endpointUrl, sort.ToString().ToLower(), window.ToString().ToLower(), page);

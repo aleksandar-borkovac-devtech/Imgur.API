@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Imgur.API.Enums;
@@ -63,14 +63,12 @@ namespace Imgur.API.Endpoints.Impl
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
-
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
+            
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountUrl);
             endpointUrl = string.Format(endpointUrl, username);
-            var account = await MakeEndpointRequestAsync<Account>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var account = await MakeEndpointRequestAsync<Account>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return account;
         }
 
@@ -86,20 +84,18 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountGalleryFavoritesAsync(string username = "me",
+        public async Task<IGalleryAlbumImageBase[]> GetAccountGalleryFavoritesAsync(string username = "me",
             int? page = null,
             GalleryFavoritesSortOrder? gallerySortOrder = GalleryFavoritesSortOrder.Newest)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountGalleryFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, username, page, gallerySortOrder.ToString().ToLower());
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var favorites = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return favorites;
         }
 
@@ -112,14 +108,15 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountFavoritesAsync()
+        public async Task<IGalleryAlbumImageBase[]> GetAccountFavoritesAsync()
         {
             if (ApiClient.OAuth2Token == null)
                 throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountFavoritesUrl);
             endpointUrl = string.Format(endpointUrl, "me");
-            var favorites = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+
+            var favorites = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return favorites;
         }
 
@@ -134,18 +131,16 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IGalleryAlbumImageBase>> GetAccountSubmissionsAsync(string username = "me", int? page = null)
+        public async Task<IGalleryAlbumImageBase[]> GetAccountSubmissionsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAccountSubmissionsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
-            var submissions = await MakeEndpointRequestAsync<IEnumerable<IGalleryAlbumImageBase>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var submissions = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return submissions;
         }
 
@@ -165,6 +160,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), AccountSettingsUrl);
             endpointUrl = string.Format(endpointUrl, "me");
+
             var settings = await MakeEndpointRequestAsync<AccountSettings>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return settings;
         }
@@ -229,8 +225,9 @@ namespace Imgur.API.Endpoints.Impl
                 parameters.Add("newsletter_subscribed", newsletterSubscribed.Value.ToString().ToLower());
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
-
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
+            
+            var result = await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
+			return result;
         }
 
         /// <summary>
@@ -248,13 +245,11 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetGalleryProfileUrl);
             endpointUrl = string.Format(endpointUrl, username);
-            var galleryProfile = await MakeEndpointRequestAsync<GalleryProfile>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var galleryProfile = await MakeEndpointRequestAsync<GalleryProfile>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return galleryProfile;
         }
 
@@ -275,7 +270,8 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), VerifyEmailUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            var result = await MakeEndpointRequestAsync<bool>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>
@@ -296,7 +292,8 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), VerifyEmailUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+            var result = await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>
@@ -311,19 +308,17 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IAlbum>> GetAlbumsAsync(string username = "me", int? page = null)
+        public async Task<IAlbum[]> GetAlbumsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<Album>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<Album[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -345,13 +340,11 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var album = await MakeEndpointRequestAsync<Album>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var album = await MakeEndpointRequestAsync<Album>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return album;
         }
 
@@ -366,19 +359,17 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetAlbumIdsAsync(string username = "me", int? page = null)
+        public async Task<string[]> GetAlbumIdsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumIdsUrl);
             endpointUrl = string.Format(endpointUrl, username, page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<string[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -396,14 +387,12 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetAlbumCountUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -427,7 +416,8 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), DeleteAlbumUrl);
             endpointUrl = string.Format(endpointUrl, "me", id);
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
+            var result = await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>
@@ -442,20 +432,18 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IComment>> GetCommentsAsync(string username = "me",
+        public async Task<IComment[]> GetCommentsAsync(string username = "me",
             CommentSortOrder commentSortOrder = CommentSortOrder.Newest, int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentsUrl);
             endpointUrl = string.Format(endpointUrl, username, commentSortOrder.ToString().ToLower(), page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<Comment>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<Comment[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -477,13 +465,11 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var comment = await MakeEndpointRequestAsync<Comment>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var comment = await MakeEndpointRequestAsync<Comment>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return comment;
         }
 
@@ -499,20 +485,18 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetCommentIdsAsync(string username = "me",
+        public async Task<string[]> GetCommentIdsAsync(string username = "me",
             CommentSortOrder commentSortOrder = CommentSortOrder.Newest, int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentIdsUrl);
             endpointUrl = string.Format(endpointUrl, username, commentSortOrder.ToString().ToLower(), page);
 
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<string[]>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -530,14 +514,12 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetCommentCountUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var result = await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
+            return result;
         }
 
         /// <summary>
@@ -575,15 +557,16 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IImage>> GetImagesAsync(int? page = null)
+        public async Task<IImage[]> GetImagesAsync(int? page = null)
         {
             if (ApiClient.OAuth2Token == null)
                 throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImagesUrl);
             endpointUrl = string.Format(endpointUrl, "me", page);
-
-            return await MakeEndpointRequestAsync<IEnumerable<Image>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            
+            var result = await MakeEndpointRequestAsync<Image[]>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>
@@ -605,13 +588,11 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            if (username.Equals("me", StringComparison.OrdinalIgnoreCase)
-                && ApiClient.OAuth2Token == null)
-                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageUrl);
             endpointUrl = string.Format(endpointUrl, username, id);
-            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl, requiresAuth: username == "me");
+
+            var reqAuth = username.Equals("me", StringComparison.OrdinalIgnoreCase);
+            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl, requiresAuth: reqAuth);
             return image;
         }
 
@@ -625,15 +606,16 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetImageIdsAsync(int? page = null)
+        public async Task<string[]> GetImageIdsAsync(int? page = null)
         {
             if (ApiClient.OAuth2Token == null)
                 throw new ArgumentNullException(nameof(ApiClient.OAuth2Token));
 
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageIdsUrl);
             endpointUrl = string.Format(endpointUrl, "me", page);
-
-            return await MakeEndpointRequestAsync<IEnumerable<string>>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            
+            var result = await MakeEndpointRequestAsync<string[]>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>
@@ -653,7 +635,8 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageCountUrl);
             endpointUrl = string.Format(endpointUrl, "me");
 
-            return await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            var result = await MakeEndpointRequestAsync<int>(HttpMethod.Get, endpointUrl, requiresAuth: true);
+            return result;
         }
 
         /// <summary>

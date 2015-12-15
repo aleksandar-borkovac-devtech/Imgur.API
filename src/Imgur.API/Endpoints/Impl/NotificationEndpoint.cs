@@ -32,7 +32,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getNotificationUrl);
             endpointUrl = string.Format(endpointUrl, id);
 
-            var notification = await MakeEndpointRequestAsync<Notification>(HttpMethod.Get, endpointUrl);
+            var notification = await MakeEndpointRequestAsync<Notification>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return notification;
         }
 
@@ -46,7 +46,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getNotificationUrl);
             endpointUrl = string.Format(endpointUrl, onlyNewNotifications);
 
-            var notifications = await MakeEndpointRequestAsync<Notifications>(HttpMethod.Get, endpointUrl);
+            var notifications = await MakeEndpointRequestAsync<Notifications>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return notifications;
         }
 
@@ -63,7 +63,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), markNotificationAsReadUrl);
             endpointUrl = string.Format(endpointUrl, id);
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -84,7 +84,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(string.Join(",", ids)), "ids");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             }
 
             return result;

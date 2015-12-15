@@ -40,6 +40,6 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The users name.
         /// </summary>
-        string AccountName { get; }
+        string AccountName { get; set; }
     }
 }

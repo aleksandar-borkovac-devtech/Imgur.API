@@ -42,7 +42,7 @@ namespace Imgur.API.Endpoints.Impl
         {
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getConversationsListUrl);
 
-            var result = await MakeEndpointRequestAsync<IConversation[]>(HttpMethod.Get, endpointUrl);
+            var result = await MakeEndpointRequestAsync<IConversation[]>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -61,7 +61,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getConversationUrl);
             endpointUrl = string.Format(endpointUrl, id, page, offset);
 
-            var result = await MakeEndpointRequestAsync<IConversation>(HttpMethod.Get, endpointUrl);
+            var result = await MakeEndpointRequestAsync<IConversation>(HttpMethod.Get, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -87,7 +87,7 @@ namespace Imgur.API.Endpoints.Impl
             {
                 content.Add(new StringContent(body), "body");
 
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
             }
 
             return result;
@@ -106,7 +106,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteConversationUrl);
             endpointUrl = string.Format(endpointUrl, id);
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -123,7 +123,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), reportSenderUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             return result;
         }
 
@@ -140,7 +140,7 @@ namespace Imgur.API.Endpoints.Impl
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), blockSenderUrl);
             endpointUrl = string.Format(endpointUrl, username);
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl);
+            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
             return result;
         }
     }

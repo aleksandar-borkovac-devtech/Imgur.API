@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Imgur.API.Models.Impl;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
@@ -25,6 +26,6 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of trophies that the user has.
         /// </summary>
-        IEnumerable<ITrophy> Trophies { get; set; }
+        Trophy[] Trophies { get; set; }
     }
 }

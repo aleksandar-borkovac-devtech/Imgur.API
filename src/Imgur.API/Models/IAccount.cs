@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Imgur.API.Enums;
+using System;
 
 namespace Imgur.API.Models
 {
@@ -31,5 +32,10 @@ namespace Imgur.API.Models
         ///     Utc timestamp of account creation, converted from epoch time.
         /// </summary>
         DateTimeOffset Created { get; set; }
+
+        /// <summary>
+        ///     The users notoriety.
+        /// </summary>
+        Notoriety Notoriety { get; }
     }
 }

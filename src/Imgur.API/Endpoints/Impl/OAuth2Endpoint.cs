@@ -76,6 +76,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
             var token = await MakeEndpointRequestAsync<OAuth2Token>(HttpMethod.Post, TokenEndpoint, content);
+            token.SetCreationTime(DateTimeOffset.UtcNow);
             return token;
         }
 
@@ -105,6 +106,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
             var token = await MakeEndpointRequestAsync<OAuth2Token>(HttpMethod.Post, TokenEndpoint, content);
+            token.SetCreationTime(DateTimeOffset.UtcNow);
             return token;
         }
 
@@ -141,6 +143,7 @@ namespace Imgur.API.Endpoints.Impl
 
             var content = new FormUrlEncodedContent(parameters.ToArray());
             var token = await MakeEndpointRequestAsync<OAuth2Token>(HttpMethod.Post, TokenEndpoint, content);
+            token.SetCreationTime(DateTimeOffset.UtcNow);
             return token;
         }
     }

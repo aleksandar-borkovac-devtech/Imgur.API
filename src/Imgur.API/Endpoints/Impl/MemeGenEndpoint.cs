@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.Threading.Tasks;
 using Imgur.API.Models;
 using System.Net.Http;
+using Imgur.API.Exceptions;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -19,14 +17,15 @@ namespace Imgur.API.Endpoints.Impl
         private const string getDefaultMemesUrl = "memegen/defaults";
 
         /// <summary>
-        /// Get the list of default memes.
+        /// 	Get the list of default memes.
         /// </summary>
-        /// <returns></returns>
-        public async Task<IImage> GetDefaultMemesAsync()
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns>An array containing the default images.</returns>
+        public async Task<IImage[]> GetDefaultMemesAsync()
         {
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getDefaultMemesUrl);
 
-            var result = await MakeEndpointRequestAsync<IImage>(HttpMethod.Get, endpointUrl);
+            var result = await MakeEndpointRequestAsync<IImage[]>(HttpMethod.Get, endpointUrl);
             return result;
         }
     }
