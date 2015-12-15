@@ -238,16 +238,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id, commentID or reply was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        public async Task<object> PostReplyAsync(string id, string commentID, string reply)
+        public async Task<object> PostReplyAsync(string id, int commentID, string reply)
         {
         	if(string.IsNullOrEmpty(id))
         		throw new ArgumentNullException(nameof(id));
         	
         	if(string.IsNullOrEmpty(reply))
         		throw new ArgumentNullException(nameof(reply));
-        	
-        	if(string.IsNullOrEmpty(commentID))
-        		throw new ArgumentNullException(nameof(commentID));
         	
         	var endpointUrl = string.Concat(GetEndpointBaseUrl(), postReplyUrl);
         	endpointUrl = string.Format(endpointUrl, id, commentID);

@@ -53,11 +53,8 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="page"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public async Task<IConversation> GetConversationAsync(string id, uint page = 1u, uint offset = 0u)
+        public async Task<IConversation> GetConversationAsync(int id, uint page = 1u, uint offset = 0u)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(nameof(id));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), getConversationUrl);
             endpointUrl = string.Format(endpointUrl, id, page, offset);
 
@@ -98,11 +95,8 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<object> DeleteConversation(string id)
+        public async Task<object> DeleteConversation(int id)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(nameof(id));
-
             var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteConversationUrl);
             endpointUrl = string.Format(endpointUrl, id);
 

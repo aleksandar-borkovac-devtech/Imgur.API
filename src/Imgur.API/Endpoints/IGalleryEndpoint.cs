@@ -101,7 +101,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id, commentID or reply was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        Task<object> PostReplyAsync(string id, string commentID, string reply);
+        Task<object> PostReplyAsync(string id, int commentID, string reply);
 
         /// <summary>
         ///		List all of the IDs for the comments on a gallery submission

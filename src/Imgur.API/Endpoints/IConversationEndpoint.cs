@@ -30,7 +30,7 @@ namespace Imgur.API.Endpoints
         /// <param name="page"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        Task<IConversation> GetConversationAsync(string id, uint page = 1, uint offset=0);
+        Task<IConversation> GetConversationAsync(int id, uint page = 1, uint offset=0);
 		
         /// <summary>
         /// Sends a new message.
@@ -45,7 +45,7 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<object> DeleteConversation(string id);
+        Task<object> DeleteConversation(int id);
 
         /// <summary>
         /// Report a user for sending messages that are against the Terms of Service.
