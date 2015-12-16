@@ -79,7 +79,7 @@
     <Compile Include="JsonConverters\NotificationConverter.cs" />
     <Compile Include="Enums\AlbumPrivacy.cs" />
     <Compile Include="Enums\CommentSortOrder.cs" />
-    <Compile Include="Models\GalleryEntryFacade.cs" />
+    <Compile Include="Models\Impl\GalleryEntryFacade.cs" />
     <Compile Include="Enums\GallerySection.cs" />
     <Compile Include="Enums\GallerySortBy.cs" />
     <Compile Include="Enums\GalleryWindow.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="Models\IBlockedUser.cs" />
     <Compile Include="Models\IComment.cs" />
     <Compile Include="Models\IGalleryAlbumImageBase.cs" />
+    <Compile Include="Models\IGalleryEntryFacade.cs" />
     <Compile Include="Models\IGalleryMeme.cs" />
     <Compile Include="Models\ImgurHelper.cs" />
     <Compile Include="Models\Impl\Album.cs" />

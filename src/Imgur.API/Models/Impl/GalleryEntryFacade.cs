@@ -10,12 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Imgur.API.Models
+namespace Imgur.API.Models.Impl
 {
     /// <summary>
     /// A facade that encapsulates either an <see cref="GalleryImage"/> or an <see cref="GalleryAlbum"/>, meant unify their usage.
     /// </summary>
-    public class GalleryEntryFacade : IGalleryAlbumImageBase, IAlbum, IImage
+    public class GalleryEntryFacade : IGalleryEntryFacade
     {
         private GalleryImage image;
         private GalleryAlbum album;
@@ -784,18 +784,26 @@ namespace Imgur.API.Models
         }
 
         /// <summary>
-        /// The thumbnail size to use in the <see cref="Thumbnail"/> property.
+        /// The thumbnail size to use in the <see cref="ThumbnailUrl"/> property.
         /// </summary>
         public static ThumbnailSize ThumbnailSize { get; set; } = ThumbnailSize.SmallSquare;
 
         /// <summary>
         /// Fetches a thumbnail for the contained gallery item.
         /// </summary>
-        public string Thumbnail
+        public string ThumbnailUrl
         {
             get
             {
                 return GetThumbnailUrl(ThumbnailSize);
+            }
+        }
+
+        public string CoverUrl
+        {
+            get
+            {
+                return string.Format("http://i.imgur.com/{0}.{1}", Cover, "png");
             }
         }
     }
