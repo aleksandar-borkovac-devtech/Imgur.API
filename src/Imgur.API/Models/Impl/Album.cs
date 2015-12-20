@@ -54,14 +54,14 @@ namespace Imgur.API.Models.Impl
         /// </summary>
         [JsonProperty("privacy")]
         [JsonConverter(typeof(AlbumPrivacyConverter))]
-        public AlbumPrivacy Privacy { get; set; }
+        public AlbumPrivacy? Privacy { get; set; }
 
         /// <summary>
         ///     The view layout of the album.
         /// </summary>
         [JsonProperty("layout")]
         [JsonConverter(typeof(AlbumLayoutConverter))]
-        public AlbumLayout Layout { get; set; }
+        public AlbumLayout? Layout { get; set; }
 
         /// <summary>
         ///     Order number of the album on the user's album page (defaults to 0 if their albums haven't been reordered).

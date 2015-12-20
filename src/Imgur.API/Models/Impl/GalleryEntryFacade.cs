@@ -431,7 +431,7 @@ namespace Imgur.API.Models.Impl
         /// <summary>
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
         /// </summary>
-        public AlbumPrivacy Privacy
+        public AlbumPrivacy? Privacy
         {
             get
             {
@@ -450,7 +450,7 @@ namespace Imgur.API.Models.Impl
         /// <summary>
         ///     The view layout of the album.
         /// </summary>
-        public AlbumLayout Layout
+        public AlbumLayout? Layout
         {
             get
             {

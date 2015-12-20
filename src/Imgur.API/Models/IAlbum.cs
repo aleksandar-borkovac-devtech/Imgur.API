@@ -36,12 +36,12 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The privacy level of the album, you can only view public if not logged in as album owner.
         /// </summary>
-        AlbumPrivacy Privacy { get; set; }
+        AlbumPrivacy? Privacy { get; set; }
 
         /// <summary>
         ///     The view layout of the album.
         /// </summary>
-        AlbumLayout Layout { get; set;}
+        AlbumLayout? Layout { get; set;}
 
         /// <summary>
         ///     Order number of the album on the user's album page (defaults to 0 if their albums haven't been reordered).
