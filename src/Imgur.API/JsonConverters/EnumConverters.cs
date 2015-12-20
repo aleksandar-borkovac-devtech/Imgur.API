@@ -49,6 +49,9 @@ namespace Imgur.API.JsonConverters
                 case "vertical":
                     return AlbumLayout.Vertical;
 
+                case null:
+                    return null;
+
                 default:
                     throw new ArgumentException(
                         string.Format("Invalid value {0} for album layout.", enumString)
@@ -105,6 +108,9 @@ namespace Imgur.API.JsonConverters
 
                 case "hidden":
                     return AlbumPrivacy.Hidden;
+
+                case null:
+                    return null;
 
                 default:
                     throw new ArgumentException(
