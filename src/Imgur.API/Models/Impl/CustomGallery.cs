@@ -1,12 +1,6 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 10-12-2015
- * Time: 4:11 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
+﻿using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models.Impl
 {
@@ -31,7 +25,8 @@ namespace Imgur.API.Models.Impl
         /// An array of all the tag names in the custom gallery.
         /// </summary>
         [JsonProperty("tags")]
-        public string[] Tags { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<string>>))]
+        public ICollection<string> Tags { get; set; }
 
         /// <summary>
         /// The total number of gallery items in the custom gallery.
@@ -43,6 +38,7 @@ namespace Imgur.API.Models.Impl
         /// An array of all the gallery items in the custom gallery.
         /// </summary>
         [JsonProperty("items")]
-        public IGalleryAlbumImageBase[] Items { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<IGalleryAlbumImageBase>>))]
+        public ICollection<IGalleryAlbumImageBase> Items { get; set; }
     }
 }

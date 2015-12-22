@@ -14,7 +14,7 @@ namespace Imgur.API.Models.Impl
 	/// <summary>
 	/// Description of GalleryImage.
 	/// </summary>
-	public class GalleryImage : GalleryAlbumImageBase, IImage
+	public class GalleryImage : GalleryAlbumImageBase, IGalleryImage
 	{
         /// <summary>
         ///     OPTIONAL, the original filename, if you're logged in as the image owner

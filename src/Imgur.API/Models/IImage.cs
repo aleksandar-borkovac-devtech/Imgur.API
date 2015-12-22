@@ -1,14 +1,4 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 09-12-2015
- * Time: 2:39 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
-
-namespace Imgur.API.Models
+﻿namespace Imgur.API.Models
 {
 	/// <summary>
 	/// Description of IImage.

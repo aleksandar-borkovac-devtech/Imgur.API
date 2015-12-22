@@ -4,6 +4,7 @@ using Imgur.API.Models;
 using System.Net.Http;
 using Imgur.API.Authentication;
 using Imgur.API.RequestBuilders;
+using System.Collections.Generic;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -30,7 +31,7 @@ namespace Imgur.API.Endpoints.Impl
         /// Get list of all conversations for the logged in user.
         /// </summary>
         /// <returns></returns>
-        public async Task<IConversation[]> GetConversationListAsync()
+        public async Task<ICollection<IConversation>> GetConversationListAsync()
         {
             var url = "conversations";
 

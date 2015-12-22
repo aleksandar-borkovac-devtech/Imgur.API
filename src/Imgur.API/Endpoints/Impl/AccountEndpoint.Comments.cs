@@ -25,7 +25,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IComment>> GetCommentsAsync(string username = "me",
+        public async Task<ICollection<IComment>> GetCommentsAsync(string username = "me",
             CommentSortOrder? sort = CommentSortOrder.Newest, int? page = null)
         {
             if (string.IsNullOrEmpty(username))
@@ -40,7 +40,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = CommentRequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var comments = await SendRequestAsync<IEnumerable<Comment>>(request);
+                var comments = await SendRequestAsync<Comment[]>(request);
                 return comments;
             }
         }
@@ -87,7 +87,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetCommentIdsAsync(string username = "me",
+        public async Task<ICollection<string>> GetCommentIdsAsync(string username = "me",
             CommentSortOrder? sort = CommentSortOrder.Newest, int? page = null)
         {
             if (string.IsNullOrEmpty(username))
@@ -102,7 +102,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = CommentRequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var comments = await SendRequestAsync<IEnumerable<string>>(request);
+                var comments = await SendRequestAsync<string[]>(request);
                 return comments;
             }
         }

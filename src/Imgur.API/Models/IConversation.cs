@@ -43,7 +43,7 @@ namespace Imgur.API.Models
         ///     OPTIONAL: (only available when requesting a specific conversation).
         ///     Reverse sorted such that most recent message is at the end of the array.
         /// </summary>
-        IEnumerable<IMessage> Messages { get; set; }
+        ICollection<IMessage> Messages { get; set; }
 
         /// <summary>
         ///     OPTIONAL: (only available when requesting a specific conversation)

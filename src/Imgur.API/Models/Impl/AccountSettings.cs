@@ -1,5 +1,7 @@
 ﻿using Imgur.API.Enums;
+using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models.Impl
 {
@@ -41,7 +43,8 @@ namespace Imgur.API.Models.Impl
         ///     The email addresses that have been activated to allow uploading.
         /// </summary>
         [JsonProperty("active_emails")]
-        public string[] ActiveEmails { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<string>>))]
+        public ICollection<string> ActiveEmails { get; set; }
 
         /// <summary>
         ///     If the user is accepting incoming messages or not.
@@ -53,7 +56,8 @@ namespace Imgur.API.Models.Impl
         ///     An array of users that have been blocked from messaging.
         /// </summary>
         [JsonProperty("blocked_users")]
-        public IBlockedUser[] BlockedUsers { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<IBlockedUser>>))]
+        public ICollection<IBlockedUser> BlockedUsers { get; set; }
 
         /// <summary>
         ///     True if the user has opted to have mature images displayed in gallery list endpoints.

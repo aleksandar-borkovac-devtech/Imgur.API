@@ -3,6 +3,7 @@ using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns>The comments posted to the gallery submission.</returns>
-        public async Task<IComment[]> GetCommentsAsync(string id, CommentSortOrder sort)
+        public async Task<ICollection<IComment>> GetCommentsAsync(string id, CommentSortOrder sort)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));

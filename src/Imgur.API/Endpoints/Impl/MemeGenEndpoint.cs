@@ -6,6 +6,7 @@ using Imgur.API.Exceptions;
 using Imgur.API.Authentication;
 using Imgur.API.RequestBuilders;
 using Imgur.API.Models.Impl;
+using System.Collections.Generic;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -36,7 +37,7 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>An array containing the default images.</returns>
-        public async Task<IImage[]> GetDefaultMemesAsync()
+        public async Task<ICollection<IImage>> GetDefaultMemesAsync()
         {
             var url = "memegen/defaults";
 

@@ -31,6 +31,7 @@ namespace Imgur.API.Models.Impl
         ///     An array of trophies that the user has.
         /// </summary>
         [JsonProperty("trophies")]
-        public Trophy[] Trophies { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<Trophy>>))]
+        public ICollection<ITrophy> Trophies { get; set; }
     }
 }

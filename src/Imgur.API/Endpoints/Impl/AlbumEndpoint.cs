@@ -217,7 +217,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IImage>> GetAlbumImagesAsync(string id)
+        public async Task<ICollection<IImage>> GetAlbumImagesAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -226,7 +226,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var images = await SendRequestAsync<IEnumerable<Image>>(request);
+                var images = await SendRequestAsync<Image[]>(request);
                 return images;
             }
         }

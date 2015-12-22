@@ -52,7 +52,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryAlbumImageBase[]> GetAccountGalleryFavoritesAsync(string username = "me",
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetAccountGalleryFavoritesAsync(string username = "me",
             int? page = null,
             GallerySortOrder? sort = GallerySortOrder.Newest)
         {
@@ -81,7 +81,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryAlbumImageBase[]> GetAccountFavoritesAsync()
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetAccountFavoritesAsync()
         {
             if (ApiClient.OAuth2Token == null)
                 throw new ArgumentNullException(nameof(ApiClient.OAuth2Token), OAuth2RequiredExceptionMessage);
@@ -105,7 +105,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IGalleryAlbumImageBase[]> GetAccountSubmissionsAsync(string username = "me", int? page = null)
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetAccountSubmissionsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));

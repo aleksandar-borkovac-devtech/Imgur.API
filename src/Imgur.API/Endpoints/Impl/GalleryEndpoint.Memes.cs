@@ -3,6 +3,7 @@ using Imgur.API.Exceptions;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace Imgur.API.Endpoints.Impl
 		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        public async Task<IGalleryMeme[]> GetMemesSubGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
+        public async Task<ICollection<IGalleryMeme>> GetMemesSubGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             var sortStr = sort.ToString().ToLower();
             var windowStr = window.ToString().ToLower();
@@ -41,7 +42,7 @@ namespace Imgur.API.Endpoints.Impl
 		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        public async Task<GalleryMemeImage> GetMemesSubGalleryImageAsync(string id)
+        public async Task<IGalleryMemeImage> GetMemesSubGalleryImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));

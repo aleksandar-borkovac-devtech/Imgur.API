@@ -1,5 +1,6 @@
 ﻿using Imgur.API.Enums;
 using Imgur.API.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Imgur.API.Endpoints
@@ -13,7 +14,7 @@ namespace Imgur.API.Endpoints
         ///     Get the list of default topics.
         /// </summary>
         /// <returns>An array of topics.</returns>
-        Task<ITopic[]> GetDefaultTopicsAsync();
+        Task<ICollection<ITopic>> GetDefaultTopicsAsync();
 
         /// <summary>
         ///     View gallery items for a topic.
@@ -23,7 +24,7 @@ namespace Imgur.API.Endpoints
         /// <param name="window">How old the items can be.</param>
         /// <param name="page">What page of the topic to fetch.</param>
         /// <returns>An array of gallery items.</returns>
-        Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+        Task<ICollection<IGalleryAlbumImageBase>> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
 
         /// <summary>
         ///     View a single item in a gallery topic.

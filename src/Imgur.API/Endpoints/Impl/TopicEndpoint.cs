@@ -5,6 +5,7 @@ using Imgur.API.Models;
 using Imgur.API.Authentication;
 using Imgur.API.RequestBuilders;
 using Imgur.API.Models.Impl;
+using System.Collections.Generic;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -31,7 +32,7 @@ namespace Imgur.API.Endpoints.Impl
         ///     Get the list of default topics.
         /// </summary>
         /// <returns>An array of topics.</returns>
-        public async Task<ITopic[]> GetDefaultTopicsAsync()
+        public async Task<ICollection<ITopic>> GetDefaultTopicsAsync()
         {
             var url = "topics/default";
 
@@ -67,7 +68,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="window">How old the items can be.</param>
         /// <param name="page">What page of the topic to fetch.</param>
         /// <returns>An array of gallery items.</returns>
-        public async Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             var sortStr = sort.ToString().ToLower();
             var windowStr = window.ToString().ToLower();

@@ -13,7 +13,7 @@ namespace Imgur.API.Models.Impl
     /// <summary>
     /// Description of GalleryMemeImage.
     /// </summary>
-    public class GalleryMemeImage : GalleryImage, IGalleryMeme
+    public class GalleryMemeImage : GalleryImage, IGalleryMemeImage
     {
         /// <summary>
         ///     The name of the meme used.

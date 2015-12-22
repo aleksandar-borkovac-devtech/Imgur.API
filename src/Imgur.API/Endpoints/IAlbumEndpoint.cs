@@ -69,7 +69,7 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="id">The album id.</param>
         /// <returns></returns>
-        Task<IEnumerable<IImage>> GetAlbumImagesAsync(string id);
+        Task<ICollection<IImage>> GetAlbumImagesAsync(string id);
 
         /// <summary>
         ///     Takes parameter, ids[], as an array of ids and removes from the album. For anonymous albums, {album} should be the

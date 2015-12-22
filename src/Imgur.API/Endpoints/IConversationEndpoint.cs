@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Imgur.API.Models;
+using System.Collections.Generic;
 
 namespace Imgur.API.Endpoints
 {
@@ -12,7 +13,7 @@ namespace Imgur.API.Endpoints
         /// Get list of all conversations for the logged in user.
         /// </summary>
         /// <returns></returns>
-		Task<IConversation[]> GetConversationListAsync();
+		Task<ICollection<IConversation>> GetConversationListAsync();
 
         /// <summary>
         /// Get information about a specific conversation. Includes messages.

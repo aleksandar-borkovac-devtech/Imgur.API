@@ -108,6 +108,7 @@ namespace Imgur.API.Models.Impl
         ///     All of the replies for this comment. If there are no replies to the comment then this is an empty set.
         /// </summary>
         [JsonProperty("children")]
-        public IComment[] Children { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<Comment>>))]
+        public ICollection<IComment> Children { get; set; }
     }
 }

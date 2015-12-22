@@ -47,7 +47,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException">Thrown when arguments are invalid or conflicting.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns>An array with gallery submissions.</returns>
-        public async Task<IGalleryAlbumImageBase[]> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true)
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetGalleryAsync(GallerySection section = GallerySection.Hot, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Day, uint page = 0, bool showViral = true)
         {
             if (sort == GallerySortBy.Rising && section != GallerySection.User)
                 throw new ArgumentException(nameof(sort) + " can only be rising if " + nameof(section) + " is user.");
@@ -72,7 +72,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns>The gallery image identified by the given ID.</returns>
-        public async Task<GalleryImage> GetGalleryImageAsync(string id)
+        public async Task<IGalleryImage> GetGalleryImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
             	throw new ArgumentNullException(nameof(id));
@@ -93,7 +93,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns>The gallery album identified by the given id.</returns>
-        public async Task<GalleryAlbum> GetGalleryAlbumAsync(string id)
+        public async Task<IGalleryAlbum> GetGalleryAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -201,7 +201,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>The tags related to the gallery submission.</returns>
-        public async Task<ITagVote[]> GetGalleryItemTagsAsync(string id)
+        public async Task<ICollection<ITagVote>> GetGalleryItemTagsAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -222,7 +222,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentException">Thrown when page was higher than 50.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>An array of gallery submissions.</returns>
-        public async Task<IGalleryAlbumImageBase[]> GetRandomItemsAsync(uint page = 0)
+        public async Task<ICollection<IGalleryAlbumImageBase>> GetRandomItemsAsync(uint page = 0)
         {
             if (page > randomPageMax)
                 throw new ArgumentException(nameof(page) + " can not be higher than 50.");
@@ -275,7 +275,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when id or tagname was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>The gallery image identified by the given id.</returns>
-        public async Task<GalleryImage> GetTagImageAsync(string tagname, string id)
+        public async Task<IGalleryImage> GetTagImageAsync(string tagname, string id)
         {
             if (string.IsNullOrEmpty(tagname))
                 throw new ArgumentNullException(nameof(tagname));
@@ -357,13 +357,13 @@ namespace Imgur.API.Endpoints.Impl
 		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>An array of gallery submissions matching the query.</returns>
-        public async Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0)
+        public async Task<ICollection<IGalleryAlbumImageBase>> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0)
         {
             if (string.IsNullOrEmpty(query))
                 throw new ArgumentNullException(nameof(query));
 				
 			if(sort == GallerySortBy.Rising)
-				throw new ArgumentException(nameof(query) + " cannot be Rising.");
+				throw new ArgumentException(nameof(sort) + " cannot be Rising.");
 
             var sortStr = sort.ToString().ToLower();
             var windowStr = window.ToString().ToLower();

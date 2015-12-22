@@ -66,7 +66,6 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
             var image = await endpoint.UploadImageBinaryAsync(file, null, "binary test title!", "binary test desc!");
 
             Assert.IsFalse(string.IsNullOrEmpty(image.Id));
-            Assert.IsFalse(string.IsNullOrEmpty(image.AccountId));
             Assert.AreEqual("binary test title!", image.Title);
             Assert.AreEqual("binary test desc!", image.Description);
 
@@ -80,7 +79,7 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
         {
             var client = new ImgurClient(ClientId, ClientSecret);
             var endpoint = new ImageEndpoint(client);
-            Image image = null;
+            IImage image = null;
 
             using (var fs = new FileStream("banana.gif", FileMode.Open))
             {
@@ -88,7 +87,6 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
             }
 
             Assert.IsFalse(string.IsNullOrEmpty(image.Id));
-            Assert.IsFalse(string.IsNullOrEmpty(image.AccountId));
             Assert.AreEqual("stream test title!", image.Title);
             Assert.AreEqual("stream test desc!", image.Description);
 
@@ -109,7 +107,6 @@ namespace Imgur.API.Tests.Integration.Endpoints.ImageEndpointTests
                         "url test desc!");
 
             Assert.IsFalse(string.IsNullOrEmpty(image.Id));
-            Assert.IsFalse(string.IsNullOrEmpty(image.AccountId));
             Assert.AreEqual("url test title!", image.Title);
             Assert.AreEqual("url test desc!", image.Description);
 

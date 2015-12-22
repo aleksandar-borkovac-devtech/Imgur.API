@@ -35,7 +35,7 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Notification> GetNotificationAsync(int id)
+        public async Task<INotification> GetNotificationAsync(int id)
         {
             var url = $"notification/{id}";
 
@@ -51,7 +51,7 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="onlyNewNotifications"></param>
         /// <returns></returns>
-        public async Task<Notifications> GetNotificationsAsync(bool onlyNewNotifications = true)
+        public async Task<INotifications> GetNotificationsAsync(bool onlyNewNotifications = true)
         {
             var url = $"notifications?new={onlyNewNotifications}";
 

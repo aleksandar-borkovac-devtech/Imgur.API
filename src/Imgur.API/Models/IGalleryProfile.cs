@@ -26,6 +26,6 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of trophies that the user has.
         /// </summary>
-        Trophy[] Trophies { get; set; }
+        ICollection<ITrophy> Trophies { get; set; }
     }
 }

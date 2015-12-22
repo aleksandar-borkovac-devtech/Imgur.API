@@ -6,6 +6,7 @@ using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
 using Imgur.API.Models.Impl;
 using Imgur.API.RequestBuilders;
+using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -42,7 +43,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image> GetImageAsync(string id)
+        public async Task<IImage> GetImageAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
@@ -71,7 +72,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image> UploadImageBinaryAsync(byte[] image, string album = null, string title = null,
+        public async Task<IImage> UploadImageBinaryAsync(byte[] image, string album = null, string title = null,
             string description = null)
         {
             if (image == null)
@@ -101,7 +102,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image> UploadImageStreamAsync(Stream image, string album = null, string title = null,
+        public async Task<IImage> UploadImageStreamAsync(Stream image, string album = null, string title = null,
             string description = null)
         {
             if (image == null)
@@ -131,7 +132,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image> UploadImageUrlAsync(string image, string album = null, string title = null,
+        public async Task<IImage> UploadImageUrlAsync(string image, string album = null, string title = null,
             string description = null)
         {
             if (string.IsNullOrEmpty(image))

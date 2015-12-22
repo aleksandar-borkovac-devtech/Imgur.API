@@ -1,4 +1,5 @@
 ﻿using Imgur.API.Models;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
@@ -20,7 +21,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the gallery items in the custom gallery
         /// </summary>
-        IGalleryAlbumImageBase[] Items { get; set; }
+        ICollection<IGalleryAlbumImageBase> Items { get; set; }
 
         /// <summary>
         ///     The URL link to the custom gallery
@@ -30,6 +31,6 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the tag names in the custom gallery.
         /// </summary>
-        string[] Tags { get; set; }
+        ICollection<string> Tags { get; set; }
     }
 }

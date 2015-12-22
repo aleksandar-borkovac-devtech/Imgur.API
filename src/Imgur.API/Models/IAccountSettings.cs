@@ -1,4 +1,5 @@
 ﻿using Imgur.API.Enums;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
@@ -15,7 +16,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The email addresses that have been activated to allow uploading.
         /// </summary>
-        string[] ActiveEmails { get; set; }
+        ICollection<string> ActiveEmails { get; set; }
 
         /// <summary>
         ///     Set the album privacy to this privacy setting on creation.
@@ -25,7 +26,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of users that have been blocked from messaging.
         /// </summary>
-        IBlockedUser[] BlockedUsers { get; set; }
+        ICollection<IBlockedUser> BlockedUsers { get; set; }
 
         /// <summary>
         ///     The users email address.

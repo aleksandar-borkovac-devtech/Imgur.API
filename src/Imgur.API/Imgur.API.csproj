@@ -52,6 +52,11 @@
     <Compile Include="Endpoints\Impl\CommentEndpoint.cs" />
     <Compile Include="Endpoints\Impl\GalleryEndpoint.Comments.cs" />
     <Compile Include="Endpoints\Impl\GalleryEndpoint.Memes.cs" />
+    <Compile Include="Models\IGalleryAlbum.cs" />
+    <Compile Include="Models\IGalleryImage.cs" />
+    <Compile Include="Models\IGalleryRedditImage.cs" />
+    <Compile Include="Models\IGalleryMemeAlbum.cs" />
+    <Compile Include="Models\IGalleryMemeImage.cs" />
     <Compile Include="RequestBuilders\MemeGenRequestBuilder.cs" />
     <Compile Include="Enums\AlbumLayout.cs" />
     <Compile Include="Enums\OAuth2ResponseType.cs" />

@@ -1,4 +1,5 @@
 ﻿using Imgur.API.Models;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
@@ -20,7 +21,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the gallery items in the custom gallery
         /// </summary>
-        IGalleryAlbumImageBase[] Items { get; set; }
+        ICollection<IGalleryAlbumImageBase> Items { get; set; }
 
         /// <summary>
         ///     Name of the tag.

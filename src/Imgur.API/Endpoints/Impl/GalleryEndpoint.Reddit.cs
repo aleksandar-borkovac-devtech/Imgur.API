@@ -1,7 +1,9 @@
 ﻿using Imgur.API.Enums;
 using Imgur.API.Exceptions;
+using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,7 +22,7 @@ namespace Imgur.API.Endpoints.Impl
 		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        public async Task<GalleryRedditImage[]> GetSubredditGalleryAsync(string subreddit, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
+        public async Task<ICollection<IGalleryRedditImage>> GetSubredditGalleryAsync(string subreddit, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             if (string.IsNullOrEmpty(subreddit))
                 throw new ArgumentNullException(nameof(subreddit));
@@ -44,7 +46,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        public async Task<GalleryRedditImage> GetSubredditGalleryImageAsync(string subreddit, string id)
+        public async Task<IGalleryRedditImage> GetSubredditGalleryImageAsync(string subreddit, string id)
         {
             if (string.IsNullOrEmpty(subreddit))
                 throw new ArgumentNullException(nameof(subreddit));

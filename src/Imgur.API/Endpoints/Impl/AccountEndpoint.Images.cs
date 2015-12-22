@@ -25,7 +25,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<IImage>> GetImagesAsync(string username = "me", int? page = null)
+        public async Task<ICollection<IImage>> GetImagesAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
@@ -37,7 +37,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = ImageRequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var images = await SendRequestAsync<IEnumerable<Image>>(request);
+                var images = await SendRequestAsync<Image[]>(request);
                 return images;
             }
         }
@@ -84,7 +84,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetImageIdsAsync(string username = "me", int? page = null)
+        public async Task<ICollection<string>> GetImageIdsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
@@ -96,7 +96,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = ImageRequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var images = await SendRequestAsync<IEnumerable<string>>(request);
+                var images = await SendRequestAsync<string[]>(request);
                 return images;
             }
         }

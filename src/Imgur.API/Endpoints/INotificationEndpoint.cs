@@ -14,14 +14,14 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="onlyNewNotifications"></param>
         /// <returns></returns>
-        Task<Notifications> GetNotificationsAsync(bool onlyNewNotifications = true);
+        Task<INotifications> GetNotificationsAsync(bool onlyNewNotifications = true);
 
         /// <summary>
         /// Returns the data about a specific notification
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Notification> GetNotificationAsync(int id);
+        Task<INotification> GetNotificationAsync(int id);
 
         /// <summary>
         /// Marks a set of notifications as viewed, this way they no longer shows up in the basic notification request.

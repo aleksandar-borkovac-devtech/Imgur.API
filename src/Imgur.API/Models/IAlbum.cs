@@ -1,5 +1,6 @@
 ﻿using Imgur.API.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
@@ -46,7 +47,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
-        IImage[] Images { get; set; }
+        ICollection<IImage> Images { get; set; }
 
         /// <summary>
         /// The account username or null if it's anonymous.

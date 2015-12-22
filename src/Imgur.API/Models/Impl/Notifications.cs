@@ -12,11 +12,15 @@ namespace Imgur.API.Models.Impl
         /// <summary>
         ///     An array of message notifications.
         /// </summary>
-        public INotification[] Messages { get; set; }
+        [JsonProperty("messages")]
+        [JsonConverter(typeof(TypeConverter<ICollection<Notification>>))]
+        public ICollection<INotification> Messages { get; set; }
 
         /// <summary>
         ///     An array of comment notifications.
         /// </summary>
-        public INotification[] Replies { get; set; }
+        [JsonProperty("messages")]
+        [JsonConverter(typeof(TypeConverter<ICollection<Notification>>))]
+        public ICollection<INotification> Replies { get; set; }
     }
 }

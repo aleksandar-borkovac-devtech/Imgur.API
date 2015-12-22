@@ -1,6 +1,7 @@
 using Imgur.API.Models;
 using Imgur.API.Exceptions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Imgur.API.Endpoints
 {
@@ -17,6 +18,6 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>An array containing the default images.</returns>
-        Task<IImage[]> GetDefaultMemesAsync();
+        Task<ICollection<IImage>> GetDefaultMemesAsync();
     }
 }

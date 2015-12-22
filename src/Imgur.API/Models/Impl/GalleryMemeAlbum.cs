@@ -1,19 +1,11 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 10-12-2015
- * Time: 4:31 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Imgur.API.Models.Impl
 {
     /// <summary>
     /// Description of GalleryMemeAlbum.
     /// </summary>
-    public class GalleryMemeAlbum : GalleryAlbum, IGalleryMeme
+    public class GalleryMemeAlbum : GalleryAlbum, IGalleryMemeAlbum
     {
         /// <summary>
         ///     The name of the meme used.

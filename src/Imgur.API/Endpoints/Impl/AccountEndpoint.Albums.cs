@@ -24,7 +24,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IAlbum[]> GetAlbumsAsync(string username = "me", int? page = null)
+        public async Task<ICollection<IAlbum>> GetAlbumsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
@@ -83,7 +83,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<IEnumerable<string>> GetAlbumIdsAsync(string username = "me", int? page = null)
+        public async Task<ICollection<string>> GetAlbumIdsAsync(string username = "me", int? page = null)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
@@ -96,7 +96,7 @@ namespace Imgur.API.Endpoints.Impl
 
             using (var request = AlbumRequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                var albums = await SendRequestAsync<IEnumerable<string>>(request);
+                var albums = await SendRequestAsync<string[]>(request);
                 return albums;
             }
         }

@@ -6,8 +6,10 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Imgur.API.Models.Impl
 {
@@ -44,6 +46,7 @@ namespace Imgur.API.Models.Impl
         /// Gallery items with current tag.
         /// </summary>
         [JsonProperty("items")]
-        public IGalleryAlbumImageBase[] Items { get; set; }
+        [JsonConverter(typeof(TypeConverter<ICollection<IGalleryAlbumImageBase>>))]
+        public ICollection<IGalleryAlbumImageBase> Items { get; set; }
     }
 }
