@@ -1,304 +1,323 @@
-﻿using Imgur.API.Authentication;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Imgur.API.Enums;
-using Imgur.API.Models.Impl;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Imgur.API.Authentication;
+using Imgur.API.Enums;
+using Imgur.API.Exceptions;
+using Imgur.API.Models;
+using Imgur.API.Models.Impl;
+using Imgur.API.RequestBuilders;
 
 namespace Imgur.API.Endpoints.Impl
 {
     /// <summary>
-    /// Implements album related actions.
+    ///     Album related actions.
     /// </summary>
     public class AlbumEndpoint : EndpointBase, IAlbumEndpoint
     {
-        private const string getAlbumUrl = "album/{0}";
-        private const string getAlbumImagesUrl = "album/{0}/images";
-        private const string getAlbumImageUrl = "album/{0}/image/{1}";
-        private const string createAlbumUrl = "album";
-        private const string updateAlbumUrl = "album/{0}";
-        private const string deleteAlbumUrl = "album/{0}";
-        private const string favoriteAlbumUrl = "album/{0}/favorite";
-        private const string setAlbumImagesUrl = "album/{0}";
-        private const string addAlbumImagesUrl = "album/{0}/add";
-        private const string removeAlbumImagesUrl = "album/{0}/remove_images";
-
         /// <summary>
-        /// Initializes the endpoint.
+        ///     Initializes a new instance of the AlbumEndpoint class.
         /// </summary>
-        /// <param name="client"></param>
-        public AlbumEndpoint(IApiClient client) : base(client)
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
+        public AlbumEndpoint(IApiClient apiClient) : base(apiClient)
         {
         }
 
         /// <summary>
-        /// Get information about a specific album.
+        ///     Initializes a new instance of the AlbumEndpoint class.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
+        /// <param name="httpClient"> The class for sending HTTP requests and receiving HTTP responses from the endpoint methods.</param>
+        internal AlbumEndpoint(IApiClient apiClient, HttpClient httpClient) : base(apiClient, httpClient)
+        {
+        }
+
+        internal AlbumRequestBuilder RequestBuilder { get; } = new AlbumRequestBuilder();
+
+        /// <summary>
+        ///     Takes parameter, ids[], as an array of ids to add to the album. For anonymous albums, {album} should be the
+        ///     deletehash
+        ///     that is returned at creation.
+        /// </summary>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be added to the album.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Album> GetAlbumAsync(string id)
+        public async Task<bool> AddAlbumImagesAsync(string album, IEnumerable<string> ids)
+        {
+            if (string.IsNullOrEmpty(album))
+                throw new ArgumentNullException(nameof(album));
+
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            var url = $"album/{album}/add";
+
+            using (var request = RequestBuilder.AddAlbumImagesRequest(url, ids))
+            {
+                var added = await SendRequestAsync<bool>(request);
+                return added;
+            }
+        }
+
+        /// <summary>
+        ///     Create a new album.
+        /// </summary>
+        /// <param name="title">The title of the album.</param>
+        /// <param name="description">The description of the album.</param>
+        /// <param name="privacy">Sets the privacy level of the album.</param>
+        /// <param name="layout">Sets the layout to display the album.</param>
+        /// <param name="cover">The Id of an image that you want to be the cover of the album.</param>
+        /// <param name="ids">The image ids that you want to be included in the album.</param>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
+        /// <returns></returns>
+        public async Task<IAlbum> CreateAlbumAsync(string title = null, string description = null,
+            AlbumPrivacy? privacy = null, AlbumLayout? layout = null, string cover = null,
+            IEnumerable<string> ids = null)
+        {
+            var url = "album";
+
+            using (var request = RequestBuilder.CreateAlbumRequest(url, title, description, privacy, layout, cover, ids)
+                )
+            {
+                var album = await SendRequestAsync<Album>(request);
+                return album;
+            }
+        }
+
+        /// <summary>
+        ///     Delete an album with a given Id. You are required to be logged in as the user to delete the album. For anonymous
+        ///     albums, {album} should be the deletehash that is returned at creation.
+        /// </summary>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
+        /// <returns></returns>
+        public async Task<bool> DeleteAlbumAsync(string album)
+        {
+            if (string.IsNullOrEmpty(album))
+                throw new ArgumentNullException(nameof(album));
+
+            var url = $"album/{album}";
+
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Delete, url))
+            {
+                var deleted = await SendRequestAsync<bool>(request);
+                return deleted;
+            }
+        }
+
+        /// <summary>
+        ///     Favorite an album with a given Id. OAuth authentication required.
+        /// </summary>
+        /// <param name="id">The album id.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
+        /// <returns></returns>
+        public async Task<bool> FavoriteAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getAlbumUrl);
-            endpointUrl = string.Format(endpointUrl, id);
-            var album = await MakeEndpointRequestAsync<Album>(HttpMethod.Get, endpointUrl);
-            return album;
+            if (ApiClient.OAuth2Token == null)
+                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token), OAuth2RequiredExceptionMessage);
+
+            var url = $"album/{id}/favorite";
+
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Post, url))
+            {
+                //The structure of the response of favoriting an album
+                //varies on if Imgur or Mashape Authentication is used
+                if (ApiClient is IImgurClient)
+                {
+                    var imgurResult = await SendRequestAsync<string>(request);
+                    return imgurResult.Equals("favorited", StringComparison.OrdinalIgnoreCase);
+                }
+
+                //If Mashape Authentication is used, the favorite is returned as an exception
+                try
+                {
+                    await SendRequestAsync<string>(request);
+                }
+                catch (ImgurException imgurException)
+                {
+                    return imgurException.Message.Equals("f", StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Get information about an image in an album, any additional actions found in <see cref="IImageEndpoint"/> will also work. 
+        ///     Get information about a specific album.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="imageId"></param>
+        /// <param name="id">The album id.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image> GetAlbumImageAsync(string id, string imageId)
+        public async Task<IAlbum> GetAlbumAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            if (string.IsNullOrEmpty(imageId))
-                throw new ArgumentNullException(nameof(imageId));
+            var url = $"album/{id}";
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getAlbumImageUrl);
-            endpointUrl = string.Format(endpointUrl, id, imageId);
-            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl);
-            return image;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var album = await SendRequestAsync<Album>(request);
+                return album;
+            }
         }
 
         /// <summary>
-        /// Return all of the images in the album
+        ///     Get information about an image in an album.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The album id.</param>
+        /// <param name="image">The image id.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<Image[]> GetAlbumImagesAsync(string id)
+        public async Task<IImage> GetAlbumImageAsync(string id, string image)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getAlbumImagesUrl);
-            endpointUrl = string.Format(endpointUrl, id);
-            var images = await MakeEndpointRequestAsync<Image[]>(HttpMethod.Get, endpointUrl);
-            return images;
-        }
+            if (string.IsNullOrEmpty(image))
+                throw new ArgumentNullException(nameof(image));
 
-        /// <summary>
-        /// Create a new album. Optional parameter of ids[] is an array of image ids to add to the album.
-        ///
-        /// This method is available without authenticating an account. Doing so will create an anonymous album which is not tied to an account.
-        /// </summary>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="privacy"></param>
-        /// <param name="layout"></param>
-        /// <param name="coverID"></param>
-        /// <param name="imageIds"></param>
-        /// <returns></returns>
-        public async Task<object> CreateAlbumAsync(
-            string title = null, string description = null,
-            AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
-            string coverID = null, string[] imageIds = null)
-        {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), createAlbumUrl);
+            var url = $"album/{id}/image/{image}";
 
-            object result;
-
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
             {
-                if (!string.IsNullOrEmpty(title))
-                    content.Add(new StringContent(title), "title");
-
-                if (!string.IsNullOrEmpty(description))
-                    content.Add(new StringContent(description), "description");
-
-                if (!string.IsNullOrEmpty(coverID))
-                    content.Add(new StringContent(coverID), "cover");
-
-                if (privacy != null)
-                    content.Add(new StringContent(privacy.ToString().ToLower()), "privacy");
-
-                if (imageIds != null)
-                    content.Add(new StringContent(string.Join(",", imageIds)), "ids");
-
-                content.Add(new StringContent(layout.ToString().ToLower()), "layout");
-
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                var returnImage = await SendRequestAsync<Image>(request);
+                return returnImage;
             }
-
-            return result;
         }
 
         /// <summary>
-        /// Takes parameter, ids[], as an array of ids to add to the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Return all of the images in the album.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="id">The album id.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<object> AddAlbumImagesAsync(string album, string[] imageIds)
-        {
-            if (string.IsNullOrEmpty(album))
-                throw new ArgumentNullException(nameof(album));
-
-            if (imageIds == null)
-                throw new ArgumentNullException(nameof(imageIds));
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), addAlbumImagesUrl);
-            endpointUrl = string.Format(endpointUrl, album);
-
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
-            {
-                content.Add(new StringContent(string.Join(",", imageIds)), "ids");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Delete an album with a given ID. You are required to be logged in as the user to delete the album. For anonymous albums, album should be the deletehash that is returned at creation. 
-        /// </summary>
-        /// <param name="album"></param>
-        /// <returns></returns>
-        public async Task<object> DeleteAlbumAsync(string album)
-        {
-            if (string.IsNullOrEmpty(album))
-                throw new ArgumentNullException(nameof(album));
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteAlbumUrl);
-            endpointUrl = string.Format(endpointUrl, album);
-
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl);
-            return result;
-        }
-
-        /// <summary>
-        /// Favorite an album with a given ID. The user is required to be logged in to favorite the album.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<object> FavoriteAlbumAsync(string id)
+        public async Task<IEnumerable<IImage>> GetAlbumImagesAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), favoriteAlbumUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            var url = $"album/{id}/images";
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var images = await SendRequestAsync<IEnumerable<Image>>(request);
+                return images;
+            }
         }
 
         /// <summary>
-        /// Takes parameter, ids[], as an array of ids to from the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Takes parameter, ids[], as an array of ids and removes from the album. For anonymous albums, {album} should be the
+        ///     deletehash that is returned at creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be removed from the album.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<object> RemoveAlbumImagesAsync(string album, string[] imageIds)
+        public async Task<bool> RemoveAlbumImagesAsync(string album, IEnumerable<string> ids)
         {
             if (string.IsNullOrEmpty(album))
                 throw new ArgumentNullException(nameof(album));
 
-            if (imageIds == null)
-                throw new ArgumentNullException(nameof(imageIds));
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), removeAlbumImagesUrl);
-            endpointUrl = string.Format(endpointUrl, album);
+            var url = $"album/{album}/remove_images";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.RemoveAlbumImagesRequest(url, ids))
             {
-                content.Add(new StringContent(string.Join(",", imageIds)), "ids");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                var removed = await SendRequestAsync<bool>(request);
+                return removed;
             }
-
-            return result;
         }
 
         /// <summary>
-        /// Sets the images for an album, removes all other images and only uses the images in this request. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Sets the images for an album, removes all other images and only uses the images in this request. For anonymous
+        ///     albums, {album} should be the deletehash that is returned at creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be added to the album.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<object> SetAlbumImagesAsync(string album, string[] imageIds)
+        public async Task<bool> SetAlbumImagesAsync(string album, IEnumerable<string> ids)
         {
             if (string.IsNullOrEmpty(album))
                 throw new ArgumentNullException(nameof(album));
 
-            if (imageIds == null)
-                throw new ArgumentNullException(nameof(imageIds));
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), setAlbumImagesUrl);
-            endpointUrl = string.Format(endpointUrl, album);
+            var url = $"album/{album}";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.SetAlbumImagesRequest(url, ids))
             {
-                content.Add(new StringContent(string.Join(",", imageIds)), "ids");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                var set = await SendRequestAsync<bool>(request);
+                return set;
             }
-
-            return result;
         }
 
         /// <summary>
-        /// Update the information of an album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Update the information of an album. For anonymous albums, {album} should be the deletehash that is returned at
+        ///     creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="privacy"></param>
-        /// <param name="layout"></param>
-        /// <param name="coverID"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="title">The title of the album.</param>
+        /// <param name="description">The description of the album.</param>
+        /// <param name="privacy">Sets the privacy level of the album.</param>
+        /// <param name="layout">Sets the layout to display the album.</param>
+        /// <param name="cover">The Id of an image that you want to be the cover of the album.</param>
+        /// <param name="ids">The image ids that you want to be included in the album.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        public async Task<object> UpdateAlbumAsync(string album,
-            string title = null, string description = null,
-            AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
-            string coverID = null, string[] imageIds = null)
+        public async Task<bool> UpdateAlbumAsync(string album, string title = null, string description = null,
+            AlbumPrivacy? privacy = null, AlbumLayout? layout = null, string cover = null,
+            IEnumerable<string> ids = null)
         {
             if (string.IsNullOrEmpty(album))
                 throw new ArgumentNullException(nameof(album));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), updateAlbumUrl);
-            endpointUrl = string.Format(endpointUrl, album);
+            var url = $"album/{album}";
 
-            object result;
-
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.UpdateAlbumRequest(url, title, description, privacy, layout, cover, ids)
+                )
             {
-                if (!string.IsNullOrEmpty(title))
-                    content.Add(new StringContent(title), "title");
-
-                if (!string.IsNullOrEmpty(description))
-                    content.Add(new StringContent(description), "description");
-
-                if (!string.IsNullOrEmpty(coverID))
-                    content.Add(new StringContent(coverID), "cover");
-
-                if (privacy != null)
-                    content.Add(new StringContent(privacy.ToString().ToLower()), "privacy");
-
-                if (imageIds != null)
-                    content.Add(new StringContent(string.Join(",", imageIds)), "ids");
-
-                content.Add(new StringContent(layout.ToString().ToLower()), "layout");
-
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content);
+                var updated = await SendRequestAsync<bool>(request);
+                return updated;
             }
-
-            return result;
         }
     }
 }

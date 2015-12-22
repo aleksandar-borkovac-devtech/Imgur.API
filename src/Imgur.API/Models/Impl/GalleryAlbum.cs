@@ -1,16 +1,8 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 09-12-2015
- * Time: 3:57 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
+﻿using System;
+using System.Collections.Generic;
 using Imgur.API.Enums;
 using Imgur.API.JsonConverters;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
 namespace Imgur.API.Models.Impl
 {
@@ -61,7 +53,7 @@ namespace Imgur.API.Models.Impl
         ///     The total number of images in the album.
         /// </summary>
         [JsonProperty("images_count")]
-        public int ImageCount { get; set; }
+        public int ImagesCount { get; set; }
 
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).

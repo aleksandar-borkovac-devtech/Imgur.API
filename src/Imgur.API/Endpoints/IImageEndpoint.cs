@@ -11,61 +11,26 @@ namespace Imgur.API.Endpoints
     public interface IImageEndpoint : IEndpoint
     {
         /// <summary>
-        ///     Get information about an image.
-        /// </summary>
-        /// <param name="id">The image id.</param>
-        /// <returns></returns>
-        Task<Image> GetImageAsync(string id);
-
-        /// <summary>
-        ///     Upload a new image using a stream.
-        /// </summary>
-        /// <param name="image">A stream.</param>
-        /// <param name="album">
-        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
-        ///     deletehash that is returned at creation.
-        /// </param>
-        /// <param name="title">The title of the image.</param>
-        /// <param name="description">The description of the image.</param>
-        /// <returns></returns>
-        Task<Image> UploadImageStreamAsync(Stream image, string album = null, string title = null,
-            string description = null);
-
-        /// <summary>
-        ///     Upload a new image using a binary file.
-        /// </summary>
-        /// <param name="image">A binary file.</param>
-        /// <param name="album">
-        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
-        ///     deletehash that is returned at creation.
-        /// </param>
-        /// <param name="title">The title of the image.</param>
-        /// <param name="description">The description of the image.</param>
-        /// <returns></returns>
-        Task<Image> UploadImageBinaryAsync(byte[] image, string album = null, string title = null,
-            string description = null);
-
-        /// <summary>
-        ///     Upload a new image using a URL.
-        /// </summary>
-        /// <param name="image">The URL for the image.</param>
-        /// <param name="album">
-        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
-        ///     deletehash that is returned at creation.
-        /// </param>
-        /// <param name="title">The title of the image.</param>
-        /// <param name="description">The description of the image.</param>
-        /// <returns></returns>
-        Task<Image> UploadImageUrlAsync(string image, string album = null, string title = null,
-            string description = null);
-
-        /// <summary>
         ///     Deletes an image. For an anonymous image, {id} must be the image's deletehash.
         ///     If the image belongs to your account then passing the ID of the image is sufficient.
         /// </summary>
         /// <param name="id">The image id.</param>
         /// <returns></returns>
         Task<bool> DeleteImageAsync(string id);
+
+        /// <summary>
+        ///     Favorite an image with the given ID. OAuth authentication required.
+        /// </summary>
+        /// <param name="id">The image id.</param>
+        /// <returns></returns>
+        Task<bool> FavoriteImageAsync(string id);
+
+        /// <summary>
+        ///     Get information about an image.
+        /// </summary>
+        /// <param name="id">The image id.</param>
+        /// <returns></returns>
+        Task<Image> GetImageAsync(string id);
 
         /// <summary>
         ///     Updates the title or description of an image.
@@ -79,10 +44,42 @@ namespace Imgur.API.Endpoints
         Task<bool> UpdateImageAsync(string id, string title = null, string description = null);
 
         /// <summary>
-        ///     Favorite an image with the given ID. The user is required to be logged in to favorite the image.
+        ///     Upload a new image using a binary file.
         /// </summary>
-        /// <param name="id">The image id.</param>
+        /// <param name="image">A binary file.</param>
+        /// <param name="album">
+        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
+        ///     deletehash that is returned at creation.
+        /// </param>
+        /// <param name="title">The title of the image.</param>
+        /// <param name="description">The description of the image.</param>
         /// <returns></returns>
-        Task<bool> FavoriteImageAsync(string id);
+        Task<Image> UploadImageBinaryAsync(byte[] image, string album = null, string title = null, string description = null);
+
+        /// <summary>
+        ///     Upload a new image using a stream.
+        /// </summary>
+        /// <param name="image">A stream.</param>
+        /// <param name="album">
+        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
+        ///     deletehash that is returned at creation.
+        /// </param>
+        /// <param name="title">The title of the image.</param>
+        /// <param name="description">The description of the image.</param>
+        /// <returns></returns>
+        Task<Image> UploadImageStreamAsync(Stream image, string album = null, string title = null, string description = null);
+
+        /// <summary>
+        ///     Upload a new image using a URL.
+        /// </summary>
+        /// <param name="image">The URL for the image.</param>
+        /// <param name="album">
+        ///     The id of the album you want to add the image to. For anonymous albums, {album} should be the
+        ///     deletehash that is returned at creation.
+        /// </param>
+        /// <param name="title">The title of the image.</param>
+        /// <param name="description">The description of the image.</param>
+        /// <returns></returns>
+        Task<Image> UploadImageUrlAsync(string image, string album = null, string title = null, string description = null);
     }
 }

@@ -1,16 +1,9 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 11-12-2015
- * Time: 12:43 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Imgur.API.Models;
 using System.Net.Http;
 using Imgur.API.Authentication;
+using Imgur.API.RequestBuilders;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -19,13 +12,6 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class ConversationEndpoint : EndpointBase, IConversationEndpoint
     {
-        private const string blockSenderUrl = "conversation/block/{0}";
-        private const string reportSenderUrl = "conversation/report/{0}";
-        private const string sendMessageUrl = "conversation/{0}";
-        private const string deleteConversationUrl = "conversation/{0}";
-        private const string getConversationUrl = "conversations/{0}/{1}/{2}";
-        private const string getConversationsListUrl = "conversations";
-
         /// <summary>
         /// Initializes the conversation endpoint.
         /// </summary>
@@ -34,16 +20,25 @@ namespace Imgur.API.Endpoints.Impl
         {
         }
 
+        internal ConversationEndpoint(IApiClient client, HttpClient httpClient) : base(client, httpClient)
+        {
+        }
+
+        internal ConversationRequestBuilder RequestBuilder { get; } = new ConversationRequestBuilder();
+
         /// <summary>
         /// Get list of all conversations for the logged in user.
         /// </summary>
         /// <returns></returns>
         public async Task<IConversation[]> GetConversationListAsync()
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getConversationsListUrl);
+            var url = "conversations";
 
-            var result = await MakeEndpointRequestAsync<IConversation[]>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var conversations = await SendRequestAsync<IConversation[]>(request);
+                return conversations;
+            }
         }
 
         /// <summary>
@@ -55,11 +50,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns></returns>
         public async Task<IConversation> GetConversationAsync(int id, uint page = 1u, uint offset = 0u)
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getConversationUrl);
-            endpointUrl = string.Format(endpointUrl, id, page, offset);
+            var url = $"conversations/{id}/{page}/{offset}";
 
-            var result = await MakeEndpointRequestAsync<IConversation>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var conversation = await SendRequestAsync<IConversation>(request);
+                return conversation;
+            }
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="recipient"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-        public async Task<object> SendMessageAsync(string recipient, string body)
+        public async Task<bool> SendMessageAsync(string recipient, string body)
         {
             if (string.IsNullOrEmpty(recipient))
                 throw new ArgumentNullException(nameof(recipient));
@@ -76,18 +73,13 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(body))
                 throw new ArgumentNullException(nameof(body));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), sendMessageUrl);
-            endpointUrl = string.Format(endpointUrl, recipient);
+            var url = $"conversations/{recipient}";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.PostConversationMessageRequest(url, body))
             {
-                content.Add(new StringContent(body), "body");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, content, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-
-            return result;
         }
 
         /// <summary>
@@ -95,13 +87,15 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<object> DeleteConversation(int id)
+        public async Task<bool> DeleteConversation(int id)
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), deleteConversationUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            var url = $"conversation/{id}";
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Delete, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Delete, url))
+            {
+                var result = await SendRequestAsync<bool>(request);
+                return result;
+            }
         }
 
         /// <summary>
@@ -109,16 +103,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public async Task<object> ReportSenderAsync(string username)
+        public async Task<bool> ReportSenderAsync(string username)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), reportSenderUrl);
-            endpointUrl = string.Format(endpointUrl, username);
+            var url = $"conversation/report/{username}";
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Post, url))
+            {
+                var result = await SendRequestAsync<bool>(request);
+                return result;
+            }
         }
 
         /// <summary>
@@ -126,16 +122,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public async Task<object> BlockSenderAsync(string username)
+        public async Task<bool> BlockSenderAsync(string username)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentNullException(nameof(username));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), blockSenderUrl);
-            endpointUrl = string.Format(endpointUrl, username);
+            var url = $"conversation/block/{username}";
 
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Post, url))
+            {
+                var result = await SendRequestAsync<bool>(request);
+                return result;
+            }
         }
     }
 }

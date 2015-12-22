@@ -1,4 +1,4 @@
-version: 3.1.0-build{build}
+version: 3.2.0-build{build}
 environment:
   VisualStudioVersion: 14.0
 install:
@@ -7,9 +7,9 @@ install:
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: 3.1.0
-  assembly_file_version: 3.1.0.{build}
-  assembly_informational_version: '3.1.0-build{build}'
+  assembly_version: 3.2.0
+  assembly_file_version: 3.2.0.{build}
+  assembly_informational_version: '3.2.0-build{build}'
 build:
   project: Imgur.API.sln
   publish_nuget: true
@@ -22,7 +22,7 @@ artifacts:
   path: artifacts\*.nupkg
 deploy:
 - provider: NuGet
-  server: https://www.myget.org/F/imgur-api/api/v2
+  server: https://www.myget.org/F/damiendennehy/api/v2/package
   api_key:
     secure: VKpWEiDhfRypjFf7MgnSlOJBdzQ1sOT87+aUCzjpj0wAFE8pOLJxcbXPR/6qqVBU
-  symbol_server: https://nuget.symbolsource.org/MyGet/imgur-api
+  symbol_server: https://nuget.symbolsource.org/MyGet/damiendennehy

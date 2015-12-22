@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Imgur.API.Enums
+﻿namespace Imgur.API.Enums
 {
     /// <summary>
-    /// The various layouts of an album.
+    ///     The album's display layout.
     /// </summary>
     public enum AlbumLayout
     {
         /// <summary>
-        /// Blog layout.
+        ///     Blog layout.
         /// </summary>
         Blog,
 
         /// <summary>
-        /// Grid layout.
+        ///     Grid layout.
         /// </summary>
         Grid,
 
         /// <summary>
-        /// Horizontal layout.
+        ///     Horizontal layout.
         /// </summary>
         Horizontal,
 
         /// <summary>
-        /// Vertical layout.
+        ///     Vertial layout.
         /// </summary>
         Vertical
     }

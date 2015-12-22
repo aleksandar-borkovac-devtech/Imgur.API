@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Imgur.API.Models;
 using Imgur.API.Models.Impl;
 using System.Net.Http;
+using Imgur.API.Authentication;
+using Imgur.API.RequestBuilders;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -14,57 +16,50 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class NotificationEndpoint : EndpointBase, INotificationEndpoint
     {
-        private const string getNotificationsUrl = "notification?new={0}";
-        private const string getNotificationUrl = "notification/{0}";
-        private const string markNotificationAsReadUrl = "notification";
-        private const string markNotificationsAsReadUrl = "notification/{0}";
+        /// <summary>
+        /// Initializes a new instance of the NotificationEndpoint.
+        /// </summary>
+        /// <param name="client">The API client to use.</param>
+        public NotificationEndpoint(IApiClient client) : base(client)
+        {
+        }
+
+        internal NotificationEndpoint(IApiClient client, HttpClient httpClient) : base(client, httpClient)
+        {
+        }
+
+        internal NotificationRequestBuilder RequestBuilder { get; } = new NotificationRequestBuilder();
 
         /// <summary>
-        /// Returns the data about a specific notification
+        /// Returns the data about a specific notification.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Notification> GetNotificationAsync(string id)
+        public async Task<Notification> GetNotificationAsync(int id)
         {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(nameof(id));
+            var url = $"notification/{id}";
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getNotificationUrl);
-            endpointUrl = string.Format(endpointUrl, id);
-
-            var notification = await MakeEndpointRequestAsync<Notification>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return notification;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var notification = await SendRequestAsync<Notification>(request);
+                return notification;
+            }
         }
 
         /// <summary>
-        /// Get all notifications for the user that's currently logged in
+        /// Get all notifications for the user that's currently logged in.
         /// </summary>
         /// <param name="onlyNewNotifications"></param>
         /// <returns></returns>
         public async Task<Notifications> GetNotificationsAsync(bool onlyNewNotifications = true)
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getNotificationUrl);
-            endpointUrl = string.Format(endpointUrl, onlyNewNotifications);
+            var url = $"notifications?new={onlyNewNotifications}";
 
-            var notifications = await MakeEndpointRequestAsync<Notifications>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return notifications;
-        }
-
-        /// <summary>
-        /// Marks a notification as viewed, this way it no longer shows up in the basic notification request.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<object> MarkNotificationAsReadAsync(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new ArgumentNullException(nameof(id));
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), markNotificationAsReadUrl);
-            endpointUrl = string.Format(endpointUrl, id);
-
-            var result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var notifications = await SendRequestAsync<Notifications>(request);
+                return notifications;
+            }
         }
 
         /// <summary>
@@ -72,22 +67,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public async Task<object> MarkNotificationsAsReadAsync(params string[] ids)
+        public async Task<bool> MarkNotificationsAsReadAsync(params int[] ids)
         {
             if (ids.Length == 0)
-                return MarkNotificationAsReadAsync(ids[0]);
+                throw new ArgumentException("Need at least one notification to mark as read.");
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), markNotificationsAsReadUrl);
+            var url = "notification";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.MarkAsReadRequest(url, ids))
             {
-                content.Add(new StringContent(string.Join(",", ids)), "ids");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-
-            return result;
         }
     }
 }

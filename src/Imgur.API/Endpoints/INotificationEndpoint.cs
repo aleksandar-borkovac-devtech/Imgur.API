@@ -21,20 +21,13 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Notification> GetNotificationAsync(string id);
+        Task<Notification> GetNotificationAsync(int id);
 
         /// <summary>
         /// Marks a set of notifications as viewed, this way they no longer shows up in the basic notification request.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        Task<object> MarkNotificationsAsReadAsync(params string[] ids);
-
-        /// <summary>
-        /// Marks a notification as viewed, this way it no longer shows up in the basic notification request.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<object> MarkNotificationAsReadAsync(string id);
+        Task<bool> MarkNotificationsAsReadAsync(params int[] ids);
     }
 }

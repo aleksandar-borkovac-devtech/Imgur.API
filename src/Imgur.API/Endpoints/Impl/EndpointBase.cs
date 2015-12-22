@@ -18,25 +18,74 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public abstract class EndpointBase : IEndpoint
     {
-        /// <summary>
-        ///     Initializes a new instance of the EndpointBase class.
-        /// </summary>
-        protected EndpointBase()
-        {
-        }
+        internal const string OAuth2RequiredExceptionMessage = "OAuth authentication required.";
 
         /// <summary>
         ///     Initializes a new instance of the EndpointBase class.
         /// </summary>
-        /// <param name="apiClient"></param>
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
         /// <exception cref="ArgumentNullException"></exception>
         protected EndpointBase(IApiClient apiClient)
+            : this(apiClient, new HttpClient())
         {
             if (apiClient == null)
                 throw new ArgumentNullException(nameof(apiClient));
 
             ApiClient = apiClient;
         }
+
+        /// <summary>
+        ///     Initializes a new instance of the EndpointBase class.
+        /// </summary>
+        protected internal EndpointBase()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the EndpointBase class.
+        /// </summary>
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
+        /// <param name="httpClient"> The class for sending HTTP requests and receiving HTTP responses from the endpoint methods.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected internal EndpointBase(IApiClient apiClient, HttpClient httpClient)
+        {
+            if (apiClient == null)
+                throw new ArgumentNullException(nameof(apiClient));
+
+            if (httpClient == null)
+                throw new ArgumentNullException(nameof(httpClient));
+
+            httpClient.DefaultRequestHeaders.Remove("Authorization");
+            httpClient.DefaultRequestHeaders.Remove("X-Mashape-Key");
+            httpClient.DefaultRequestHeaders.Accept.Clear();
+
+            //Add OAuth Authentication header
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                "Authorization",
+                apiClient.OAuth2Token != null
+                    ? $"Bearer {apiClient.OAuth2Token.AccessToken}"
+                    : $"Client-ID {apiClient.ClientId}");
+
+            //Add Mashape Authentication header
+            var mashapeClient = apiClient as IMashapeClient;
+            if (mashapeClient != null)
+            {
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                    "X-Mashape-Key", mashapeClient.MashapeKey);
+            }
+
+            // ReSharper disable once ExceptionNotDocumented
+            httpClient.BaseAddress = new Uri(apiClient.EndpointUrl);
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            ApiClient = apiClient;
+            HttpClient = httpClient;
+        }
+
+        /// <summary>
+        ///     The class for sending HTTP requests and receiving HTTP responses from the endpoint methods.
+        /// </summary>
+        public virtual HttpClient HttpClient { get; }
 
         /// <summary>
         ///     Interface for all API authentication types.
@@ -44,30 +93,9 @@ namespace Imgur.API.Endpoints.Impl
         public virtual IApiClient ApiClient { get; private set; }
 
         /// <summary>
-        ///     Whether or not the Endpoint should fetch a new OAuth2 token after the old one has expired.
-        /// </summary>
-        public bool AutoReauthorize { get; set; } = true;
-
-        /// <summary>
-        ///     The base Endpoint Url based on the current authentication set.
-        ///     https://api.imgur.com/3/ or https://imgur-apiv3.p.mashape.com/3/
-        /// </summary>
-        /// <exception cref="InvalidOperationException"></exception>
-        public virtual string GetEndpointBaseUrl()
-        {
-            if (ApiClient is IImgurClient)
-                return "https://api.imgur.com/3/";
-
-            if (ApiClient is IMashapeClient)
-                return "https://imgur-apiv3.p.mashape.com/3/";
-
-            throw new InvalidOperationException("ApiClient type not recognized.");
-        }
-
-        /// <summary>
         ///     Switch from one client type to another.
         /// </summary>
-        /// <param name="apiClient"></param>
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
         /// <exception cref="ArgumentNullException"></exception>
         public virtual void SwitchClient(IApiClient apiClient)
         {
@@ -75,124 +103,124 @@ namespace Imgur.API.Endpoints.Impl
                 throw new ArgumentNullException(nameof(apiClient));
 
             ApiClient = apiClient;
+
+            HttpClient.DefaultRequestHeaders.Remove("Authorization");
+            HttpClient.DefaultRequestHeaders.Remove("X-Mashape-Key");
+            HttpClient.DefaultRequestHeaders.Accept.Clear();
+
+            //Add OAuth Authentication header
+            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                "Authorization",
+                apiClient.OAuth2Token != null
+                    ? $"Bearer {apiClient.OAuth2Token.AccessToken}"
+                    : $"Client-ID {apiClient.ClientId}");
+
+            //Add Mashape Authentication header
+            var mashapeClient = apiClient as IMashapeClient;
+            if (mashapeClient != null)
+            {
+                HttpClient.DefaultRequestHeaders.TryAddWithoutValidation(
+                    "X-Mashape-Key", mashapeClient.MashapeKey);
+            }
+
+            // ReSharper disable once ExceptionNotDocumented
+            HttpClient.BaseAddress = new Uri(apiClient.EndpointUrl);
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         /// <summary>
-        ///     Make requests to the endpoint.
+        ///     Parses the string response from the endpoint into an expected type T.
         /// </summary>
-        /// <param name="endpointUrl">The endpointUrl that should be called.</param>
-        /// <param name="httpMethod">The HttpMethod that should be used.</param>
-        /// <param name="content">The HttpContent that should be submitted.</param>
-        /// <param name="requiresAuth">Whether or not this request needs authentication.</param>
+        /// <typeparam name="T">The expected output type, Image, bool, etc.</typeparam>
+        /// <param name="endpointStringResponse">The string response from the endpoint.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="MashapeException"></exception>
+        /// <exception cref="ImgurException"></exception>
+        /// <returns></returns>
+        internal virtual T ProcessEndpointResponse<T>(string endpointStringResponse)
+        {
+            //If no result is found, then we can't proceed
+            if (string.IsNullOrWhiteSpace(endpointStringResponse))
+                throw new ImgurException("The response from the endpoint is empty.");
+
+            //If the result isn't a json response, then we can't proceed
+            if (endpointStringResponse.StartsWith("<"))
+                throw new ImgurException("The response from the endpoint is invalid.");
+
+            //If the authentication method is Mashape, then an error response
+            //is different to that of Imgur's response.
+            if (ApiClient is IMashapeClient && endpointStringResponse.Contains("{\"message\":"))
+            {
+                var maShapeError = JsonConvert.DeserializeObject<MashapeError>(endpointStringResponse);
+                throw new MashapeException(maShapeError.Message);
+            }
+
+            //If an error occurs, throw an exception
+            if (endpointStringResponse.Contains("{\"data\":{\"error\":"))
+            {
+                var apiError = JsonConvert.DeserializeObject<Basic<ImgurError>>(endpointStringResponse);
+                throw new ImgurException(apiError.Data.Error);
+            }
+
+            //If the type being requested is an oAuthToken
+            //Deserialize it immediately and return
+            if (typeof (T) == typeof (IOAuth2Token) || typeof (T) == typeof (OAuth2Token))
+            {
+                var oAuth2Response = JsonConvert.DeserializeObject<T>(endpointStringResponse);
+                return oAuth2Response;
+            }
+
+            //Deserialize the response into a generic Basic<object> type
+            var response = JsonConvert.DeserializeObject<Basic<object>>(endpointStringResponse);
+
+            //If the response was not a success, then the response type is Basic<ImgurError>
+            //and should be handled as such.
+            if (!response.Success)
+            {
+                var apiError = JsonConvert.DeserializeObject<Basic<ImgurError>>(endpointStringResponse);
+                throw new ImgurException(apiError.Data.Error);
+            }
+
+            var converters = new JsonConverter[1];
+            converters[0] = new GalleryItemConverter();
+
+            //Deserialize the actual response
+            var finalResponse = JsonConvert.DeserializeObject<Basic<T>>(endpointStringResponse, converters);
+
+            return finalResponse.Data;
+        }
+
+        /// <summary>
+        ///     Send requests to the service.
+        /// </summary>
+        /// <param name="message">The HttpRequestMessage that should be sent.</param>
+        /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="OverflowException"></exception>
         /// <returns></returns>
-        internal async Task<T> MakeEndpointRequestAsync<T>(HttpMethod httpMethod, string endpointUrl,
-            HttpContent content = null, bool requiresAuth = false)
+        internal virtual async Task<T> SendRequestAsync<T>(HttpRequestMessage message)
         {
-            if (httpMethod == null)
-                throw new ArgumentNullException(nameof(httpMethod));
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
 
-            if (string.IsNullOrEmpty(endpointUrl))
-                throw new ArgumentNullException(nameof(endpointUrl));
+            var httpResponse = await HttpClient.SendAsync(message);
 
-            if (requiresAuth)
-            {
-                if (ApiClient.OAuth2Token == null)
-                    throw new InvalidOperationException("Requested API call requires a valid OAuth2Token in ApiClient.");
+            string stringResponse = null;
 
-                // If the token has expired, refresh.
-                if (ApiClient.OAuth2Token.ExpiresAt < DateTimeOffset.UtcNow && AutoReauthorize)
-                {
-                    Debug.WriteLine("Auto-refreshing token...");
-                    var authEndpoint = new OAuth2Endpoint(ApiClient);
+            if (httpResponse.Content != null)
+                stringResponse = await httpResponse.Content.ReadAsStringAsync();
 
-                    // Try to refresh token.
-                    try
-                    {
-                        var token = await authEndpoint.GetTokenByRefreshTokenAsync(ApiClient.OAuth2Token.RefreshToken);
-                        ApiClient.SetOAuth2Token(token);
-                    }
-                    catch(ImgurException ex)
-                    {
-                        throw new InvalidOperationException("Cannot make request as authorization is required, but token could not be refreshed.", ex);
-                    }
-                }
-            }
+            UpdateRateLimit(httpResponse.Headers);
 
-            using (var httpClient = GetHttpClient())
-            {
-                HttpResponseMessage httpResponse;
-
-                //Select the right method to use
-                if (httpMethod == HttpMethod.Get)
-                {
-                    httpResponse = await httpClient.GetAsync(endpointUrl);
-                }
-                else if (httpMethod == HttpMethod.Post)
-                {
-                    httpResponse = await httpClient.PostAsync(endpointUrl, content);
-                }
-                else if (httpMethod == HttpMethod.Put)
-                {
-                    httpResponse = await httpClient.PutAsync(endpointUrl, content);
-                }
-                else if (httpMethod == HttpMethod.Delete)
-                {
-                    httpResponse = await httpClient.DeleteAsync(endpointUrl);
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid HttpMethod provided.", nameof(httpMethod));
-                }
-
-                UpdateRateLimit(httpResponse.Headers);
-
-                //Get the string response
-                var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-
-                return ProcessEndpointResponse<T>(stringResponse);
-            }
-        }
-
-        /// <summary>
-        ///     Gets a new HttpClient with DefaultRequestHeaders configured based
-        ///     on the current ApiClient set.
-        /// </summary>
-        /// <returns></returns>
-        internal virtual HttpClient GetHttpClient()
-        {
-            var httpClient = new HttpClient();
-
-            //Add OAuth Authentication header
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
-                "Authorization",
-                ApiClient.OAuth2Token != null
-                    ? $"Bearer {ApiClient.OAuth2Token.AccessToken}"
-                    : $"Client-ID {ApiClient.ClientId}");
-
-            //Add Mashape Authentication header
-            var mashapeAuthentication = ApiClient as IMashapeClient;
-            if (mashapeAuthentication != null)
-            {
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation(
-                    "X-Mashape-Key", mashapeAuthentication.MashapeKey);
-            }
-
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            return httpClient;
+            return ProcessEndpointResponse<T>(stringResponse);
         }
 
         /// <summary>
         ///     Updates the ApiClient's RateLimit
         ///     with the values from the last response from the Api.
         /// </summary>
-        /// <param name="headers"></param>
+        /// <param name="headers">The response headers from the last request to the endpoint.</param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -238,71 +266,6 @@ namespace Imgur.API.Endpoints.Impl
                 ApiClient.RateLimit.UserRemaining = null;
                 ApiClient.RateLimit.UserReset = null;
             }
-        }
-
-        /// <summary>
-        ///     Parses the string response from the endpoint into an expected type T.
-        /// </summary>
-        /// <typeparam name="T">The expected output type, Image, bool, etc.</typeparam>
-        /// <param name="endpointStringResponse">The string response from the endpoint.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="MashapeException"></exception>
-        /// <exception cref="ImgurException"></exception>
-        /// <returns></returns>
-        internal T ProcessEndpointResponse<T>(string endpointStringResponse)
-        {
-            //If no result is found, then we can't proceed
-            if (string.IsNullOrWhiteSpace(endpointStringResponse))
-                throw new ArgumentNullException(nameof(endpointStringResponse),
-                    "The response from the endpoint is empty.");
-
-            //If the result isn't a json response, then we can't proceed
-            if (endpointStringResponse.StartsWith("<"))
-                throw new ArgumentOutOfRangeException(nameof(endpointStringResponse), endpointStringResponse,
-                    "The response from the endpoint is invalid.");
-
-            //If the authentication method is Mashape, then an error response
-            //is different to that of Imgur's response.
-            if (ApiClient is IMashapeClient && endpointStringResponse.Contains("{\"message\":"))
-            {
-                var maShapeError = JsonConvert.DeserializeObject<MashapeError>(endpointStringResponse);
-                throw new MashapeException(maShapeError.Message);
-            }
-
-            //If an error occurs, throw an exception
-            if (endpointStringResponse.Contains("{\"data\":{\"error\":"))
-            {
-                var apiError = JsonConvert.DeserializeObject<Basic<ImgurError>>(endpointStringResponse);
-                throw new ImgurException(apiError.Data.Error);
-            }
-
-            //If the type being requested is an oAuthToken
-            //Deserialize it immediately and return
-            if (typeof (T) == typeof (IOAuth2Token) || typeof (T) == typeof (OAuth2Token))
-            {
-                var oAuth2Response = JsonConvert.DeserializeObject<T>(endpointStringResponse);
-                return oAuth2Response;
-            }
-
-            //Deserialize the response into a generic Basic<object> type
-            var response = JsonConvert.DeserializeObject<Basic<object>>(endpointStringResponse);
-
-            //If the response was not a success, then the response type is Basic<ImgurError>
-            //and should be handled as such.
-            if (!response.Success)
-            {
-                var apiError = JsonConvert.DeserializeObject<Basic<ImgurError>>(endpointStringResponse);
-                throw new ImgurException(apiError.Data.Error);
-            }
-
-            var converters = new JsonConverter[1];
-            converters[0] = new GalleryItemConverter();
-
-            //Deserialize the actual response
-            var finalResponse = JsonConvert.DeserializeObject<Basic<T>>(endpointStringResponse, converters);
-
-            return finalResponse.Data;
         }
     }
 }

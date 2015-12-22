@@ -1,13 +1,4 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 11-12-2015
- * Time: 12:33 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints
@@ -38,27 +29,27 @@ namespace Imgur.API.Endpoints
         /// <param name="recipient"></param>
         /// <param name="body"></param>
         /// <returns></returns>
-		Task<object> SendMessageAsync(string recipient, string body);
+		Task<bool> SendMessageAsync(string recipient, string body);
 
         /// <summary>
         /// Delete a conversation by the given ID.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<object> DeleteConversation(int id);
+        Task<bool> DeleteConversation(int id);
 
         /// <summary>
         /// Report a user for sending messages that are against the Terms of Service.
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        Task<object> ReportSenderAsync(string username);
+        Task<bool> ReportSenderAsync(string username);
 
         /// <summary>
         /// Block the user from sending messages to the user that is logged in.
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        Task<object> BlockSenderAsync(string username);
+        Task<bool> BlockSenderAsync(string username);
 	}
 }

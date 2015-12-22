@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Imgur.API.Enums
+﻿namespace Imgur.API.Enums
 {
     /// <summary>
-    /// Voting options.
+    ///     Options for voting on content.
     /// </summary>
     public enum Vote
     {
         /// <summary>
-        /// Upvote.
+        ///     Vote Up.
         /// </summary>
         Up,
 
         /// <summary>
-        /// Downvote.
+        ///     Vote Down.
         /// </summary>
         Down
     }

@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Imgur.API.Models;
 using System.Net.Http;
 using Imgur.API.Exceptions;
+using Imgur.API.Authentication;
+using Imgur.API.RequestBuilders;
+using Imgur.API.Models.Impl;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -14,7 +17,19 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class MemeGenEndpoint : EndpointBase, IMemeGenEndpoint
     {
-        private const string getDefaultMemesUrl = "memegen/defaults";
+        /// <summary>
+        /// Initializes a new instance of the MemegenEndpoint.
+        /// </summary>
+        /// <param name="client">The API client to use.</param>
+        public MemeGenEndpoint(IApiClient client) : base(client)
+        {
+        }
+
+        internal MemeGenEndpoint(IApiClient client, HttpClient httpClient) : base(client, httpClient)
+        {
+        }
+
+        internal MemeGenRequestBuilder RequestBuilder { get; } = new MemeGenRequestBuilder();
 
         /// <summary>
         /// 	Get the list of default memes.
@@ -23,10 +38,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns>An array containing the default images.</returns>
         public async Task<IImage[]> GetDefaultMemesAsync()
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getDefaultMemesUrl);
+            var url = "memegen/defaults";
 
-            var result = await MakeEndpointRequestAsync<IImage[]>(HttpMethod.Get, endpointUrl);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var images = await SendRequestAsync<Image[]>(request);
+                return images;
+            }
         }
     }
 }

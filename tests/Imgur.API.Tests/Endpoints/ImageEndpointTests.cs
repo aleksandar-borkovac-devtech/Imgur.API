@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints;
 using Imgur.API.Endpoints.Impl;
-using Imgur.API.Exceptions;
-using Imgur.API.Models.Impl;
-using Imgur.API.Tests.EndpointResponses;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
 using Imgur.API.Models;
+using Imgur.API.Tests.FakeResponses;
+using Imgur.API.Tests.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Imgur.API.Tests.Endpoints
 {
@@ -17,144 +16,150 @@ namespace Imgur.API.Tests.Endpoints
     public class ImageEndpointTests
     {
         [TestMethod]
-        public void GetImageAsync_WithId_ReceivedIsTrue()
+        public async Task DeleteImageAsync_AreEqual()
         {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            endpoint.GetImageAsync("1234");
-            endpoint.Received().GetImageAsync("1234");
-        }
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.DeleteImageResponse)
+            };
 
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task GetImageAsync_WithNullId_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.GetImageAsync(null);
-        }
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image/123xyj"), fakeResponse);
 
-        [TestMethod]
-        public void UploadImageBinaryAsync_WithImage_ReceivedIsTrue()
-        {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            var image = new byte[] {0x20};
-            endpoint.UploadImageBinaryAsync(image, "1234", "t1234", "d1234");
-            endpoint.Received().UploadImageBinaryAsync(image, "1234", "t1234", "d1234");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task UploadImageBinaryAsync_WithNullImage_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.UploadImageBinaryAsync(null, null, null, null);
-        }
-
-        [TestMethod]
-        public void UploadImageStreamAsync_WithImage_ReceivedIsTrue()
-        {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            var image = new byte[] {0x20};
-            var ms = new MemoryStream(image);
-            endpoint.UploadImageStreamAsync(ms, "1234", "t1234", "d1234");
-            endpoint.Received().UploadImageStreamAsync(ms, "1234", "t1234", "d1234");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task UploadStreamBinaryAsync_WithNullImage_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.UploadImageStreamAsync(null, null, null, null);
-        }
-
-        [TestMethod]
-        public void UploadImageUrlAsync_WithUrlReceivedIsTrue()
-        {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            endpoint.UploadImageUrlAsync("http://imgur.com/something", "1234", "t1234", "d1234");
-            endpoint.Received().UploadImageUrlAsync("http://imgur.com/something", "1234", "t1234", "d1234");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task UploadImageUrlAsync_WithNullUrl_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.UploadImageUrlAsync(null, null, null, null);
-        }
-
-        [TestMethod]
-        public void DeleteImageAsync_WithId_ReceivedIsTrue()
-        {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            endpoint.DeleteImageAsync("12345");
-            endpoint.Received().DeleteImageAsync("12345");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task DeleteImageAsync_WithNullId_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.DeleteImageAsync(null);
-        }
-
-        [TestMethod]
-        public void DeleteImageAsync_WithValidReponse_AreEqual()
-        {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
-            var deleted =
-                endpoint.ProcessEndpointResponse<bool>(
-                    ImageEndpointResponses.Imgur.DeleteAlbumResponse);
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var deleted = await endpoint.DeleteImageAsync("123xyj");
 
             Assert.AreEqual(true, deleted);
         }
 
         [TestMethod]
-        public void UpdateImageAsync_WithId_ReceivedIsTrue()
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task DeleteImageAsync_WithIdNull_ThrowsArgumentNullException()
         {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            endpoint.UpdateImageAsync("id12345", "title12345", "desc12345");
-            endpoint.Received().UpdateImageAsync("id12345", "title12345", "desc12345");
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.DeleteImageAsync(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof (ArgumentNullException))]
-        public async Task UpdateImageAsync_WithNullId_ThrowsArgumentNullException()
+        public async Task FavoriteImageAsync_WithIdNull_ThrowsArgumentNullException()
         {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
-            await endpoint.UpdateImageAsync(null, null, null);
-        }
-
-        [TestMethod]
-        public void FavoriteImageAsync_WithId_ReceivedIsTrue()
-        {
-            var endpoint = Substitute.For<IImageEndpoint>();
-            endpoint.FavoriteImageAsync("id12345");
-            endpoint.Received().FavoriteImageAsync("id12345");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (ArgumentNullException))]
-        public async Task FavoriteImageAsync_WithNullId_ThrowsArgumentNullException()
-        {
-            var imgurAuth = new ImgurClient("123", "1234");
-            var endpoint = new ImageEndpoint(imgurAuth);
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
             await endpoint.FavoriteImageAsync(null);
         }
 
         [TestMethod]
-        public void GetImageResponse_WithValidReponse_AreEqual()
+        public async Task FavoriteImageAsync_WithImgurClient_IsFalse()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
-            var image = endpoint.ProcessEndpointResponse<Image>(ImageEndpointResponses.Imgur.GetImageResponse);
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.FavoriteImageResponseFalse)
+            };
 
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image/zVpyzhW/favorite"),
+                fakeResponse);
+
+            var fakeOAuth2Handler = new FakeOAuth2TokenHandler();
+
+            var client = new ImgurClient("123", "1234", fakeOAuth2Handler.GetOAuth2TokenCodeResponse());
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var favorited = await endpoint.FavoriteImageAsync("zVpyzhW");
+
+            Assert.IsFalse(favorited);
+        }
+
+        [TestMethod]
+        public async Task FavoriteImageAsync_WithImgurClient_IsTrue()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.FavoriteImageResponseTrue)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image/zVpyzhW/favorite"),
+                fakeResponse);
+
+            var fakeOAuth2Handler = new FakeOAuth2TokenHandler();
+
+            var client = new ImgurClient("123", "1234", fakeOAuth2Handler.GetOAuth2TokenCodeResponse());
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var favorited = await endpoint.FavoriteImageAsync("zVpyzhW");
+
+            Assert.IsTrue(favorited);
+        }
+
+        [TestMethod]
+        public async Task FavoriteImageAsync_WithMashapeClient_IsFalse()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Mashape.FavoriteImageResponseFalse)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(
+                new Uri("https://imgur-apiv3.p.mashape.com/3/image/zVpyzhW/favorite"), fakeResponse);
+
+            var fakeOAuth2Handler = new FakeOAuth2TokenHandler();
+
+            var client = new MashapeClient("123", "1234", "xyz", fakeOAuth2Handler.GetOAuth2TokenCodeResponse());
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var favorited = await endpoint.FavoriteImageAsync("zVpyzhW");
+
+            Assert.IsFalse(favorited);
+        }
+
+        [TestMethod]
+        public async Task FavoriteImageAsync_WithMashapeClient_IsTrue()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Mashape.FavoriteImageResponseTrue)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(
+                new Uri("https://imgur-apiv3.p.mashape.com/3/image/zVpyzhW/favorite"), fakeResponse);
+
+            var fakeOAuth2Handler = new FakeOAuth2TokenHandler();
+
+            var client = new MashapeClient("123", "1234", "xyz", fakeOAuth2Handler.GetOAuth2TokenCodeResponse());
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var favorited = await endpoint.FavoriteImageAsync("zVpyzhW");
+
+            Assert.IsTrue(favorited);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task FavoriteImageAsync_WithOAuth2TokenNull_ThrowsArgumentNullException()
+        {
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.FavoriteImageAsync("zVpyzhW");
+        }
+
+        [TestMethod]
+        public async Task GetImageAsync_AreEqual()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.GetImageResponse)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image/zVpyzhW"), fakeResponse);
+
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var image = await endpoint.GetImageAsync("zVpyzhW");
+
+            Assert.IsNotNull(image);
             Assert.AreEqual("zVpyzhW", image.Id);
             Assert.AreEqual("Look Mom, it's Bambi!", image.Title);
             Assert.AreEqual(null, image.Description);
@@ -180,84 +185,195 @@ namespace Imgur.API.Tests.Endpoints
         }
 
         [TestMethod]
-        public void UploadImageResponse_WithValidResponse_AreEqual()
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task GetImageAsync_WithIdNull_ThrowsArgumentNullException()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
-            var image = endpoint.ProcessEndpointResponse<Image>(ImageEndpointResponses.Imgur.UploadImageResponse);
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.GetImageAsync(null);
+        }
 
-            Assert.AreEqual("kiNOcUl", image.Id);
-            Assert.AreEqual("Title Test", image.Title);
-            Assert.AreEqual("Description Test", image.Description);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(1440373411), image.DateTime);
-            Assert.AreEqual("image/gif", image.Type);
-            Assert.AreEqual(true, image.Animated);
-            Assert.AreEqual(290, image.Width);
-            Assert.AreEqual(189, image.Height);
-            Assert.AreEqual(1038889, image.Size);
-            Assert.AreEqual(0, image.Views);
-            Assert.AreEqual(0, image.Bandwidth);
-            Assert.AreEqual(null, image.Vote);
-            Assert.AreEqual(false, image.Favorite);
-            Assert.AreEqual(null, image.Nsfw);
-            Assert.AreEqual(null, image.Section);
-            Assert.AreEqual(null, image.AccountUrl);
+        [TestMethod]
+        public async Task UpdateImageAsync_AreEqual()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.UpdateImageResponse)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image/123xyj"), fakeResponse);
+
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var updated = await endpoint.UpdateImageAsync("123xyj");
+
+            Assert.AreEqual(true, updated);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task UpdateImageAsync_WithIdNull_ThrowsArgumentNullException()
+        {
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.UpdateImageAsync(null);
+        }
+
+        [TestMethod]
+        public async Task UploadImageBinaryAsync_AreEqual()
+        {
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.UploadImageResponse)
+            };
+
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image"), fakeResponse);
+
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var image = await endpoint.UploadImageBinaryAsync(File.ReadAllBytes("banana.gif"));
+
+            Assert.IsNotNull(image);
             Assert.AreEqual("24234234", image.AccountId);
+            Assert.AreEqual(null, image.AccountUrl);
+            Assert.AreEqual(true, image.Animated);
+            Assert.AreEqual(0, image.Bandwidth);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2015, 8, 23, 23, 43, 31, DateTimeKind.Utc)), image.DateTime);
             Assert.AreEqual("nGxOKC9ML6KyTWQ", image.DeleteHash);
+            Assert.AreEqual("Description Test", image.Description);
+            Assert.AreEqual(false, image.Favorite);
             Assert.AreEqual("http://i.imgur.com/kiNOcUl.gifv", image.Gifv);
-            Assert.AreEqual("http://i.imgur.com/kiNOcUl.webm", image.Webm);
-            Assert.AreEqual("http://i.imgur.com/kiNOcUl.mp4", image.Mp4);
+            Assert.AreEqual(189, image.Height);
+            Assert.AreEqual("kiNOcUl", image.Id);
             Assert.AreEqual("http://i.imgur.com/kiNOcUl.gif", image.Link);
             Assert.AreEqual(true, image.Looping);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.mp4", image.Mp4);
+            Assert.AreEqual("", image.Name);
+            Assert.AreEqual(null, image.Nsfw);
+            Assert.AreEqual(null, image.Section);
+            Assert.AreEqual(1038889, image.Size);
+            Assert.AreEqual("Title Test", image.Title);
+            Assert.AreEqual("image/gif", image.Type);
+            Assert.AreEqual(0, image.Views);
+            Assert.AreEqual(null, image.Vote);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.webm", image.Webm);
+            Assert.AreEqual(290, image.Width);
         }
 
         [TestMethod]
-        public void FavoriteImage_WithValidImgurTrueResponse_AreEqual()
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task UploadImageBinaryAsync_WithImageNull_ThrowsArgumentNullException()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
-            var response =
-                endpoint.ProcessEndpointResponse<string>(ImageEndpointResponses.Imgur.FavoriteImageResponseTrue);
-
-            Assert.AreEqual("favorited", response);
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.UploadImageBinaryAsync(null);
         }
 
         [TestMethod]
-        public void FavoriteImage_WithValidImgurFalseResponse_AreEqual()
+        public async Task UploadImageStreamAsync_AreEqual()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
-            var response =
-                endpoint.ProcessEndpointResponse<string>(ImageEndpointResponses.Imgur.FavoriteImageResponseFalse);
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.UploadImageResponse)
+            };
 
-            Assert.AreEqual("unfavorited", response);
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image"), fakeResponse);
+
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            IImage image;
+
+            using (var fs = new FileStream("banana.gif", FileMode.Open))
+            {
+                image = await endpoint.UploadImageStreamAsync(fs);
+            }
+
+            Assert.IsNotNull(image);
+            Assert.AreEqual(true, image.Animated);
+            Assert.AreEqual(0, image.Bandwidth);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2015, 8, 23, 23, 43, 31, DateTimeKind.Utc)), image.DateTime);
+            Assert.AreEqual("nGxOKC9ML6KyTWQ", image.DeleteHash);
+            Assert.AreEqual("Description Test", image.Description);
+            Assert.AreEqual(false, image.Favorite);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.gifv", image.Gifv);
+            Assert.AreEqual(189, image.Height);
+            Assert.AreEqual("kiNOcUl", image.Id);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.gif", image.Link);
+            Assert.AreEqual(true, image.Looping);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.mp4", image.Mp4);
+            Assert.AreEqual("", image.Name);
+            Assert.AreEqual(null, image.Nsfw);
+            Assert.AreEqual(null, image.Section);
+            Assert.AreEqual(1038889, image.Size);
+            Assert.AreEqual("Title Test", image.Title);
+            Assert.AreEqual("image/gif", image.Type);
+            Assert.AreEqual(0, image.Views);
+            Assert.AreEqual(null, image.Vote);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.webm", image.Webm);
+            Assert.AreEqual(290, image.Width);
         }
 
         [TestMethod]
-        public void FavoriteImage_WithValidMashapeTrueResponse_AreEqual()
+        public async Task UploadImageUrlAsync_AreEqual()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
+            var fakeHttpMessageHandler = new FakeHttpMessageHandler();
+            var fakeResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(ImageEndpointResponses.Imgur.UploadImageResponse)
+            };
 
-            try
-            {
-                endpoint.ProcessEndpointResponse<ImgurError>(ImageEndpointResponses.Mashape.FavoriteImageResponseTrue);
-            }
-            catch (ImgurException imgurException)
-            {
-                Assert.AreEqual("f", imgurException.Message);
-            }
+            fakeHttpMessageHandler.AddFakeResponse(new Uri("https://api.imgur.com/3/image"), fakeResponse);
+
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client, new HttpClient(fakeHttpMessageHandler));
+            var image = await endpoint.UploadImageUrlAsync("http://i.imgur.com/kiNOcUl.gif");
+
+            Assert.IsNotNull(image);
+            Assert.AreEqual("24234234", image.AccountId);
+            Assert.AreEqual(null, image.AccountUrl);
+            Assert.AreEqual(true, image.Animated);
+            Assert.AreEqual(0, image.Bandwidth);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2015, 8, 23, 23, 43, 31, DateTimeKind.Utc)), image.DateTime);
+            Assert.AreEqual("nGxOKC9ML6KyTWQ", image.DeleteHash);
+            Assert.AreEqual("Description Test", image.Description);
+            Assert.AreEqual(false, image.Favorite);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.gifv", image.Gifv);
+            Assert.AreEqual(189, image.Height);
+            Assert.AreEqual("kiNOcUl", image.Id);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.gif", image.Link);
+            Assert.AreEqual(true, image.Looping);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.mp4", image.Mp4);
+            Assert.AreEqual("", image.Name);
+            Assert.AreEqual(null, image.Nsfw);
+            Assert.AreEqual(null, image.Section);
+            Assert.AreEqual(1038889, image.Size);
+            Assert.AreEqual("Title Test", image.Title);
+            Assert.AreEqual("image/gif", image.Type);
+            Assert.AreEqual(0, image.Views);
+            Assert.AreEqual(null, image.Vote);
+            Assert.AreEqual("http://i.imgur.com/kiNOcUl.webm", image.Webm);
+            Assert.AreEqual(290, image.Width);
         }
 
         [TestMethod]
-        public void FavoriteImage_WithValidMashapeFalseResponse_AreEqual()
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task UploadImageUrlAsync_WithUrlNull_ThrowsArgumentNullException()
         {
-            var endpoint = Substitute.ForPartsOf<EndpointBase>();
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.UploadImageUrlAsync(null);
+        }
 
-            try
-            {
-                endpoint.ProcessEndpointResponse<ImgurError>(ImageEndpointResponses.Mashape.FavoriteImageResponseFalse);
-            }
-            catch (ImgurException imgurException)
-            {
-                Assert.AreEqual("u", imgurException.Message);
-            }
+        [TestMethod]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public async Task UploadStreamBinaryAsync_WithImageNull_ThrowsArgumentNullException()
+        {
+            var client = new ImgurClient("123", "1234");
+            var endpoint = new ImageEndpoint(client);
+            await endpoint.UploadImageStreamAsync(null);
         }
     }
 }

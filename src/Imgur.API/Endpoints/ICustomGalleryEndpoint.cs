@@ -44,27 +44,27 @@ namespace Imgur.API.Endpoints
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        Task<object> AddCustomGalleryTagsAsync(string[] tags);
+        Task<bool> AddCustomGalleryTagsAsync(string[] tags);
 
         /// <summary>
         /// Remove tags from a custom gallery.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        Task<object> RemoveCustomGalleryTagsAsync(string[] tags);
+        Task<bool> RemoveCustomGalleryTagsAsync(string[] tags);
 
         /// <summary>
         /// Filter out a tag.
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        Task<object> AddFilteredOutGalleryTagAsync(string tag);
+        Task<bool> AddFilteredOutGalleryTagAsync(string tag);
 
         /// <summary>
         /// Remove a filtered out tag.
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        Task<object> RemoveFilteredOutGalleryTagAsync(string tag);
+        Task<bool> RemoveFilteredOutGalleryTagAsync(string tag);
     }
 }

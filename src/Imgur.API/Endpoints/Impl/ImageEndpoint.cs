@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Imgur.API.Authentication;
 using Imgur.API.Exceptions;
 using Imgur.API.Models.Impl;
+using Imgur.API.RequestBuilders;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -15,26 +14,30 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class ImageEndpoint : EndpointBase, IImageEndpoint
     {
-        private const string UploadImageUrl = "image";
-        private const string GetImageUrl = "image/{0}";
-        private const string UpdateImageUrl = "image/{0}";
-        private const string DeleteImageUrl = "image/{0}";
-        private const string FavoriteImageUrl = "image/{0}/favorite";
+        /// <summary>
+        ///     Initializes a new instance of the ImageEndpoint class.
+        /// </summary>
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
+        public ImageEndpoint(IApiClient apiClient) : base(apiClient)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the ImageEndpoint class.
         /// </summary>
-        /// <param name="apiClient"></param>
-        public ImageEndpoint(IApiClient apiClient) : base(apiClient)
+        /// <param name="apiClient">The type of client that will be used for authentication.</param>
+        /// <param name="httpClient"> The class for sending HTTP requests and receiving HTTP responses from the endpoint methods.</param>
+        internal ImageEndpoint(IApiClient apiClient, HttpClient httpClient) : base(apiClient, httpClient)
         {
         }
+
+        internal ImageRequestBuilder RequestBuilder { get; } = new ImageRequestBuilder();
 
         /// <summary>
         ///     Get information about an image.
         /// </summary>
         /// <param name="id">The image id.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -44,10 +47,13 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), GetImageUrl);
-            endpointUrl = string.Format(endpointUrl, id);
-            var image = await MakeEndpointRequestAsync<Image>(HttpMethod.Get, endpointUrl);
-            return image;
+            var url = $"image/{id}";
+
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var image = await SendRequestAsync<Image>(request);
+                return image;
+            }
         }
 
         /// <summary>
@@ -61,7 +67,6 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="title">The title of the image.</param>
         /// <param name="description">The description of the image.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -71,29 +76,14 @@ namespace Imgur.API.Endpoints.Impl
         {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
+            
+            var url = "image";
 
-            Image returnImage;
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), UploadImageUrl);
-
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.UploadImageBinaryRequest(url, image, album, title, description))
             {
-                content.Add(new StringContent("type"), "file");
-                content.Add(new ByteArrayContent(image), nameof(image));
-
-                if (!string.IsNullOrWhiteSpace(album))
-                    content.Add(new StringContent(album), nameof(album));
-
-                if (!string.IsNullOrWhiteSpace(title))
-                    content.Add(new StringContent(title), nameof(title));
-
-                if (!string.IsNullOrWhiteSpace(description))
-                    content.Add(new StringContent(description), nameof(description));
-
-                returnImage = await MakeEndpointRequestAsync<Image>(HttpMethod.Post, endpointUrl, content);
+                var returnImage = await SendRequestAsync<Image>(request);
+                return returnImage;
             }
-
-            return returnImage;
         }
 
         /// <summary>
@@ -107,7 +97,6 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="title">The title of the image.</param>
         /// <param name="description">The description of the image.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -117,29 +106,14 @@ namespace Imgur.API.Endpoints.Impl
         {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
+            
+            var url = "image";
 
-            Image returnImage;
-
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), UploadImageUrl);
-
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.UploadImageStreamRequest(url, image, album, title, description))
             {
-                content.Add(new StringContent("type"), "file");
-                content.Add(new StreamContent(image), nameof(image));
-
-                if (!string.IsNullOrWhiteSpace(album))
-                    content.Add(new StringContent(album), nameof(album));
-
-                if (!string.IsNullOrWhiteSpace(title))
-                    content.Add(new StringContent(title), nameof(title));
-
-                if (!string.IsNullOrWhiteSpace(description))
-                    content.Add(new StringContent(description), nameof(description));
-
-                returnImage = await MakeEndpointRequestAsync<Image>(HttpMethod.Post, endpointUrl, content);
+                var returnImage = await SendRequestAsync<Image>(request);
+                return returnImage;
             }
-
-            return returnImage;
         }
 
         /// <summary>
@@ -153,7 +127,6 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="title">The title of the image.</param>
         /// <param name="description">The description of the image.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -164,28 +137,14 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(image))
                 throw new ArgumentNullException(nameof(image));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), UploadImageUrl);
+            var url = "image";
 
-            var parameters = new Dictionary<string, string>
+            using (var request = RequestBuilder.UploadImageUrlRequest(url, image, album, title, description))
             {
-                {"type", "URL"},
-                {"image", image}
-            };
 
-            if (!string.IsNullOrWhiteSpace(album))
-                parameters.Add(nameof(album), album);
-
-            if (!string.IsNullOrWhiteSpace(title))
-                parameters.Add(nameof(title), title);
-
-            if (!string.IsNullOrWhiteSpace(description))
-                parameters.Add(nameof(description), description);
-
-            var content = new FormUrlEncodedContent(parameters.ToArray());
-
-            Image returnImage = await MakeEndpointRequestAsync<Image>(HttpMethod.Post, endpointUrl, content);
-
-            return returnImage;
+                var returnImage = await SendRequestAsync<Image>(request);
+                return returnImage;
+            }
         }
 
         /// <summary>
@@ -194,7 +153,6 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="id">The image id.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -204,10 +162,13 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), DeleteImageUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            var url = $"image/{id}";
 
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Delete, endpointUrl);
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Delete, url))
+            {
+                var deleted = await SendRequestAsync<bool>(request);
+                return deleted;
+            }
         }
 
         /// <summary>
@@ -219,7 +180,6 @@ namespace Imgur.API.Endpoints.Impl
         /// <param name="title">The title of the image.</param>
         /// <param name="description">The description of the image.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -229,28 +189,21 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), UpdateImageUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            var url = $"image/{id}";
 
-            var parameters = new Dictionary<string, string>();
-
-            if (!string.IsNullOrWhiteSpace(title))
-                parameters.Add(nameof(title), title);
-
-            if (!string.IsNullOrWhiteSpace(description))
-                parameters.Add(nameof(description), description);
-
-            var content = new FormUrlEncodedContent(parameters.ToArray());
-
-            return await MakeEndpointRequestAsync<bool>(HttpMethod.Post, endpointUrl, content);
+            using (var request = RequestBuilder.UpdateImageRequest(url, title, description))
+            {
+                var updated = await SendRequestAsync<bool>(request);
+                return updated;
+            }
         }
 
         /// <summary>
-        ///     Favorite an image with the given ID. The user is required to be logged in to favorite the image.
+        ///     Favorite an image with the given ID. OAuth authentication required.
         /// </summary>
         /// <param name="id">The image id.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ImgurException"></exception>
         /// <exception cref="MashapeException"></exception>
         /// <exception cref="OverflowException"></exception>
@@ -260,29 +213,33 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), FavoriteImageUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            if (ApiClient.OAuth2Token == null)
+                throw new ArgumentNullException(nameof(ApiClient.OAuth2Token), OAuth2RequiredExceptionMessage);
 
-            //The structure of the response of favoriting an image
-            //varies on if Imgur or Mashape Authentication is used
-            if (ApiClient is IImgurClient)
+            var url = $"image/{id}/favorite";
+
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Post, url))
             {
-                var imgurResult = await MakeEndpointRequestAsync<string>(HttpMethod.Post, endpointUrl);
-                return imgurResult.Equals("favorited", StringComparison.OrdinalIgnoreCase);
+                //The structure of the response of favoriting an image
+                //varies on if Imgur or Mashape Authentication is used
+                if (ApiClient is IImgurClient)
+                {
+                    var imgurResult = await SendRequestAsync<string>(request);
+                    return imgurResult.Equals("favorited", StringComparison.OrdinalIgnoreCase);
+                }
+
+                //If Mashape Authentication is used, the favorite is returned as an exception
+                try
+                {
+                    await SendRequestAsync<string>(request);
+                }
+                catch (ImgurException imgurException)
+                {
+                    return imgurException.Message.Equals("f", StringComparison.OrdinalIgnoreCase);
+                }
             }
 
-            var favorited = false;
-
-            try
-            {
-                await MakeEndpointRequestAsync<ImgurError>(HttpMethod.Post, endpointUrl);
-            }
-            catch (ImgurException imgurException)
-            {
-                favorited = imgurException.Message.Equals("f", StringComparison.OrdinalIgnoreCase);
-            }
-
-            return favorited;
+            return false;
         }
     }
 }

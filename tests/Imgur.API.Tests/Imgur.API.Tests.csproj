@@ -39,8 +39,8 @@
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NSubstitute, Version=1.9.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSubstitute.1.9.0.0\lib\net45\NSubstitute.dll</HintPath>
+    <Reference Include="NSubstitute, Version=1.9.2.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -64,22 +64,47 @@
     <Compile Include="Authentication\ApiClientTests.cs" />
     <Compile Include="Authentication\ImgurClientTests.cs" />
     <Compile Include="Authentication\MashapeClientTests.cs" />
-    <Compile Include="Authentication\OAuth2TokenTests.cs" />
-    <Compile Include="EndpointResponses\AccountEndpointResponses.cs" />
-    <Compile Include="EndpointResponses\AlbumEndpointResponses.cs" />
-    <Compile Include="EndpointResponses\GenericEndpointResponses.cs" />
-    <Compile Include="EndpointResponses\ImageEndpointResponses.cs" />
+    <Compile Include="Endpoints\AccountEndpointTests.Comments.cs" />
+    <Compile Include="Endpoints\AccountEndpointTests.Notifications.cs" />
+    <Compile Include="Endpoints\AccountEndpointTests.Gallery.cs" />
     <Compile Include="Endpoints\AccountEndpointTests.cs" />
+    <Compile Include="Endpoints\AccountEndpointTests.Images.cs" />
+    <Compile Include="Endpoints\AccountEndpointTests.Albums.cs" />
     <Compile Include="Endpoints\AlbumEndpointTests.cs" />
-    <Compile Include="Endpoints\EndpointTests.cs" />
+    <Compile Include="Endpoints\CommentEndpointTests.cs" />
     <Compile Include="Endpoints\ImageEndpointTests.cs" />
     <Compile Include="Endpoints\OAuth2EndpointTests.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.Albums.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.Images.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.Comments.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.Notifications.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.Gallery.cs" />
+    <Compile Include="FakeResponses\CommentEndpointResponses.cs" />
+    <Compile Include="FakeResponses\CustomGalleryResponses.cs" />
+    <Compile Include="Fakes\FakeOAuth2TokenHandler.cs" />
+    <Compile Include="Fakes\FakeOAuth2TokenHandlerTests.cs" />
+    <Compile Include="RequestBuilders\AccountRequestBuilderTests.cs" />
+    <Compile Include="RequestBuilders\AlbumRequestBuilderTests.cs" />
+    <Compile Include="RequestBuilders\CommentRequestBuilderTests.cs" />
+    <Compile Include="RequestBuilders\ImageRequestBuilderTests.cs" />
+    <Compile Include="RequestBuilders\OAuth2RequestBuilderTests.cs" />
     <Compile Include="Endpoints\RateLimitEndpointTests.cs" />
-    <Compile Include="JsonConverters\EnumerableConverterTests.cs" />
+    <Compile Include="FakeResponses\OAuth2EndpointResponses.cs" />
+    <Compile Include="FakeResponses\RateLimitEndpointResponses.cs" />
+    <Compile Include="Fakes\FakeHttpMessageHandlerTests.cs" />
+    <Compile Include="FakeResponses\FakeErrors.cs" />
+    <Compile Include="FakeResponses\AccountEndpointResponses.cs" />
+    <Compile Include="FakeResponses\AlbumEndpointResponses.cs" />
+    <Compile Include="Fakes\FakeHttpMessageHandler.cs" />
+    <Compile Include="FakeResponses\GenericEndpointResponses.cs" />
+    <Compile Include="FakeResponses\ImageEndpointResponses.cs" />
+    <Compile Include="Endpoints\EndpointTests.cs" />
+    <Compile Include="JsonConverters\TypeConverterTests.cs" />
     <Compile Include="JsonConverters\EpochTimeConverterTests.cs" />
     <Compile Include="JsonConverters\GalleryItemConverterTests.cs" />
     <Compile Include="JsonConverters\NotificationConverterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestBuilders\RequestBuilderBaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Imgur.API\Imgur.API.csproj">
@@ -88,10 +113,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Banana.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

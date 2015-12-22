@@ -51,7 +51,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        Task<object> PostReportAsync(string id, Reporting reason);
+        Task<bool> PostReportAsync(string id, Reporting reason);
 
         /// <summary>
         /// 	Get the vote information about an image
@@ -70,7 +70,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        Task<object> PostVoteAsync(string id, Vote vote);
+        Task<bool> PostVoteAsync(string id, Vote vote);
 
         /// <summary>
         ///		Get the comments on a gallery submission.
@@ -90,7 +90,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id or comment was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        Task<object> PostCommentAsync(string id, string comment);
+        Task<bool> PostCommentAsync(string id, string comment);
 
         /// <summary>
         /// 	Reply to a comment that has been created for a gallery submission.
@@ -101,7 +101,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id, commentID or reply was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encountered an error.</exception>
         /// <returns></returns>
-        Task<object> PostReplyAsync(string id, int commentID, string reply);
+        Task<bool> PostReplyAsync(string id, int commentID, string reply);
 
         /// <summary>
         ///		List all of the IDs for the comments on a gallery submission
@@ -110,7 +110,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        Task<object> GetCommentIdsAsync(string id);
+        Task<string> GetCommentIdsAsync(string id);
 
         /// <summary>
         /// 	The number of comments on a gallery submission.
@@ -119,7 +119,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        Task<object> GetCommentCountAsync(string id);
+        Task<int> GetCommentCountAsync(string id);
 
         /// <summary>
         /// 	Remove a submission from the gallery. You must be logged in as the owner of the item to do this action.
@@ -128,7 +128,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        Task<object> DeleteFromGalleryAsync(string id);
+        Task<bool> DeleteFromGalleryAsync(string id);
 
         /// <summary>
         /// 	View tags for a gallery submission.
@@ -180,7 +180,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id or tagname was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        Task<object> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
+        Task<bool> PostGalleryTagVoteAsync(string id, string tagname, Vote vote);
 
         /// <summary>
         /// 	Share an Album or Image to the Gallery.
@@ -193,7 +193,7 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ArgumentNullException">Thrown when id or title was null or empty.</exception>
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns></returns>
-        Task<object> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null);
+        Task<bool> PublishToGalleryAsync(string id, string title, string topic = null, bool? acceptTerms = null, bool? Nsfw = null);
 
         /// <summary>
         /// 	Search the gallery with a given query string.
@@ -207,5 +207,50 @@ namespace Imgur.API.Endpoints
         /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
         /// <returns>An array of gallery submissions matching the query.</returns>
         Task<IGalleryAlbumImageBase[]> SearchGalleryAsync(string query, GallerySortBy sort = GallerySortBy.Time, GalleryWindow window = GalleryWindow.All, uint page = 0);
+
+        /// <summary>
+        /// View images for memes subgallery.
+        /// </summary>
+        /// <param name="sort">How to sort the results.</param>
+        /// <param name="window">The maximum age of the items in the result.</param>
+        /// <param name="page">The page of the result.</param>
+        /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns></returns>
+        Task<IGalleryMeme[]> GetMemesSubGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+
+        /// <summary>
+        /// View a single image in the memes gallery.
+        /// </summary>
+        /// <param name="id">The id of the image to fetch.</param>
+        /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns></returns>
+        Task<GalleryMemeImage> GetMemesSubGalleryImageAsync(string id);
+
+        /// <summary>
+        /// View gallery images for a subreddit.
+        /// </summary>
+        /// <param name="sort">How to sort the results.</param>
+        /// <param name="window">The maximum age of the items in the result.</param>
+        /// <param name="page">The page of the result.</param>
+        /// <param name="subreddit">A valid subreddit name</param>
+        /// <returns></returns>
+        Task<GalleryRedditImage[]> GetSubredditGalleryAsync(string subreddit, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0);
+
+        /// <summary>
+        /// View a single image in the subreddit.
+        /// </summary>
+        /// <param name="subreddit">A valid subreddit name</param>
+        /// <param name="id">The id of the image to fetch.</param>
+        /// <exception cref="ArgumentNullException">Thrown when query was null or empty.</exception>
+		/// <exception cref="ArgumentException">Thrown when sort was set to GallerySortBy.Rising.</exception>
+        /// <exception cref="ImgurException">Thrown when Imgur encounters an error.</exception>
+        /// <returns></returns>
+        Task<GalleryRedditImage> GetSubredditGalleryImageAsync(string subreddit, string id);
     }
 }

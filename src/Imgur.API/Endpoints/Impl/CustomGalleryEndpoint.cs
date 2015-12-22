@@ -4,6 +4,8 @@ using Imgur.API.Enums;
 using Imgur.API.Models;
 using System.Net.Http;
 using Imgur.API.Models.Impl;
+using Imgur.API.Authentication;
+using Imgur.API.RequestBuilders;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -12,34 +14,37 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class CustomGalleryEndpoint : EndpointBase, ICustomGalleryEndpoint
     {
-        private const string getCustomGalleryUrl = "g/custom/{0}/{1}/{2}";
-        private const string getFilteredOutGalleryUrl = "g/filtered/{0}/{1}/{2}";
-        private const string getCustomGalleryItemUrl = "g/custom/{0}";
-        private const string addCustomGalleryTagsUrl = "g/custom/add_tags";
-        private const string removeCustomGalleryTagsUrl = "g/custom/remove_tags";
-        private const string addFilteredOutGalleryTagUrl = "g/block_tag";
-        private const string removeFilteredOutGalleryTagUrl = "g/unblock_tag";
+        /// <summary>
+        /// Initializes a new instance of the CustumGalleryEndpoint.
+        /// </summary>
+        /// <param name="client">The API client to use.</param>
+        public CustomGalleryEndpoint(IApiClient client) : base(client)
+        {
+        }
+
+        internal CustomGalleryEndpoint(IApiClient apiClient, HttpClient httpClient) : base(apiClient, httpClient)
+        {
+        }
+
+        internal CustomGalleryRequestBuilder RequestBuilder { get; } = new CustomGalleryRequestBuilder();
 
         /// <summary>
         /// Add tags to a user's custom gallery.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public async Task<object> AddCustomGalleryTagsAsync(string[] tags)
+        public async Task<bool> AddCustomGalleryTagsAsync(string[] tags)
         {
             if (tags == null)
                 throw new ArgumentNullException(nameof(tags));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), addCustomGalleryTagsUrl);
+            var url = "g/custom/add_tags";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.AddCustomGalleryTagsRequest(url, tags))
             {
-                content.Add(new StringContent(string.Join(",", tags)), "tags");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-            return result;
         }
 
         /// <summary>
@@ -47,21 +52,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public async Task<object> AddFilteredOutGalleryTagAsync(string tag)
+        public async Task<bool> AddFilteredOutGalleryTagAsync(string tag)
         {
-            if (tag == null)
+            if (string.IsNullOrEmpty(tag))
                 throw new ArgumentNullException(nameof(tag));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), addFilteredOutGalleryTagUrl);
+            var url = "g/block_tag";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.AddBlockedOutGalleryRequest(url, tag))
             {
-                content.Add(new StringContent(tag), "tag");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-            return result;
         }
 
         /// <summary>
@@ -76,15 +78,15 @@ namespace Imgur.API.Endpoints.Impl
             if (sort == GallerySortBy.Rising)
                 throw new ArgumentException("Cannot sort custom gallery by rising.");
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCustomGalleryUrl);
-            endpointUrl = string.Format(
-                endpointUrl,
-                sort.ToString().ToLower(),
-                window.ToString().ToLower(),
-                page);
+            var sortStr = sort.ToString().ToLower();
+            var windowStr = window.ToString().ToLower();
+            var url = $"g/custom/{sortStr}/{windowStr}/{page}";
 
-            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return gallery;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var customGallery = await SendRequestAsync<CustomGallery>(request);
+                return customGallery;
+            }
         }
 
         /// <summary>
@@ -97,11 +99,13 @@ namespace Imgur.API.Endpoints.Impl
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentNullException(nameof(id));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getCustomGalleryItemUrl);
-            endpointUrl = string.Format(endpointUrl, id);
+            var url = $"g/custom/{id}";
 
-            var result = await MakeEndpointRequestAsync<IGalleryAlbumImageBase>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return result;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var item = await SendRequestAsync<GalleryAlbumImageBase>(request);
+                return item;
+            }
         }
 
         /// <summary>
@@ -114,17 +118,17 @@ namespace Imgur.API.Endpoints.Impl
         public async Task<CustomGallery> GetFilteredOutGalleryAsync(GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
             if (sort == GallerySortBy.Rising)
-                throw new ArgumentException("Cannot sort custom gallery by rising.");
+                throw new ArgumentException("Cannot sort filtered out gallery by rising.");
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getFilteredOutGalleryUrl);
-            endpointUrl = string.Format(
-                endpointUrl,
-                sort.ToString().ToLower(),
-                window.ToString().ToLower(),
-                page);
+            var sortStr = sort.ToString().ToLower();
+            var windowStr = window.ToString().ToLower();
+            var url = $"g/filtered/{sortStr}/{windowStr}/{page}";
 
-            var gallery = await MakeEndpointRequestAsync<CustomGallery>(HttpMethod.Get, endpointUrl, requiresAuth: true);
-            return gallery;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var customGallery = await SendRequestAsync<CustomGallery>(request);
+                return customGallery;
+            }
         }
 
         /// <summary>
@@ -132,21 +136,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public async Task<object> RemoveCustomGalleryTagsAsync(string[] tags)
+        public async Task<bool> RemoveCustomGalleryTagsAsync(string[] tags)
         {
             if (tags == null)
                 throw new ArgumentNullException(nameof(tags));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), removeCustomGalleryTagsUrl);
+            var url = "g/custom/remove_tags";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.RemoveCustomGalleryRequest(url, tags))
             {
-                content.Add(new StringContent(string.Join(",", tags)), "tags");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-            return result;
         }
 
         /// <summary>
@@ -154,21 +155,18 @@ namespace Imgur.API.Endpoints.Impl
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public async Task<object> RemoveFilteredOutGalleryTagAsync(string tag)
+        public async Task<bool> RemoveFilteredOutGalleryTagAsync(string tag)
         {
             if (tag == null)
                 throw new ArgumentNullException(nameof(tag));
 
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), removeFilteredOutGalleryTagUrl);
+            var url = "g/unblock_tag";
 
-            object result;
-            using (var content = new MultipartFormDataContent(DateTime.UtcNow.Ticks.ToString()))
+            using (var request = RequestBuilder.RemoveBlockedOutGalleryRequest(url, tag))
             {
-                content.Add(new StringContent(tag), "tag");
-
-                result = await MakeEndpointRequestAsync<object>(HttpMethod.Post, endpointUrl, requiresAuth: true);
+                var result = await SendRequestAsync<bool>(request);
+                return result;
             }
-            return result;
         }
     }
 }

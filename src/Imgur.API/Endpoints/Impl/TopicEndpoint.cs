@@ -1,8 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Net.Http;
 using Imgur.API.Enums;
 using Imgur.API.Models;
-using System.Net.Http;
+using Imgur.API.Authentication;
+using Imgur.API.RequestBuilders;
+using Imgur.API.Models.Impl;
 
 namespace Imgur.API.Endpoints.Impl
 {
@@ -11,9 +13,19 @@ namespace Imgur.API.Endpoints.Impl
     /// </summary>
     public class TopicEndpoint : EndpointBase, ITopicEndpoint
     {
-        private const string getDefaultTopics = "topics/defaults";
-        private const string getGalleryTopic = "topics/{0}/{1}/{2}/{3}";
-        private const string getGalleryTopicItem = "topics/{0}/{1}";
+        /// <summary>
+        /// Initializes a new instance of the TopicEndpoint.
+        /// </summary>
+        /// <param name="client">The API client to use.</param>
+        public TopicEndpoint(IApiClient client) : base(client)
+        {
+        }
+
+        internal TopicEndpoint(IApiClient apiClient, HttpClient httpClient) : base(apiClient, httpClient)
+        {
+        }
+
+        internal TopicRequestBuilder RequestBuilder { get; } = new TopicRequestBuilder();
 
         /// <summary>
         ///     Get the list of default topics.
@@ -21,10 +33,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns>An array of topics.</returns>
         public async Task<ITopic[]> GetDefaultTopicsAsync()
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getDefaultTopics);
+            var url = "topics/default";
 
-            var topics = await MakeEndpointRequestAsync<ITopic[]>(HttpMethod.Get, endpointUrl);
-            return topics;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var topics = await SendRequestAsync<Topic[]>(request);
+                return topics;
+            }
         }
 
         /// <summary>
@@ -35,11 +50,13 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns>A gallery item.</returns>
         public async Task<IGalleryAlbumImageBase> GetTopicGalleryItemAsync(int topicId, string itemId)
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryTopicItem);
-            endpointUrl = string.Format(endpointUrl, topicId, itemId);
+            var url = $"topics/{topicId}/{itemId}";
 
-            var items = await MakeEndpointRequestAsync<IGalleryAlbumImageBase>(HttpMethod.Get, endpointUrl);
-            return items;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var items = await SendRequestAsync<IGalleryAlbumImageBase>(request);
+                return items;
+            }
         }
 
         /// <summary>
@@ -52,11 +69,15 @@ namespace Imgur.API.Endpoints.Impl
         /// <returns>An array of gallery items.</returns>
         public async Task<IGalleryAlbumImageBase[]> GetTopicGalleryItemsAsync(int topicId, GallerySortBy sort = GallerySortBy.Viral, GalleryWindow window = GalleryWindow.Week, uint page = 0)
         {
-            var endpointUrl = string.Concat(GetEndpointBaseUrl(), getGalleryTopicItem);
-            endpointUrl = string.Format(endpointUrl, topicId, sort, window, page);
+            var sortStr = sort.ToString().ToLower();
+            var windowStr = window.ToString().ToLower();
+            var url = $"topics/{topicId}/{sortStr}/{windowStr}/{page}";
 
-            var items = await MakeEndpointRequestAsync<IGalleryAlbumImageBase[]>(HttpMethod.Get, endpointUrl);
-            return items;
+            using (var request = RequestBuilder.CreateRequest(HttpMethod.Get, url))
+            {
+                var items = await SendRequestAsync<IGalleryAlbumImageBase[]>(request);
+                return items;
+            }
         }
     }
 }

@@ -6,13 +6,13 @@
     public interface IVotes
     {
         /// <summary>
-        ///     Number of upvotes.
-        /// </summary>
-        int Ups { get; set; }
-
-        /// <summary>
         ///     The number of downvotes.
         /// </summary>
         int Downs { get; set; }
+
+        /// <summary>
+        ///     Number of upvotes.
+        /// </summary>
+        int Ups { get; set; }
     }
 }

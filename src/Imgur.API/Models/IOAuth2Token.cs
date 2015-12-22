@@ -13,6 +13,26 @@ namespace Imgur.API.Models
         string AccessToken { get; }
 
         /// <summary>
+        ///     The user's AccountId.
+        /// </summary>
+        string AccountId { get; }
+
+        /// <summary>
+        ///     The user's Username.
+        /// </summary>
+        string AccountUsername { get; }
+
+        /// <summary>
+        ///     The DateTimeOffset when the token expires. Usually one month from when the token was created.
+        /// </summary>
+        DateTimeOffset ExpiresAt { get; }
+
+        /// <summary>
+        ///     The time in seconds when the token expires. Usually one month from when the token was created.
+        /// </summary>
+        int ExpiresIn { get; }
+
+        /// <summary>
         ///     The user's refresh token.
         /// </summary>
         string RefreshToken { get; }
@@ -21,25 +41,5 @@ namespace Imgur.API.Models
         ///     The type of token that was requested, usually "bearer".
         /// </summary>
         string TokenType { get; }
-
-        /// <summary>
-        ///     The user's AccountId.
-        /// </summary>
-        string AccountId { get; }
-
-        /// <summary>
-        ///     The DateTimeOffset when the token expires. Usually one hour from when the token was created.
-        /// </summary>
-        DateTimeOffset ExpiresAt { get; }
-
-        /// <summary>
-        ///     The time in seconds when the token expires. Usually one hour from when the token was created.
-        /// </summary>
-        int ExpiresIn { get; }
-
-        /// <summary>
-        ///     The users name.
-        /// </summary>
-        string AccountName { get; set; }
     }
 }

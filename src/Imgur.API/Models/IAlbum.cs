@@ -1,25 +1,15 @@
-﻿/*
- * Created by SharpDevelop.
- * User: lbokkers
- * Date: 09-12-2015
- * Time: 3:48 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using Imgur.API.Enums;
-using Imgur.API.Models;
+﻿using Imgur.API.Enums;
 using System;
-using System.Collections.Generic;
 
 namespace Imgur.API.Models
 {
-	/// <summary>
-	/// Description of IAlbum.
-	/// </summary>
-	public interface IAlbum : IAlbumImageBase
+    /// <summary>
+    /// Description of IAlbum.
+    /// </summary>
+    public interface IAlbum : IAlbumImageBase
 	{
         /// <summary>
-        ///     The ID of the album cover image.
+        ///     The width, in pixels, of the album cover image.
         /// </summary>
        	string Cover { get; set; }
 
@@ -39,7 +29,7 @@ namespace Imgur.API.Models
         AlbumPrivacy? Privacy { get; set; }
 
         /// <summary>
-        ///     The view layout of the album.
+        ///     An array of all the images in the album (only available when requesting the direct album).
         /// </summary>
         AlbumLayout? Layout { get; set;}
 
@@ -51,7 +41,7 @@ namespace Imgur.API.Models
         /// <summary>
         ///     The total number of images in the album.
         /// </summary>
-        int ImageCount { get; set; }
+        int ImagesCount { get; set; }
 
         /// <summary>
         ///     An array of all the images in the album (only available when requesting the direct album).

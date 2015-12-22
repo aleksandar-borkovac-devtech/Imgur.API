@@ -1,109 +1,108 @@
-﻿using Imgur.API.Enums;
-using Imgur.API.Models.Impl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Imgur.API.Enums;
+using Imgur.API.Models;
 
 namespace Imgur.API.Endpoints
 {
     /// <summary>
-    /// Album related actions.
+    ///     Album related actions.
     /// </summary>
     public interface IAlbumEndpoint : IEndpoint
     {
         /// <summary>
-        /// Get information about a specific album.
+        ///     Takes parameter, ids[], as an array of ids to add to the album. For anonymous albums, {album} should be the
+        ///     deletehash
+        ///     that is returned at creation.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be added to the album.</param>
         /// <returns></returns>
-        Task<Album> GetAlbumAsync(string id);
+        Task<bool> AddAlbumImagesAsync(string album, IEnumerable<string> ids);
 
         /// <summary>
-        /// Return all of the images in the album
+        ///     Create a new album.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="title">The title of the album.</param>
+        /// <param name="description">The description of the album.</param>
+        /// <param name="privacy">Sets the privacy level of the album.</param>
+        /// <param name="layout">Sets the layout to display the album.</param>
+        /// <param name="cover">The Id of an image that you want to be the cover of the album.</param>
+        /// <param name="ids">The image ids that you want to be included in the album.</param>
         /// <returns></returns>
-        Task<Image[]> GetAlbumImagesAsync(string id);
+        Task<IAlbum> CreateAlbumAsync(string title = null, string description = null,
+            AlbumPrivacy? privacy = null, AlbumLayout? layout = null,
+            string cover = null, IEnumerable<string> ids = null);
 
         /// <summary>
-        /// Get information about an image in an album, any additional actions found in <see cref="IImageEndpoint"/> will also work. 
+        ///     Delete an album with a given Id. You are required to be logged in as the user to delete the album. For anonymous
+        ///     albums, {album} should be the deletehash that is returned at creation.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="imageId"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
         /// <returns></returns>
-        Task<Image> GetAlbumImageAsync(string id, string imageId);
+        Task<bool> DeleteAlbumAsync(string album);
 
         /// <summary>
-        /// Create a new album. Optional parameter of ids[] is an array of image ids to add to the album.
-        ///
-        /// This method is available without authenticating an account. Doing so will create an anonymous album which is not tied to an account.
+        ///     Favorite an album with a given Id. OAuth authentication required.
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="privacy"></param>
-        /// <param name="layout"></param>
-        /// <param name="coverID"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="id">The album id.</param>
         /// <returns></returns>
-        Task<object> CreateAlbumAsync(
-            string title = null, string description = null,
-            AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
-            string coverID = null, string[] imageIds = null);
+        Task<bool> FavoriteAlbumAsync(string id);
 
         /// <summary>
-        /// Update the information of an album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Get information about a specific album.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="privacy"></param>
-        /// <param name="layout"></param>
-        /// <param name="coverID"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="id">The album id.</param>
         /// <returns></returns>
-        Task<object> UpdateAlbumAsync(string album,
-            string title = null, string description = null,
-            AlbumPrivacy? privacy = null, AlbumLayout layout = AlbumLayout.Vertical,
-            string coverID = null, string[] imageIds = null);
+        Task<IAlbum> GetAlbumAsync(string id);
 
         /// <summary>
-        /// Delete an album with a given ID. You are required to be logged in as the user to delete the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Get information about an image in an album.
         /// </summary>
-        /// <param name="album"></param>
+        /// <param name="id">The album id.</param>
+        /// <param name="image">The image id.</param>
         /// <returns></returns>
-        Task<object> DeleteAlbumAsync(string album);
+        Task<IImage> GetAlbumImageAsync(string id, string image);
 
         /// <summary>
-        /// Favorite an album with a given ID. The user is required to be logged in to favorite the album.
+        ///     Return all of the images in the album.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The album id.</param>
         /// <returns></returns>
-        Task<object> FavoriteAlbumAsync(string id);
+        Task<IEnumerable<IImage>> GetAlbumImagesAsync(string id);
 
         /// <summary>
-        /// Sets the images for an album, removes all other images and only uses the images in this request. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Takes parameter, ids[], as an array of ids and removes from the album. For anonymous albums, {album} should be the
+        ///     deletehash that is returned at creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be removed from the album.</param>
         /// <returns></returns>
-        Task<object> SetAlbumImagesAsync(string album, string[] imageIds);
+        Task<bool> RemoveAlbumImagesAsync(string album, IEnumerable<string> ids);
 
         /// <summary>
-        /// Takes parameter, ids[], as an array of ids to add to the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Sets the images for an album, removes all other images and only uses the images in this request. For anonymous
+        ///     albums, {album} should be the deletehash that is returned at creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="ids">The image ids that you want to be added to the album.</param>
         /// <returns></returns>
-        Task<object> AddAlbumImagesAsync(string album, string[] imageIds);
+        Task<bool> SetAlbumImagesAsync(string album, IEnumerable<string> ids);
 
         /// <summary>
-        /// Takes parameter, ids[], as an array of ids to from the album. For anonymous albums, album should be the deletehash that is returned at creation. 
+        ///     Update the information of an album. For anonymous albums, {album} should be the deletehash that is returned at
+        ///     creation.
         /// </summary>
-        /// <param name="album"></param>
-        /// <param name="imageIds"></param>
+        /// <param name="album">The id or deletehash of the album.</param>
+        /// <param name="title">The title of the album.</param>
+        /// <param name="description">The description of the album.</param>
+        /// <param name="privacy">Sets the privacy level of the album.</param>
+        /// <param name="layout">Sets the layout to display the album.</param>
+        /// <param name="cover">The Id of an image that you want to be the cover of the album.</param>
+        /// <param name="ids">The image ids that you want to be included in the album.</param>
         /// <returns></returns>
-        Task<object> RemoveAlbumImagesAsync(string album, string[] imageIds);
+        Task<bool> UpdateAlbumAsync(string album, string title = null, string description = null,
+            AlbumPrivacy? privacy = null, AlbumLayout? layout = null,
+            string cover = null, IEnumerable<string> ids = null);
     }
 }
